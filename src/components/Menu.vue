@@ -64,7 +64,7 @@ const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
 
 .menu-enter-from .menu-container,
 .menu-leave-to .menu-container {
-  transform: translateX(-100vw);
+  transform: translateX(-100%);
 }
 
 .menu-container .router-link-exact-active {

@@ -3,8 +3,8 @@ import { useWalletsStore } from '@/stores/wallets'
 import { computed, ref, type Ref } from 'vue'
 import { useStateStore } from '@/stores/state'
 import type { UUID } from '@/models/common'
-import moment from 'moment'
 import BaseModal from './BaseModal.vue'
+import { DateTime } from 'luxon'
 
 const state = useStateStore()
 const wallets = useWalletsStore()
@@ -13,7 +13,11 @@ const accountId: Ref<UUID | null> = ref(null)
 const value = ref(0)
 const payee = ref('')
 const description = ref('')
-const datetime = ref(moment().format('yyyy-MM-DDTHH:mm'))
+const datetime = ref(
+  DateTime.now()
+    .set({ second: 0, millisecond: 0 })
+    .toISO({ includeOffset: false, suppressSeconds: true })
+)
 
 function createRecord() {
   if (state.activeWallet && accountId.value) {
@@ -23,7 +27,7 @@ function createRecord() {
       value.value,
       payee.value,
       description.value,
-      moment(datetime.value).toDate()
+      DateTime.fromISO(datetime.value).toJSDate()
     )
   }
 }
