@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.material-icons {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -moz-font-feature-settings: 'liga';
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Standard style for any label
+.nt-form-label {
+  @apply text-gray-700 font-bold;
+}
+
+// Any focusable interface control should use this focus ring for consistant styling and to facilitate keyboard navigation
+.nt-focus-ring {
+  @apply transition-shadow ring-cyan-400 ring-opacity-50 focus:ring-2;
+}
+
+// Standard style for an input. Gives it an outline, focus ring, fixed height and padding.
+// For use with textarea, override the height with an important rule
+.nt-form-input {
+  @apply bg-white placeholder:text-gray-500 placeholder:font-light text-gray-700 border-solid border border-gray-300 rounded-md px-4 h-9 font-normal nt-focus-ring;
+
+  &:disabled {
+    @apply cursor-not-allowed;
+    filter: contrast(0.2) brightness(150%);
+  }
+}
+
+.nt-form-color-input {
+  @apply bg-white border-solid border border-gray-300 rounded-md h-9 nt-focus-ring p-0;
+  appearance: none;
+
+  &:disabled {
+    @apply cursor-not-allowed;
+    filter: contrast(0.2) brightness(150%);
+  }
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    @apply rounded-md;
+    border: none;
+  }
+  &::-moz-color-swatch {
+    @apply rounded-md;
+    border: none;
+  }
+}
+
+// Custom CSS for the basic button
+// Combine this component with a width/grow/padding-x and a background color
+.nt-button {
+  @apply transition duration-75 h-9 rounded-md flex items-center justify-center text-gray-100 font-medium leading-none border-none select-none nt-focus-ring;
+
+  &:disabled {
+    @apply cursor-not-allowed;
+    filter: contrast(0.2) brightness(150%) grayscale(1);
+  }
+
+  &:hover:not(:disabled) {
+    @apply shadow;
+    filter: brightness(105%) grayscale(0.2);
+  }
+
+  &:active:not(:disabled) {
+    @apply brightness-95 shadow-none;
+  }
+}
+
+// See documentation for how to use vk-dropdown (Javascript custom dropdown menus) and vk-select (native select element with consistant styling)
+
+// Dropdown icon for both the "fake" Vk Dropdown and the normal select element
+.nt-dropdown > button:not(:disabled):after,
+.nt-select:not(:disabled):after {
+  @apply material-icons absolute items-center top-0 bottom-0 right-0 pr-4 pointer-events-none;
+  // need to say it manually to overwrite material-icons's display property
+  display: flex;
+  content: 'arrow_drop_down';
+}
+// Remove default dropdown arrow
+.nt-select {
+  @apply flex relative;
+
+  > select {
+    @apply appearance-none grow w-full;
+
+    &::-ms-expand {
+      display: none;
+    }
+  }
+}
+
+.nt-dropdown button,
+.nt-select > select {
+  @apply pl-4 pr-12 select-none cursor-pointer text-left;
+
+  &:disabled {
+    @apply cursor-not-allowed;
+    filter: contrast(0.2) brightness(150%);
+  }
+
+  &:hover:not(:disabled) {
+    @apply brightness-95;
+  }
+}
+
+.nt-dropdown {
+  @apply relative;
+  > button,
+  > ul {
+    @apply w-full border-solid border border-gray-300 rounded-md bg-white;
+  }
+
+  > button {
+    @apply h-9 relative nt-focus-ring;
+  }
+
+  button {
+    // only applies to dropdown, not select, cause it doesn't look good (stays active when the menu is open)
+    &:active:not(:disabled) {
+      @apply brightness-75;
+    }
+  }
+
+  > ul {
+    @apply absolute mt-px transition-opacity opacity-0 pointer-events-none overflow-y-auto list-none m-0 p-0 shadow-lg;
+    max-height: 20vh;
+
+    > li {
+      > button {
+        @apply h-9 bg-white w-full border-none;
+      }
+    }
+  }
+
+  > button[data-open='open'] ~ ul {
+    @apply opacity-100 pointer-events-auto z-10;
+  }
+}
+
+.nt-clickable {
+  @apply select-none cursor-pointer;
+}
