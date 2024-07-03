@@ -8,10 +8,15 @@ const { wallet } = defineProps<{ wallet: Wallet | null }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
 
 const submit = async (fields: any) => {
-  if (wallet?.id) {
-    wallets.updateWallet(wallet, fields.name)
-  } else {
-    wallets.createWallet(fields.name)
+  try {
+    if (wallet?.id) {
+      wallets.updateWallet(wallet, fields.name)
+    } else {
+      wallets.createWallet(fields.name)
+    }
+  } catch (e) {
+    alert(e)
+    console.error(e)
   }
   emit('done')
 }

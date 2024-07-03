@@ -1,0 +1,1 @@
+<template>Categories Page</template>

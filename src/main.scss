@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body,
+#app {
+  @apply h-screen overflow-hidden;
+}
+
+main {
+  @apply h-screen overflow-y-auto;
+}
+
 .material-icons {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -18,18 +28,18 @@
 
 // Standard style for any label
 .nt-form-label {
-  @apply text-gray-700 font-bold;
+  @apply font-bold text-gray-700;
 }
 
 // Any focusable interface control should use this focus ring for consistant styling and to facilitate keyboard navigation
 .nt-focus-ring {
-  @apply transition-shadow ring-cyan-400 ring-opacity-50 focus:ring-2;
+  @apply ring-cyan-400 ring-opacity-50 transition-shadow focus:ring-2;
 }
 
 // Standard style for an input. Gives it an outline, focus ring, fixed height and padding.
 // For use with textarea, override the height with an important rule
 .nt-form-input {
-  @apply bg-white placeholder:text-gray-500 placeholder:font-light text-gray-700 border-solid border border-gray-300 rounded-md px-4 h-9 font-normal nt-focus-ring;
+  @apply nt-focus-ring h-9 rounded-md border border-solid border-gray-300 bg-white px-4 font-normal text-gray-700 placeholder:font-light placeholder:text-gray-500;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -38,7 +48,7 @@
 }
 
 .nt-form-color-input {
-  @apply bg-white border-solid border border-gray-300 rounded-md h-9 nt-focus-ring p-0;
+  @apply nt-focus-ring h-9 rounded-md border border-solid border-gray-300 bg-white p-0;
   appearance: none;
 
   &:disabled {
@@ -63,7 +73,7 @@
 // Custom CSS for the basic button
 // Combine this component with a width/grow/padding-x and a background color
 .nt-button {
-  @apply transition duration-75 h-9 rounded-md flex items-center justify-center text-gray-100 font-medium leading-none border-none select-none nt-focus-ring;
+  @apply nt-focus-ring flex h-9 select-none items-center justify-center rounded-md border-none font-medium leading-none text-gray-100 transition duration-75;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -76,7 +86,7 @@
   }
 
   &:active:not(:disabled) {
-    @apply brightness-95 shadow-none;
+    @apply shadow-none brightness-95;
   }
 }
 
@@ -85,17 +95,17 @@
 // Dropdown icon for both the "fake" Vk Dropdown and the normal select element
 .nt-dropdown > button:not(:disabled):after,
 .nt-select:not(:disabled):after {
-  @apply material-icons absolute items-center top-0 bottom-0 right-0 pr-4 pointer-events-none;
+  @apply material-icons pointer-events-none absolute bottom-0 right-0 top-0 items-center pr-4;
   // need to say it manually to overwrite material-icons's display property
   display: flex;
   content: 'arrow_drop_down';
 }
 // Remove default dropdown arrow
 .nt-select {
-  @apply flex relative;
+  @apply relative flex;
 
   > select {
-    @apply appearance-none grow w-full;
+    @apply w-full grow appearance-none;
 
     &::-ms-expand {
       display: none;
@@ -105,7 +115,7 @@
 
 .nt-dropdown button,
 .nt-select > select {
-  @apply pl-4 pr-12 select-none cursor-pointer text-left;
+  @apply cursor-pointer select-none pl-4 pr-12 text-left;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -121,11 +131,11 @@
   @apply relative;
   > button,
   > ul {
-    @apply w-full border-solid border border-gray-300 rounded-md bg-white;
+    @apply w-full rounded-md border border-solid border-gray-300 bg-white;
   }
 
   > button {
-    @apply h-9 relative nt-focus-ring;
+    @apply nt-focus-ring relative h-9;
   }
 
   button {
@@ -136,21 +146,21 @@
   }
 
   > ul {
-    @apply absolute mt-px transition-opacity opacity-0 pointer-events-none overflow-y-auto list-none m-0 p-0 shadow-lg;
+    @apply pointer-events-none absolute m-0 mt-px list-none overflow-y-auto p-0 opacity-0 shadow-lg transition-opacity;
     max-height: 20vh;
 
     > li {
       > button {
-        @apply h-9 bg-white w-full border-none;
+        @apply h-9 w-full border-none bg-white;
       }
     }
   }
 
   > button[data-open='open'] ~ ul {
-    @apply opacity-100 pointer-events-auto z-10;
+    @apply pointer-events-auto z-10 opacity-100;
   }
 }
 
 .nt-clickable {
-  @apply select-none cursor-pointer;
+  @apply cursor-pointer select-none;
 }

@@ -57,17 +57,21 @@ function useBlackText(backgroundColor: string) {
 <template>
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">List of accounts</h2>
-    <button class="material-icons nt-focus-ring p-4">settings</button>
+    <RouterLink
+      :to="`/wallets/${state.activeWallet?.id}/accounts`"
+      class="material-icons nt-focus-ring p-4"
+      >settings</RouterLink
+    >
   </div>
-  <ul class="flex flex-wrap justify-between p-3">
+  <ul class="flex flex-wrap justify-between p-3 sm:justify-center">
     <li
-      class="max-w-1/2 w-1/2 p-1 sm:w-auto"
+      class="w-1/2 p-1 sm:w-72"
       v-for="account of state.activeAccounts"
       :key="account.id"
     >
       <div
         :style="`background-color: ${account.color}`"
-        :class="`flex flex-col rounded-md p-2 ${
+        :class="`nt-clickable flex flex-col rounded-md p-2 ${
           useBlackText(account.color) ? 'text-black' : 'text-white'
         } ${
           state.shownAccounts.length > 0 &&
@@ -81,9 +85,9 @@ function useBlackText(backgroundColor: string) {
         <span>{{ account.currency.code }} {{ account.balance }}</span>
       </div>
     </li>
-    <li class="max-w-1/2 w-1/2 p-1 sm:w-auto">
+    <li class="w-1/2 p-1 sm:w-72">
       <button
-        class="h-full w-full rounded-md border border-gray-400 p-2"
+        class="h-full w-full rounded-md border border-gray-400 p-2 text-gray-600"
         @click="showModal = true"
       >
         Create Account
