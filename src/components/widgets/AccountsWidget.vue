@@ -1,36 +1,12 @@
 <script setup lang="ts">
-import { currencies, type Account } from '@/models/account'
-import { useWalletsStore } from '@/stores/wallets'
+import { type Account } from '@/models/account'
 import { ref } from 'vue'
 import { useStateStore } from '@/stores/state'
 import BaseModal from '../BaseModal.vue'
-import type { UUID } from '@/models/common'
 import Color from 'colorjs.io'
+import AccountForm from '../forms/AccountForm.vue'
 
 const state = useStateStore()
-const wallets = useWalletsStore()
-
-const name = ref('')
-const color = ref('#FF0000')
-const currency = ref(currencies[0])
-
-function createAccount() {
-  if (state.activeWallet) {
-    showModal.value = false
-    wallets.createAccount(
-      state.activeWallet.id,
-      name.value,
-      color.value,
-      currency.value
-    )
-  }
-}
-
-function deleteAccount(id: UUID) {
-  if (confirm('Delete Account ?')) {
-    wallets.deleteAccount(id)
-  }
-}
 
 function toggleShowAccount(account: Account) {
   const index = state.shownAccounts.indexOf(account)
@@ -96,55 +72,16 @@ function useBlackText(backgroundColor: string) {
   </ul>
   <Teleport to="body">
     <BaseModal
-      header="New Account"
+      header="Create Account"
       :show="showModal"
       @close="showModal = false"
     >
-      <div class="flex flex-col gap-2 p-4">
-        <label class="nt-form-label" for="new-account-name">Account Name</label>
-        <input
-          class="nt-form-input"
-          v-model="name"
-          type="text"
-          name="new-account-name"
-          id="new-account-name"
-        />
-        <label class="nt-form-label" for="new-account-color"
-          >Account Color</label
-        >
-        <input
-          class="nt-form-color-input"
-          v-model="color"
-          type="color"
-          name="new-account-color"
-          id="new-account-color"
-        />
-        <label class="nt-form-label" for="new-account-currency"
-          >Account Currency</label
-        >
-        <label class="nt-select" for="new-account-currency">
-          <select
-            class="nt-form-input"
-            v-model="currency"
-            name="new-account-currency"
-            id="new-account-currency"
-          >
-            <option
-              v-for="currency of currencies"
-              :key="currency.code"
-              :value="currency"
-            >
-              {{ currency.name }} ({{ currency.code }})
-            </option>
-          </select>
-        </label>
-        <button
-          class="nt-button mt-2 bg-emerald-800 px-4"
-          @click="createAccount()"
-          :disabled="!name.trim()"
-        >
-          Create
-        </button>
+      <div class="p-4" v-if="state.activeWallet">
+        <AccountForm
+          :wallet-id="state.activeWallet.id"
+          :account="null"
+          @done="showModal = false"
+        ></AccountForm>
       </div>
     </BaseModal>
   </Teleport>

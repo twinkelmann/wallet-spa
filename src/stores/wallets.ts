@@ -90,6 +90,18 @@ export const useWalletsStore = defineStore('wallets', () => {
     accounts.value.push(newAccount)
     return newAccount
   }
+  function updateAccount(
+    account: Account,
+    name: string,
+    color: string,
+    currency: Currency
+  ) {
+    const now = new Date()
+    account.name = name
+    account.color = color
+    account.currency = currency
+    account.updatedAt = now
+  }
   function deleteAccount(id: UUID) {
     // Delete associated records
     records.value = records.value.filter((r) => r.accountId !== id)
@@ -144,6 +156,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     updateWallet,
     deleteWallet,
     createAccount,
+    updateAccount,
     deleteAccount,
     createRecord,
     deleteRecord,

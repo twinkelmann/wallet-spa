@@ -23,19 +23,22 @@ const show = ref(false)
 </script>
 
 <template>
-  <main class="flex flex-col">
-    <header class="mb-4 flex h-12 items-center justify-between bg-gray-100">
-      <button class="material-icons nt-focus-ring p-4" @click="show = !show">
-        menu
-      </button>
-      <h1 class="mx-2 truncate">{{ state.activeWallet?.name }}</h1>
-      <RouterLink class="material-icons nt-focus-ring p-4" to="/">
-        home
-      </RouterLink>
-    </header>
-    <RouterView />
-    <Teleport to="body">
-      <Menu :show="show" @close="show = false"></Menu>
-    </Teleport>
+  <main class="flex">
+    <Menu :show="show" @close="show = false"></Menu>
+    <div class="flex grow flex-col">
+      <header class="mb-4 flex h-12 items-center justify-between bg-gray-100">
+        <button
+          class="material-icons nt-focus-ring p-4 md:hidden"
+          @click="show = !show"
+        >
+          menu
+        </button>
+        <h1 class="mx-2 truncate">{{ state.activeWallet?.name }}</h1>
+        <RouterLink class="material-icons nt-focus-ring p-4" to="/">
+          home
+        </RouterLink>
+      </header>
+      <RouterView />
+    </div>
   </main>
 </template>
