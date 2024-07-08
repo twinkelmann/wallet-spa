@@ -33,7 +33,9 @@ function deleteAccount(account: Account) {
 <template>
   <div class="mx-4 mb-4 flex flex-col items-center">
     <h1 class="text-center">Accounts</h1>
-    <ul class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-1/2 lg:w-1/3">
+    <ul
+      class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2"
+    >
       <li
         v-for="account of wallets.accounts"
         :key="account.id"
@@ -44,7 +46,7 @@ function deleteAccount(account: Account) {
           @click="updateAccount(account)"
         >
           <span class="truncate"> {{ account.name }}</span>
-          <i class="material-icons nt-focus-ring ml-auto"> edit </i>
+          <i class="material-icons nt-focus-ring ml-auto">edit</i>
         </button>
         <button
           class="material-icons nt-focus-ring rounded-r-md p-4"

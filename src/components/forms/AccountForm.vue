@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { currencies, type Account } from '@/models/account'
+import { currencies, currenciesByCode, type Account } from '@/models/account'
 import type { UUID } from '@/models/common'
 import { useWalletsStore } from '@/stores/wallets'
 
@@ -18,14 +18,14 @@ const submit = async (fields: any) => {
         account,
         fields.name,
         fields.color,
-        currencies[fields.currency]
+        currenciesByCode[fields.currency]
       )
     } else {
       wallets.createAccount(
         walletId,
         fields.name,
         fields.color,
-        currencies[fields.currency]
+        currenciesByCode[fields.currency]
       )
     }
   } catch (e) {
@@ -60,13 +60,13 @@ const submit = async (fields: any) => {
       type="select"
       name="currency"
       label="Currency"
-      :value="account ? currencies.indexOf(account.currency) : 0"
+      :value="account?.currency.code || currencies[0].code"
       validation="required"
     >
       <option
-        v-for="(currency, i) in currencies"
+        v-for="currency of currencies"
         :key="currency.code"
-        :value="i"
+        :value="currency.code"
       >
         {{ currency.name }} ({{ currency.code }})
       </option>

@@ -36,18 +36,18 @@ export const useWalletsStore = defineStore('wallets', () => {
    * @returns The new Wallet
    */
   function createWallet(name: string) {
-    const now = new Date()
+    const now = new Date().toISOString()
     const newWallet = {
       id: crypto.randomUUID(),
       name,
       createdAt: now,
-      updatedAt: new Date(now),
+      updatedAt: now,
     } as Wallet
     wallets.value.push(newWallet)
     return newWallet
   }
   function updateWallet(wallet: Wallet, name: string) {
-    const now = new Date()
+    const now = new Date().toISOString()
     wallet.name = name
     wallet.updatedAt = now
   }
@@ -74,7 +74,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     color: string,
     currency: Currency
   ) {
-    const now = new Date()
+    const now = new Date().toISOString()
     const newAccount = {
       id: crypto.randomUUID(),
       walletId,
@@ -85,7 +85,7 @@ export const useWalletsStore = defineStore('wallets', () => {
       startBalance: 0,
       currency,
       createdAt: now,
-      updatedAt: new Date(now),
+      updatedAt: now,
     } as Account
     accounts.value.push(newAccount)
     return newAccount
@@ -96,7 +96,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     color: string,
     currency: Currency
   ) {
-    const now = new Date()
+    const now = new Date().toISOString()
     account.name = name
     account.color = color
     account.currency = currency
@@ -123,9 +123,9 @@ export const useWalletsStore = defineStore('wallets', () => {
     value: number,
     payee: string | null,
     description: string | null,
-    datetime: Date
+    datetime: string
   ) {
-    const now = new Date()
+    const now = new Date().toISOString()
     const newRecord = {
       id: crypto.randomUUID(),
       accountId,
@@ -134,11 +134,36 @@ export const useWalletsStore = defineStore('wallets', () => {
       description,
       datetime,
       createdAt: now,
-      updatedAt: new Date(now),
+      updatedAt: now,
     } as Record
     records.value.push(newRecord)
     updateBalance(accountId)
     return newRecord
+  }
+  function updateRecord(
+    recordId: UUID,
+    accountId: UUID,
+    value: number,
+    payee: string | null,
+    description: string | null,
+    datetime: string
+  ) {
+    const record = records.value.find((r) => r.id === recordId)
+    if (record) {
+      const oldAccountId = record.accountId
+      const now = new Date().toISOString()
+      record.accountId = accountId
+      record.value = value
+      record.payee = payee
+      record.description = description
+      record.datetime = datetime
+      record.updatedAt = now
+      updateBalance(accountId)
+      if (oldAccountId !== accountId) {
+        // if the record was moved to another account, update the balance of both accounts
+        updateBalance(oldAccountId)
+      }
+    }
   }
   function deleteRecord(id: UUID) {
     const recordIndex = records.value.findIndex((r) => r.id === id)
@@ -159,6 +184,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     updateAccount,
     deleteAccount,
     createRecord,
+    updateRecord,
     deleteRecord,
     /**
      * See localStoragePlugin

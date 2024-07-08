@@ -39,6 +39,9 @@ export const currencies: Currency[] = [
   },
 ]
 
+export const currenciesByCode: Record<string, Currency> = {}
+currencies.forEach((c) => (currenciesByCode[c.code] = c))
+
 export interface Account extends HasId, HasTimestamps {
   walletId: UUID
   name: string

@@ -37,7 +37,7 @@ const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
       <li>
         <button>Language</button>
       </li>
-      <li class="mt-auto flex flex-col items-center">
+      <li class="mb-4 mt-auto flex flex-col items-center">
         <span class="flex items-center gap-2"
           ><i class="material-icons">account_balance_wallet</i>
           <span>Wallet</span>

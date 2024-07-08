@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import CreateRecord from '@/components/CreateRecord.vue'
 import AccountsWidget from '@/components/widgets/AccountsWidget.vue'
-import Records from '@/components/Records.vue'
+import RecordsWidget from '@/components/widgets/RecordsWidgets.vue'
 </script>
 
 <template>
   <AccountsWidget></AccountsWidget>
-  <Records></Records>
+  <RecordsWidget></RecordsWidget>
+  <CreateRecord></CreateRecord>
 </template>

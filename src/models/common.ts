@@ -8,8 +8,14 @@ export interface HasId {
 }
 
 export interface HasTimestamps {
-  createdAt: Date
-  updatedAt: Date
+  /**
+   * ISO DateTime String
+   */
+  createdAt: string
+  /**
+   * ISO DateTime String
+   */
+  updatedAt: string
 }
 
 export function deleteById(array: HasId[], id: UUID) {

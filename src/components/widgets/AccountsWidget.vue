@@ -22,20 +22,21 @@ const showModal = ref(false)
 const black = new Color('black')
 const white = new Color('white')
 function useBlackText(backgroundColor: string) {
-  console.log('called useBlackText')
   const background = new Color(backgroundColor)
   const cBlack = background.contrast(black, 'APCA')
   const cWhite = background.contrast(white, 'APCA')
   return Math.abs(cBlack) > Math.abs(cWhite)
 }
-</script>
 
+// TODO: use configured local
+const languages = navigator.languages
+</script>
 <template>
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">List of accounts</h2>
     <RouterLink
       :to="`/wallets/${state.activeWallet?.id}/accounts`"
-      class="material-icons nt-focus-ring p-4"
+      class="material-icons nt-focus-ring rounded-full p-4"
       >settings</RouterLink
     >
   </div>
@@ -58,7 +59,12 @@ function useBlackText(backgroundColor: string) {
         @click="toggleShowAccount(account)"
       >
         <span class="truncate text-sm">{{ account.name }}</span>
-        <span>{{ account.currency.code }} {{ account.balance }}</span>
+        <span>{{
+          account.balance.toLocaleString(languages, {
+            style: 'currency',
+            currency: account.currency.code,
+          })
+        }}</span>
       </div>
     </li>
     <li class="w-1/2 p-1 sm:w-72">

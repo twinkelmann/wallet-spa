@@ -5,5 +5,8 @@ export interface Record extends HasId, HasTimestamps {
   value: number
   payee: string | null
   description: string | null
-  datetime: Date
+  /**
+   * ISO DateTime String
+   */
+  datetime: string
 }
