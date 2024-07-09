@@ -17,7 +17,7 @@ const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
     @click="$emit('close')"
   >
     <ul
-      :class="`menu-container flex h-full w-3/4 flex-col bg-white shadow-2xl transition-transform md:fixed md:w-64 ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
+      :class="`menu-container flex h-full w-3/4 flex-col bg-white shadow-2xl transition-transform md:fixed md:w-64 md:shadow-lg ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
       @click="$event.stopPropagation()"
     >
       <li

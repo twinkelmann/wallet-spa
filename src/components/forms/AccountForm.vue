@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { currencies, type Account } from '@/models/account'
-import type { UUID } from '@/models/common'
+import { capitalizeFirstLetter, type UUID } from '@/models/common'
 import { useWalletsStore } from '@/stores/wallets'
 
 const wallets = useWalletsStore()
@@ -34,7 +34,11 @@ const submit = async (fields: any) => {
   <FormKit
     type="form"
     @submit="submit"
-    :submit-label="account ? 'Update Account' : 'Create Account'"
+    :submit-label="
+      capitalizeFirstLetter(
+        account ? $t('update.account') : $t('create.account')
+      )
+    "
   >
     <FormKit
       type="text"
