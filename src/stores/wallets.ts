@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Wallet } from '@/models/wallet'
-import type { Account, Currency } from '@/models/account'
+import type { Account } from '@/models/account'
 import type { Monthly } from '@/models/monthly'
 import type { Record } from '@/models/record'
 import { deleteById, type UUID } from '@/models/common'
@@ -72,7 +72,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     walletId: UUID,
     name: string,
     color: string,
-    currency: Currency
+    currency: string
   ) {
     const now = new Date().toISOString()
     const newAccount = {
@@ -94,7 +94,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     account: Account,
     name: string,
     color: string,
-    currency: Currency
+    currency: string
   ) {
     const now = new Date().toISOString()
     account.name = name
