@@ -6,8 +6,11 @@ import WalletForm from '../components/forms/WalletForm.vue'
 import type { Ref } from 'vue'
 import type { Wallet } from '@/models/wallet'
 import LocaleSelector from '@/components/LocaleSelector.vue'
+import { capitalizeFirstLetter } from '@/models/common'
+import { useI18n } from 'vue-i18n'
 
 const wallets = useWalletsStore()
+const { t } = useI18n()
 
 const editedWallet: Ref<Wallet | null> = ref(null)
 const showModal = ref(false)
@@ -23,7 +26,7 @@ function updateWallet(wallet: Wallet) {
 }
 
 function deleteWallet(wallet: Wallet) {
-  if (confirm('Delete Wallet ?')) {
+  if (confirm(capitalizeFirstLetter(`${t('delete.wallet')} ?`))) {
     wallets.deleteWallet(wallet.id)
   }
 }
