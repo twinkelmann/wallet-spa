@@ -15,47 +15,52 @@ export const menuEntries: (RouteRecordRaw & {
 })[] = [
   {
     path: '',
-    name: 'Overview',
+    name: 'pages.overview',
     icon: 'team_dashboard',
     component: Overview,
   },
   {
     path: 'accounts',
-    name: 'Accounts',
+    name: 'terminology.account',
     icon: 'account_balance',
     component: Accounts,
   },
   {
     path: 'records',
-    name: 'Records',
+    name: 'terminology.record',
     icon: 'receipt_long',
     component: Records,
   },
   {
     path: 'statistics',
-    name: 'Statistics',
+    name: 'terminology.statistics',
     icon: 'analytics',
     component: Statistics,
   },
   {
     path: 'planned',
-    name: 'Planned payments',
+    name: 'terminology.planned',
     icon: 'inbox',
     component: Planned,
   },
   {
     path: 'debts',
-    name: 'Debts',
+    name: 'terminology.debt',
     icon: 'handshake',
     component: Debts,
   },
   {
     path: 'categories',
-    name: 'Categories',
+    name: 'terminology.category',
     icon: 'category',
     component: Categories,
   },
-  { path: 'labels', name: 'Labels', icon: 'label', component: Labels },
+  {
+    path: 'labels',
+    name: 'terminology.label',
+    icon: 'label',
+    component: Labels,
+  },
 ]
 
 const router = createRouter({

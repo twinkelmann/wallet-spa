@@ -69,7 +69,9 @@ function deleteAll() {
 <template>
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">
-      Last records overview ({{ filter.toHuman() }})
+      Last records overview ({{
+        filter.reconfigure({ locale: $i18n.locale }).toHuman()
+      }})
     </h2>
     <button class="material-icons nt-focus-ring rounded-full p-4">
       settings

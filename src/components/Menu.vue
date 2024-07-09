@@ -3,10 +3,12 @@ import { menuEntries } from '@/router'
 import { useStateStore } from '@/stores/state'
 import { computed } from 'vue'
 import { version } from '../../package.json'
+import { useSettingsStore } from '@/stores/settings'
 
 defineProps<{ show: boolean }>()
 defineEmits<{ (e: 'close'): void }>()
 
+const settings = useSettingsStore()
 const state = useStateStore()
 const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
 </script>
@@ -27,15 +29,28 @@ const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
         <RouterLink
           :to="`${basePath}/${entry.path}`"
           class="flex h-full w-full items-center p-4"
+          exactActiveClass="bg-gray-100"
           ><i class="material-icons mr-2">{{ entry.icon }}</i>
-          {{ entry.name }}</RouterLink
-        >
+          <span class="first-letter:uppercase">{{
+            $t(entry.name as string, 2)
+          }}</span>
+        </RouterLink>
       </li>
       <li>
         <button>Dark Mode</button>
       </li>
       <li>
-        <button>Language</button>
+        <div class="nt-select">
+          <select name="interface-locale" v-model="settings.interfaceLocale">
+            <option
+              v-for="locale in settings.supportedInterfaceLocales"
+              :key="locale"
+              :value="locale"
+            >
+              {{ locale }}
+            </option>
+          </select>
+        </div>
       </li>
       <li class="mb-4 mt-auto flex flex-col items-center">
         <span class="flex items-center gap-2"
@@ -53,8 +68,3 @@ const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
     </ul>
   </div>
 </template>
-<style>
-.menu-container .router-link-exact-active {
-  @apply bg-gray-100;
-}
-</style>

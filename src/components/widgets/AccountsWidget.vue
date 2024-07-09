@@ -69,16 +69,16 @@ const languages = navigator.languages
     </li>
     <li class="w-1/2 p-1 sm:w-72">
       <button
-        class="h-full w-full rounded-md border border-gray-400 p-2 text-gray-600"
+        class="h-full w-full rounded-md border border-gray-400 p-2 text-gray-600 first-letter:uppercase"
         @click="showModal = true"
       >
-        Create Account
+        {{ $t('create.account') }}
       </button>
     </li>
   </ul>
   <Teleport to="body">
     <BaseModal
-      header="Create Account"
+      :header="$t('create.account')"
       :show="showModal"
       @close="showModal = false"
     >

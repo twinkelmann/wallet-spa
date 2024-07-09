@@ -61,8 +61,11 @@ function deleteWallet(wallet: Wallet) {
         </button>
       </li>
       <li>
-        <button class="nt-button w-full bg-emerald-800" @click="createWallet()">
-          Create Wallet
+        <button
+          class="nt-button w-full bg-emerald-800 capitalize"
+          @click="createWallet()"
+        >
+          {{ $t('create.wallet') }}
         </button>
       </li>
     </ul>

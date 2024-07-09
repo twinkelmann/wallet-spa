@@ -40,10 +40,12 @@ const languages = navigator.languages
       >
       <!-- TODO maybe: intermediary value -->
       <span class="text-sm">{{
-        DateTime.fromISO(record.datetime).toLocaleString({
-          month: 'short',
-          day: 'numeric',
-        })
+        DateTime.fromISO(record.datetime)
+          .reconfigure({ locale: $i18n.locale })
+          .toLocaleString({
+            month: 'short',
+            day: 'numeric',
+          })
       }}</span>
     </div>
   </div>

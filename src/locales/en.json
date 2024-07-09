@@ -1,0 +1,34 @@
+{
+  "terminology": {
+    "wallet": "wallet | wallets",
+    "account": "account | accounts",
+    "record": "record | records",
+    "statistics": "statistics",
+    "planned": "planned payment | planned payments",
+    "debt": "debt | debts",
+    "category": "category | categories",
+    "label": "label | labels"
+  },
+  "pages": {
+    "overview": "overview"
+  },
+  "create": {
+    "action": "create",
+    "wallet": "@:create.action @:terminology.wallet",
+    "account": "@:create.action @:terminology.account",
+    "record": "@:create.action @:terminology.record"
+  },
+  "update": {
+    "action": "update",
+    "wallet": "@:create.update @:terminology.wallet",
+    "account": "@:create.update @:terminology.account",
+    "record": "@:create.update @:terminology.record"
+  },
+  "delete": {
+    "action": "delete",
+    "wallet": "@:create.delete @:terminology.wallet",
+    "account": "@:create.delete @:terminology.account",
+    "record": "@:create.delete @:terminology.record"
+  },
+  "close-modal": "Close \"{name}\" modal"
+}

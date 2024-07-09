@@ -1,0 +1,34 @@
+{
+  "terminology": {
+    "wallet": "portefeuille | portefeuilles",
+    "account": "compte | comptes",
+    "record": "transaction | transactions",
+    "statistics": "statistiques",
+    "planned": "paiement planifié | paiements planifiés",
+    "debt": "dette | dettes",
+    "category": "catégorie | catégories",
+    "label": "étiquette | étiquettes"
+  },
+  "pages": {
+    "overview": "vue d'ensemble"
+  },
+  "create": {
+    "action": "créer",
+    "wallet": "@:create.action un @:terminology.wallet",
+    "account": "@:create.action un @:terminology.account",
+    "record": "@:create.action une @:terminology.record"
+  },
+  "update": {
+    "action": "modifier",
+    "wallet": "@:create.update le @:terminology.wallet",
+    "account": "@:create.update le @:terminology.account",
+    "record": "@:create.update la @:terminology.record"
+  },
+  "delete": {
+    "action": "supprimer",
+    "wallet": "@:create.delete le @:terminology.wallet",
+    "account": "@:create.delete le @:terminology.account",
+    "record": "@:create.delete la @:terminology.record"
+  },
+  "close-modal": "Fermer la modal \"{name}\""
+}
