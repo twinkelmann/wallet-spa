@@ -8,14 +8,14 @@ const showModal = ref(false)
 
 <template>
   <button
-    class="nt-clickable nt-focus-ring material-icons fixed bottom-8 right-8 rounded-full bg-blue-400 p-5 text-lg text-white shadow-lg"
+    class="nt-clickable nt-focus-ring material-icons fixed bottom-8 right-8 rounded-full bg-blue-400 p-5 text-lg text-white shadow-lg print:hidden"
     @click="showModal = true"
   >
     add
   </button>
   <Teleport to="body">
     <BaseModal
-      header="Create Record"
+      :header="$t('create.record')"
       :show="showModal"
       @close="showModal = false"
     >

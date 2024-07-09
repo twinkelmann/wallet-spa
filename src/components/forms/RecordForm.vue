@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { capitalizeFirstLetter } from '@/models/common'
 import type { Record } from '@/models/record'
 import { useStateStore } from '@/stores/state'
 import { useWalletsStore } from '@/stores/wallets'
@@ -47,12 +48,14 @@ const submit = async (fields: any) => {
   <FormKit
     type="form"
     @submit="submit"
-    :submit-label="record ? 'Update Record' : 'Create Record'"
+    :submit-label="
+      capitalizeFirstLetter(record ? $t('update.record') : $t('create.record'))
+    "
   >
     <FormKit
       type="select"
       name="accountId"
-      label="Account"
+      :label="capitalizeFirstLetter($t('terminology.account'))"
       :value="record?.accountId || state.activeAccounts[0]?.id"
       validation="required"
     >
@@ -67,7 +70,7 @@ const submit = async (fields: any) => {
     <FormKit
       type="number"
       name="value"
-      label="Value"
+      :label="$t('forms.labels.value')"
       :value="record?.value"
       validation="required"
       step=".01"
@@ -75,21 +78,21 @@ const submit = async (fields: any) => {
     <FormKit
       type="text"
       name="payee"
-      label="Payee"
-      placeholder="Groceries Ltd."
+      :label="$t('forms.labels.payee')"
+      :placeholder="$t('forms.placeholders.payee')"
       :value="record?.payee || ''"
     />
     <FormKit
       type="text"
       name="description"
-      label="Description"
-      placeholder="Monthly groceries"
+      :label="$t('forms.labels.description')"
+      :placeholder="$t('forms.placeholders.description')"
       :value="record?.description || ''"
     />
     <FormKit
       type="datetime-local"
       name="datetime"
-      label="Datetime"
+      :label="$t('forms.labels.datetime')"
       :value="
         (record?.datetime ? DateTime.fromISO(record.datetime) : DateTime.now())
           .set({ second: 0, millisecond: 0 })

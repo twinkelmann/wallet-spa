@@ -7,7 +7,7 @@ body,
 #app {
   @apply h-screen overflow-hidden;
 }
-
+//  TODO: scroll the page instead
 main {
   @apply h-screen overflow-y-auto;
 }
@@ -28,7 +28,7 @@ main {
 
 // Standard style for any label
 .nt-form-label {
-  @apply font-bold text-gray-700;
+  @apply font-medium text-gray-700;
 }
 
 // Any focusable interface control should use this focus ring for consistant styling and to facilitate keyboard navigation
@@ -73,7 +73,7 @@ main {
 // Custom CSS for the basic button
 // Combine this component with a width/grow/padding-x and a background color
 .nt-button {
-  @apply nt-focus-ring flex h-9 select-none items-center justify-center rounded-md border-none font-medium leading-none text-gray-100 transition duration-75;
+  @apply nt-focus-ring h-9 select-none rounded-md border-none font-medium leading-none text-gray-100 transition duration-75;
 
   &:disabled {
     @apply cursor-not-allowed;

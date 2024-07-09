@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { currencies, currenciesByCode, type Account } from '@/models/account'
+import { currencies, type Account } from '@/models/account'
 import type { UUID } from '@/models/common'
 import { useWalletsStore } from '@/stores/wallets'
 
@@ -14,18 +14,13 @@ const emit = defineEmits<{ (e: 'done'): void }>()
 const submit = async (fields: any) => {
   try {
     if (account?.id) {
-      wallets.updateAccount(
-        account,
-        fields.name,
-        fields.color,
-        currenciesByCode[fields.currency]
-      )
+      wallets.updateAccount(account, fields.name, fields.color, fields.currency)
     } else {
       wallets.createAccount(
         walletId,
         fields.name,
         fields.color,
-        currenciesByCode[fields.currency]
+        fields.currency
       )
     }
   } catch (e) {
@@ -44,31 +39,27 @@ const submit = async (fields: any) => {
     <FormKit
       type="text"
       name="name"
-      label="Name"
-      placeholder="Cash"
+      :label="$t('forms.labels.name')"
+      :placeholder="$t('forms.placeholders.account-name')"
       :value="account?.name"
       validation="required"
     />
     <FormKit
       type="color"
       name="color"
-      label="Color"
+      :label="$t('forms.labels.color')"
       :value="account?.color || '#FF0000'"
       validation="required"
     />
     <FormKit
       type="select"
       name="currency"
-      label="Currency"
-      :value="account?.currency.code || currencies[0].code"
+      :label="$t('forms.labels.currency')"
+      :value="account?.currency || currencies[0]"
       validation="required"
     >
-      <option
-        v-for="currency of currencies"
-        :key="currency.code"
-        :value="currency.code"
-      >
-        {{ currency.name }} ({{ currency.code }})
+      <option v-for="currency of currencies" :key="currency" :value="currency">
+        {{ $t(`currencies.${currency}`) }} ({{ currency }})
       </option>
     </FormKit>
   </FormKit>

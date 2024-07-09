@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import type { Record } from '@/models/record'
+import { useSettingsStore } from '@/stores/settings'
 import { useStateStore } from '@/stores/state'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 
 const state = useStateStore()
+const settings = useSettingsStore()
 
 const { record } = defineProps<{ record: Record }>()
 const desc = computed(() => {
   return [record.description, record.payee].filter(Boolean).join(' - ')
 })
-
-// TODO: use configured local
-const languages = navigator.languages
 </script>
 <template>
   <div class="flex w-full gap-2">
@@ -32,9 +31,9 @@ const languages = navigator.languages
         :class="`font-medium ${record.value >= 0 ? 'text-green-700' : 'text-red-700'}`"
       >
         {{
-          record.value.toLocaleString(languages, {
+          record.value.toLocaleString(settings.numberLocale, {
             style: 'currency',
-            currency: state.accountById[record.accountId].currency.code,
+            currency: state.accountById[record.accountId].currency,
           })
         }}</span
       >

@@ -9,8 +9,33 @@
     "category": "catégorie | catégories",
     "label": "étiquette | étiquettes"
   },
+  "forms": {
+    "labels": {
+      "name": "Nom",
+      "value": "Montant",
+      "payee": "Bénéficiaire",
+      "description": "Description",
+      "datetime": "Datetime",
+      "color": "Couleur",
+      "currency": "Devise"
+    },
+    "placeholders": {
+      "wallet-name": "Mon @.capitalize:terminology.wallet Personnel",
+      "account-name": "Espèces",
+      "payee": "Épicerie Sàrl",
+      "description": "Courses mensuelles"
+    }
+  },
   "pages": {
-    "overview": "vue d'ensemble"
+    "overview": "aperçu"
+  },
+  "widgets": {
+    "accounts": {
+      "title": "Liste des @:terminology.account"
+    },
+    "records": {
+      "title": "Aperçu des dernières @:terminology.record"
+    }
   },
   "create": {
     "action": "créer",
@@ -20,15 +45,32 @@
   },
   "update": {
     "action": "modifier",
-    "wallet": "@:create.update le @:terminology.wallet",
-    "account": "@:create.update le @:terminology.account",
-    "record": "@:create.update la @:terminology.record"
+    "wallet": "@:update.action le @:terminology.wallet",
+    "account": "@:update.action le @:terminology.account",
+    "record": "@:update.action la @:terminology.record"
   },
   "delete": {
     "action": "supprimer",
-    "wallet": "@:create.delete le @:terminology.wallet",
-    "account": "@:create.delete le @:terminology.account",
-    "record": "@:create.delete la @:terminology.record"
+    "wallet": "@:delete.action le @:terminology.wallet",
+    "account": "@:delete.action le @:terminology.account",
+    "record": "@:delete.action la @:terminology.record"
   },
-  "close-modal": "Fermer la modal \"{name}\""
+  "close-modal": "Fermer la fenêtre contextuelle \"{name}\"",
+  "locale": {
+    "title": "Paramètres régionaux",
+    "interface": "Interface",
+    "number": "Nombres"
+  },
+  "home": {
+    "select-wallet": "Sélectionnez un @:terminology.wallet ou créez-en un nouveau"
+  },
+  "wallet": {
+    "back": "Retour à la sélection du @:terminology.wallet"
+  },
+  "currencies": {
+    "CHF": "Franc suisse",
+    "EUR": "Euro",
+    "GBP": "Livre sterling",
+    "USD": "Dollar américain"
+  }
 }

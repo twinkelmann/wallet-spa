@@ -5,8 +5,10 @@ import { useStateStore } from '@/stores/state'
 import BaseModal from '../BaseModal.vue'
 import Color from 'colorjs.io'
 import AccountForm from '../forms/AccountForm.vue'
+import { useSettingsStore } from '@/stores/settings'
 
 const state = useStateStore()
+const settings = useSettingsStore()
 
 function toggleShowAccount(account: Account) {
   const index = state.shownAccounts.indexOf(account)
@@ -27,16 +29,13 @@ function useBlackText(backgroundColor: string) {
   const cWhite = background.contrast(white, 'APCA')
   return Math.abs(cBlack) > Math.abs(cWhite)
 }
-
-// TODO: use configured local
-const languages = navigator.languages
 </script>
 <template>
   <div class="mx-4 flex items-center justify-between">
-    <h2 class="text-lg font-medium">List of accounts</h2>
+    <h2 class="text-lg font-medium">{{ $t('widgets.accounts.title', 2) }}</h2>
     <RouterLink
       :to="`/wallets/${state.activeWallet?.id}/accounts`"
-      class="material-icons nt-focus-ring rounded-full p-4"
+      class="material-icons nt-focus-ring rounded-full p-4 print:hidden"
       >settings</RouterLink
     >
   </div>
@@ -60,14 +59,14 @@ const languages = navigator.languages
       >
         <span class="truncate text-sm">{{ account.name }}</span>
         <span>{{
-          account.balance.toLocaleString(languages, {
+          account.balance.toLocaleString(settings.numberLocale, {
             style: 'currency',
-            currency: account.currency.code,
+            currency: account.currency,
           })
         }}</span>
       </div>
     </li>
-    <li class="w-1/2 p-1 sm:w-72">
+    <li class="w-1/2 p-1 sm:w-72 print:hidden">
       <button
         class="h-full w-full rounded-md border border-gray-400 p-2 text-gray-600 first-letter:uppercase"
         @click="showModal = true"

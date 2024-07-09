@@ -1,46 +1,6 @@
 import type { HasId, HasTimestamps, UUID } from './common'
 
-export interface Currency {
-  name: string
-  code: string
-  unit: string
-  plural: string
-  symbol: string
-}
-
-export const currencies: Currency[] = [
-  {
-    name: 'Swiss franc',
-    code: 'CHF',
-    unit: 'franc',
-    plural: 'francs',
-    symbol: 'CHF',
-  },
-  {
-    name: 'Euro',
-    code: 'EUR',
-    unit: 'euro',
-    plural: 'euros',
-    symbol: '€',
-  },
-  {
-    name: 'Pound sterling',
-    code: 'GBP',
-    unit: 'pound',
-    plural: 'pounds',
-    symbol: '£',
-  },
-  {
-    name: 'United States dollar',
-    code: 'USD',
-    unit: 'dollar',
-    plural: 'dollars',
-    symbol: '$',
-  },
-]
-
-export const currenciesByCode: Record<string, Currency> = {}
-currencies.forEach((c) => (currenciesByCode[c.code] = c))
+export const currencies = ['CHF', 'EUR', 'GBP', 'USD'] as const
 
 export interface Account extends HasId, HasTimestamps {
   walletId: UUID
@@ -48,5 +8,5 @@ export interface Account extends HasId, HasTimestamps {
   color: string
   balance: number
   startBalance: number
-  currency: Currency
+  currency: string
 }

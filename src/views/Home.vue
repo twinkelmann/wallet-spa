@@ -5,6 +5,7 @@ import BaseModal from '../components/BaseModal.vue'
 import WalletForm from '../components/forms/WalletForm.vue'
 import type { Ref } from 'vue'
 import type { Wallet } from '@/models/wallet'
+import LocaleSelector from '@/components/LocaleSelector.vue'
 
 const wallets = useWalletsStore()
 
@@ -33,14 +34,12 @@ function deleteWallet(wallet: Wallet) {
     <h1 class="mb-4 mt-12 flex items-center text-3xl">
       <i class="material-icons mr-2">account_balance_wallet</i> Wallet
     </h1>
-    <span class="mb-8 text-center"
-      >Please select a wallet or create a new one</span
-    >
+    <span class="mb-8 text-center">{{ $t('home.select-wallet') }}</span>
     <ul class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-1/2 lg:w-1/3">
       <li
         v-for="wallet of wallets.wallets"
         :key="wallet.id"
-        class="nt-clickable flex rounded-md bg-gray-100"
+        class="nt-clickable flex rounded-md bg-gray-100 shadow transition-shadow hover:shadow-md"
       >
         <RouterLink
           :to="`wallets/${wallet.id}`"
@@ -62,13 +61,16 @@ function deleteWallet(wallet: Wallet) {
       </li>
       <li>
         <button
-          class="nt-button w-full bg-emerald-800 capitalize"
+          class="nt-button w-full bg-emerald-800 first-letter:uppercase"
           @click="createWallet()"
         >
           {{ $t('create.wallet') }}
         </button>
       </li>
     </ul>
+    <div class="mb-4 mt-auto rounded-md bg-gray-100 p-4 shadow-md">
+      <LocaleSelector></LocaleSelector>
+    </div>
     <Teleport to="body">
       <BaseModal
         :header="editedWallet ? 'Update Wallet' : 'Create Wallet'"

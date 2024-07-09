@@ -29,7 +29,7 @@ function updateRecord(record: Record) {
   </ul>
   <Teleport to="body">
     <BaseModal
-      :header="editedRecord ? 'Update Record' : 'Create Record'"
+      :header="editedRecord ? $t('update.record') : $t('create.record')"
       :show="showModal"
       @close="showModal = false"
     >

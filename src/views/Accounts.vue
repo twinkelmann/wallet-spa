@@ -2,13 +2,16 @@
 import BaseModal from '@/components/BaseModal.vue'
 import AccountForm from '@/components/forms/AccountForm.vue'
 import type { Account } from '@/models/account'
+import { capitalizeFirstLetter } from '@/models/common'
 import { useStateStore } from '@/stores/state'
 import { useWalletsStore } from '@/stores/wallets'
 import type { Ref } from 'vue'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const state = useStateStore()
 const wallets = useWalletsStore()
+const { t } = useI18n()
 
 const editedAccount: Ref<Account | null> = ref(null)
 const showModal = ref(false)
@@ -24,7 +27,7 @@ function updateAccount(account: Account) {
 }
 
 function deleteAccount(account: Account) {
-  if (confirm('Delete account ?')) {
+  if (confirm(capitalizeFirstLetter(`${t('delete.account')} ?`))) {
     wallets.deleteAccount(account.id)
   }
 }
@@ -32,7 +35,9 @@ function deleteAccount(account: Account) {
 
 <template>
   <div class="mx-4 mb-4 flex flex-col items-center">
-    <h1 class="text-center">Accounts</h1>
+    <h1 class="text-center first-letter:uppercase">
+      {{ $t('terminology.account', 2) }}
+    </h1>
     <ul
       class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2"
     >
@@ -57,16 +62,16 @@ function deleteAccount(account: Account) {
       </li>
       <li>
         <button
-          class="nt-button w-full bg-emerald-800"
+          class="nt-button w-full bg-emerald-800 first-letter:uppercase"
           @click="createAccount()"
         >
-          Create Account
+          {{ $t('create.account') }}
         </button>
       </li>
     </ul>
     <Teleport to="body">
       <BaseModal
-        :header="editedAccount ? 'Update Account' : 'Create Account'"
+        :header="editedAccount ? $t('update.account') : $t('create.account')"
         :show="showModal"
         @close="showModal = false"
       >

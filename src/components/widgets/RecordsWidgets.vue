@@ -69,19 +69,25 @@ function deleteAll() {
 <template>
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">
-      Last records overview ({{
+      {{ $t('widgets.records.title', 2) }} ({{
         filter.reconfigure({ locale: $i18n.locale }).toHuman()
       }})
     </h2>
-    <button class="material-icons nt-focus-ring rounded-full p-4">
+    <button class="material-icons nt-focus-ring rounded-full p-4 print:hidden">
       settings
     </button>
   </div>
   <RecordList class="m-2" :records="orderedRecords"></RecordList>
-  <button class="nt-button m-4 shrink-0 bg-red-900" @click="addTestData()">
+  <button
+    class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
+    @click="addTestData()"
+  >
     Add test data
   </button>
-  <button class="nt-button m-4 shrink-0 bg-red-900" @click="deleteAll()">
+  <button
+    class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
+    @click="deleteAll()"
+  >
     Delete all records in active Wallet
   </button>
 </template>

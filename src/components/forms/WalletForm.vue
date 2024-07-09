@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { capitalizeFirstLetter } from '@/models/common'
 import type { Wallet } from '@/models/wallet'
 import { useWalletsStore } from '@/stores/wallets'
 
@@ -25,13 +26,15 @@ const submit = async (fields: any) => {
   <FormKit
     type="form"
     @submit="submit"
-    :submit-label="wallet ? 'Update Wallet' : 'Create Wallet'"
+    :submit-label="
+      capitalizeFirstLetter(wallet ? $t('update.wallet') : $t('create.wallet'))
+    "
   >
     <FormKit
       type="text"
       name="name"
-      label="Name"
-      placeholder="My Personnal Wallet"
+      :label="$t('forms.labels.name')"
+      :placeholder="$t('forms.placeholders.wallet-name')"
       :value="wallet?.name"
       validation="required"
     />

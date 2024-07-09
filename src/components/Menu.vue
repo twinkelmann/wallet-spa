@@ -3,12 +3,11 @@ import { menuEntries } from '@/router'
 import { useStateStore } from '@/stores/state'
 import { computed } from 'vue'
 import { version } from '../../package.json'
-import { useSettingsStore } from '@/stores/settings'
+import LocaleSelector from './LocaleSelector.vue'
 
 defineProps<{ show: boolean }>()
 defineEmits<{ (e: 'close'): void }>()
 
-const settings = useSettingsStore()
 const state = useStateStore()
 const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
 </script>
@@ -39,18 +38,8 @@ const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
       <li>
         <button>Dark Mode</button>
       </li>
-      <li>
-        <div class="nt-select">
-          <select name="interface-locale" v-model="settings.interfaceLocale">
-            <option
-              v-for="locale in settings.supportedInterfaceLocales"
-              :key="locale"
-              :value="locale"
-            >
-              {{ locale }}
-            </option>
-          </select>
-        </div>
+      <li class="m-4">
+        <LocaleSelector></LocaleSelector>
       </li>
       <li class="mb-4 mt-auto flex flex-col items-center">
         <span class="flex items-center gap-2"

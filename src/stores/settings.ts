@@ -10,7 +10,13 @@ export const useSettingsStore = defineStore('settings', () => {
     fallbackInterfaceLocale
   )
 
-  const supportedNumberLocales = ['en-us', 'en-gb', 'fr-fr', 'fr-ch'] as const
+  const supportedNumberLocales = [
+    'en-us',
+    'fr-fr',
+    'de-ch',
+    'en-ch',
+    'de-de',
+  ] as const
   const fallbackNumberLocale = 'en-us'
   const numberLocale: Ref<(typeof supportedNumberLocales)[number]> =
     ref(fallbackNumberLocale)

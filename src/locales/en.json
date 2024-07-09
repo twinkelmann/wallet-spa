@@ -9,8 +9,33 @@
     "category": "category | categories",
     "label": "label | labels"
   },
+  "forms": {
+    "labels": {
+      "name": "Name",
+      "value": "Value",
+      "payee": "Payee",
+      "description": "Description",
+      "datetime": "Date et heure",
+      "color": "Color",
+      "currency": "Currency"
+    },
+    "placeholders": {
+      "wallet-name": "My Personnal @.capitalize:terminology.wallet",
+      "account-name": "Cash",
+      "payee": "Groceries Ltd.",
+      "description": "Monthly Groceries"
+    }
+  },
   "pages": {
     "overview": "overview"
+  },
+  "widgets": {
+    "accounts": {
+      "title": "List of @:terminology.account"
+    },
+    "records": {
+      "title": "Last @:terminology.record overview"
+    }
   },
   "create": {
     "action": "create",
@@ -20,15 +45,32 @@
   },
   "update": {
     "action": "update",
-    "wallet": "@:create.update @:terminology.wallet",
-    "account": "@:create.update @:terminology.account",
-    "record": "@:create.update @:terminology.record"
+    "wallet": "@:update.action @:terminology.wallet",
+    "account": "@:update.action @:terminology.account",
+    "record": "@:update.action @:terminology.record"
   },
   "delete": {
     "action": "delete",
-    "wallet": "@:create.delete @:terminology.wallet",
-    "account": "@:create.delete @:terminology.account",
-    "record": "@:create.delete @:terminology.record"
+    "wallet": "@:delete.action @:terminology.wallet",
+    "account": "@:delete.action @:terminology.account",
+    "record": "@:delete.action @:terminology.record"
   },
-  "close-modal": "Close \"{name}\" modal"
+  "close-modal": "Close \"{name}\" modal",
+  "locale": {
+    "title": "Locale selection",
+    "interface": "Interface",
+    "number": "Numbers"
+  },
+  "home": {
+    "select-wallet": "Please select a @:terminology.wallet or @:create.action a new one"
+  },
+  "wallet": {
+    "back": "Back to @:terminology.wallet selection"
+  },
+  "currencies": {
+    "CHF": "Swiss franc",
+    "EUR": "Euro",
+    "GBP": "Pound sterling",
+    "USD": "United States dollar"
+  }
 }
