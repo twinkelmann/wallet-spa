@@ -2,12 +2,12 @@ import type { Wallet } from '@/models/wallet'
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref } from 'vue'
 import { useWalletsStore } from './wallets'
-import type { UUID } from '@/models/common'
+import type { ID, RelDocument } from '@/models/common'
 import type { Account } from '@/models/account'
 
 export const useStateStore = defineStore('state', () => {
   const wallets = useWalletsStore()
-  const activeWallet: Ref<Wallet | null> = ref(null)
+  const activeWallet: Ref<RelDocument<Wallet> | null> = ref(null)
   const shownAccounts: Ref<Account[]> = ref([])
 
   const activeAccounts = computed(() => {
@@ -22,13 +22,13 @@ export const useStateStore = defineStore('state', () => {
   })
 
   const accountById = computed(() => {
-    const byId: Record<UUID, Account> = {}
+    const byId: Record<ID, Account> = {}
     wallets.accounts.forEach((a) => (byId[a.id] = a))
     return byId
   })
 
   const walletById = computed(() => {
-    const byId: Record<UUID, Wallet> = {}
+    const byId: Record<ID, Wallet> = {}
     wallets.wallets.forEach((a) => (byId[a.id] = a))
     return byId
   })

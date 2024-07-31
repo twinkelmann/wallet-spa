@@ -1,11 +1,15 @@
-import type { HasId } from './common'
+import type { ID } from './common'
 
-export interface Category extends HasId {
+export interface Category {
+  wallet: ID
+  records: ID[]
+  categories: ID[]
+  category?: ID
   name: string
   color: string
   icon: string
-  children: Category[] | null
 }
+/*
 
 export async function getDefaultCategoryTree(): Promise<Category[]> {
   const res = await fetch('/src/assets/defaultCategories.json')
@@ -17,3 +21,4 @@ export async function getDefaultCategoryTree(): Promise<Category[]> {
   })
   return json.map(addId)
 }
+*/

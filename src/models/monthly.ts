@@ -1,7 +1,7 @@
-import type { UUID } from './common'
+import type { ID } from './common'
 
 export interface Monthly {
-  accountId: UUID
+  account: ID
   balance: number
   /**
    * ISO DateTime String

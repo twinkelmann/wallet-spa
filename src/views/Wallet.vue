@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Menu from '@/components/Menu.vue'
-import { getDefaultCategoryTree } from '@/models/category'
-import type { UUID } from '@/models/common'
+// import { getDefaultCategoryTree } from '@/models/category'
+import { getWallet } from '@/models/wallet'
 import { useStateStore } from '@/stores/state'
+import { onMounted } from 'vue'
 import { ref } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
@@ -10,19 +11,24 @@ const route = useRoute()
 const router = useRouter()
 const state = useStateStore()
 
-// Try to auto-select wallet based on URL
-state.activeWallet = state.walletById[route.params.id as UUID] || null
-state.shownAccounts = []
-if (state.activeWallet === null) {
-  // If the wallet is not found, redirect to home page
-  router.replace('/')
-}
-
 router.afterEach(() => (show.value = false))
 
 const show = ref(false)
 
-getDefaultCategoryTree().then(console.log)
+onMounted(async () => {
+  // Try to auto-select wallet based on URL
+  state.activeWallet =
+    (await getWallet(
+      Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+    )) || null
+  state.shownAccounts = []
+  if (state.activeWallet === null) {
+    // If the wallet is not found, redirect to home page
+    router.replace('/')
+  }
+})
+
+// getDefaultCategoryTree().then(console.log)
 </script>
 
 <template>

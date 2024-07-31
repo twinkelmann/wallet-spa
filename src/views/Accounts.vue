@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import BaseModal from '@/components/BaseModal.vue'
 import AccountForm from '@/components/forms/AccountForm.vue'
-import type { Account } from '@/models/account'
+import { deleteAccount, type Account } from '@/models/account'
 import { capitalizeFirstLetter } from '@/models/common'
 import { useStateStore } from '@/stores/state'
 import { useWalletsStore } from '@/stores/wallets'
 import type { Ref } from 'vue'
+import { onMounted } from 'vue'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -26,11 +27,27 @@ function updateAccount(account: Account) {
   showModal.value = true
 }
 
-function deleteAccount(account: Account) {
+async function onDeleteAccount(account: Account) {
   if (confirm(capitalizeFirstLetter(`${t('delete.account')} ?`))) {
-    wallets.deleteAccount(account.id)
+    try {
+      await deleteAccount(account.id)
+      allWallets.value = await getAllWallets()
+    } catch (e) {
+      // TODO: show errors to user
+      console.error(e)
+    }
   }
 }
+const allAccounts: Ref<Account[]> = ref([])
+
+onMounted(async () => {
+  try {
+    allAccounts.value = await getAllWallets()
+  } catch (e) {
+    // TODO: show errors to user
+    console.error(e)
+  }
+})
 </script>
 
 <template>
@@ -55,7 +72,7 @@ function deleteAccount(account: Account) {
         </button>
         <button
           class="material-icons nt-focus-ring rounded-r-md p-4"
-          @click="deleteAccount(account)"
+          @click="onDeleteAccount(account)"
         >
           delete
         </button>

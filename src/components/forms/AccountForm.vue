@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { currencies, type Account } from '@/models/account'
-import { capitalizeFirstLetter, type UUID } from '@/models/common'
+import { capitalizeFirstLetter, type ID } from '@/models/common'
 import { useWalletsStore } from '@/stores/wallets'
 
 const wallets = useWalletsStore()
 
 const { account, walletId } = defineProps<{
   account: Account | null
-  walletId: UUID
+  walletId: ID
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
 

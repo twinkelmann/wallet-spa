@@ -3,7 +3,7 @@ import type { Wallet } from '@/models/wallet'
 import type { Account } from '@/models/account'
 import type { Monthly } from '@/models/monthly'
 import type { Record } from '@/models/record'
-import { deleteById, type UUID } from '@/models/common'
+import { deleteById, type ID } from '@/models/common'
 import { ref, type Ref } from 'vue'
 
 export const useWalletsStore = defineStore('wallets', () => {
@@ -12,7 +12,7 @@ export const useWalletsStore = defineStore('wallets', () => {
   const records: Ref<Record[]> = ref([])
   const monthly: Ref<Monthly[]> = ref([])
 
-  function updateBalance(accountId: UUID) {
+  function updateBalance(accountId: ID) {
     const account = accounts.value.find((a) => a.id === accountId)
     if (account) {
       // TODO: use monthlies to optimize computation of balance
@@ -51,7 +51,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     wallet.name = name
     wallet.updatedAt = now
   }
-  function deleteWallet(id: UUID) {
+  function deleteWallet(id: ID) {
     // Delete associated accounts and records
     accounts.value
       .filter((a) => a.walletId === id)
@@ -69,7 +69,7 @@ export const useWalletsStore = defineStore('wallets', () => {
    * @returns The new Account
    */
   function createAccount(
-    walletId: UUID,
+    walletId: ID,
     name: string,
     color: string,
     currency: string
@@ -102,7 +102,7 @@ export const useWalletsStore = defineStore('wallets', () => {
     account.currency = currency
     account.updatedAt = now
   }
-  function deleteAccount(id: UUID) {
+  function deleteAccount(id: ID) {
     // Delete associated records
     records.value = records.value.filter((r) => r.accountId !== id)
     // Delete the account
@@ -119,7 +119,7 @@ export const useWalletsStore = defineStore('wallets', () => {
    * @returns The new Record
    */
   function createRecord(
-    accountId: UUID,
+    accountId: ID,
     value: number,
     payee: string | null,
     description: string | null,
@@ -141,8 +141,8 @@ export const useWalletsStore = defineStore('wallets', () => {
     return newRecord
   }
   function updateRecord(
-    recordId: UUID,
-    accountId: UUID,
+    recordId: ID,
+    accountId: ID,
     value: number,
     payee: string | null,
     description: string | null,
@@ -165,7 +165,7 @@ export const useWalletsStore = defineStore('wallets', () => {
       }
     }
   }
-  function deleteRecord(id: UUID) {
+  function deleteRecord(id: ID) {
     const recordIndex = records.value.findIndex((r) => r.id === id)
     const accountId = records.value[recordIndex].accountId
     records.value.splice(recordIndex, 1)

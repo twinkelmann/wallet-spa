@@ -1,26 +1,24 @@
-export type UUID = `${string}-${string}-${string}-${string}-${string}`
-
-export interface HasId {
-  /**
-   * Random UUID
-   */
-  id: UUID
-}
+export type ID = PouchDB.Core.DocumentId
 
 export interface HasTimestamps {
   /**
    * ISO DateTime String
    */
-  createdAt: string
+  createdAt: Date
   /**
    * ISO DateTime String
    */
-  updatedAt: string
+  updatedAt: Date
 }
 
-export function deleteById(array: HasId[], id: UUID) {
+export type RelDocument<Content extends {}> = Content & {
+  id: ID
+  rev: string
+}
+
+export function deleteById(array: PouchDB.Core.IdMeta[], id: ID) {
   array.splice(
-    array.findIndex((w) => w.id === id),
+    array.findIndex((w) => w._id === id),
     1
   )
 }

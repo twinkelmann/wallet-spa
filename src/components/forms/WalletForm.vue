@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { capitalizeFirstLetter } from '@/models/common'
-import type { Wallet } from '@/models/wallet'
+import { createWallet, updateWallet, type Wallet } from '@/models/wallet'
 import { useWalletsStore } from '@/stores/wallets'
-
-const wallets = useWalletsStore()
 
 const { wallet } = defineProps<{ wallet: Wallet | null }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
@@ -11,9 +9,9 @@ const emit = defineEmits<{ (e: 'done'): void }>()
 const submit = async (fields: any) => {
   try {
     if (wallet?.id) {
-      wallets.updateWallet(wallet, fields.name)
+      await updateWallet(wallet?.id, fields.name)
     } else {
-      wallets.createWallet(fields.name)
+      await createWallet(fields.name)
     }
   } catch (e) {
     alert(e)
