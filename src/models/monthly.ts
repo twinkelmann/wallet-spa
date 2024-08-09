@@ -1,7 +1,7 @@
 import type { ID } from './common'
 
 export interface Monthly {
-  account: ID
+  accountId: ID
   balance: number
   /**
    * ISO DateTime String

@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { capitalizeFirstLetter } from '@/models/common'
-import type { Record } from '@/models/record'
-import { useStateStore } from '@/stores/state'
-import { useWalletsStore } from '@/stores/wallets'
+import type { Account } from '@/models/account'
+import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
+import { createRecord, updateRecord, type Record } from '@/models/record'
 import { DateTime } from 'luxon'
 
-const wallets = useWalletsStore()
-const state = useStateStore()
-
-const { record } = defineProps<{
-  record: Record | null
+const props = defineProps<{
+  accounts: RelDocument<Account>[]
+  record: RelDocument<Record> | null
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
 
@@ -19,9 +16,9 @@ function stringTo2DecimalNumber(input: string) {
 
 const submit = async (fields: any) => {
   try {
-    if (record?.id) {
-      wallets.updateRecord(
-        record.id,
+    if (props.record) {
+      await updateRecord(
+        props.record.id,
         fields.accountId,
         stringTo2DecimalNumber(fields.value),
         fields.payee,
@@ -29,7 +26,7 @@ const submit = async (fields: any) => {
         fields.datetime
       )
     } else {
-      wallets.createRecord(
+      await createRecord(
         fields.accountId,
         stringTo2DecimalNumber(fields.value),
         fields.payee,
@@ -56,14 +53,10 @@ const submit = async (fields: any) => {
       type="select"
       name="accountId"
       :label="capitalizeFirstLetter($t('terminology.account'))"
-      :value="record?.accountId || state.activeAccounts[0]?.id"
+      :value="record?.accountId || accounts[0]?.id"
       validation="required"
     >
-      <option
-        v-for="account of state.activeAccounts"
-        :key="account.id"
-        :value="account.id"
-      >
+      <option v-for="account of accounts" :key="account.id" :value="account.id">
         {{ account.name }}
       </option>
     </FormKit>

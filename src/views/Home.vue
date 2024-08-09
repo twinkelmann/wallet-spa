@@ -11,7 +11,7 @@ import { onMounted } from 'vue'
 
 const { t } = useI18n()
 
-const editedWallet: Ref<Wallet | null> = ref(null)
+const editedWallet: Ref<RelDocument<Wallet> | null> = ref(null)
 const showModal = ref(false)
 
 function createWallet() {

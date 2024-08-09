@@ -1,10 +1,8 @@
 import type { ID } from './common'
 
 export interface Category {
-  wallet: ID
-  records: ID[]
-  categories: ID[]
-  category?: ID
+  walletId: ID
+  categoryId?: ID
   name: string
   color: string
   icon: string

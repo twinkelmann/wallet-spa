@@ -2,7 +2,6 @@ import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
 
 export interface Wallet extends HasTimestamps {
-  accounts: ID[]
   name: string
 }
 
@@ -13,11 +12,11 @@ export interface Wallet extends HasTimestamps {
  */
 export function createWallet(name: string): Promise<ID> {
   return DB.then((db) => {
-    const now = new Date()
+    const now = new Date().toISOString()
     const newWallet = {
       name,
       createdAt: now,
-      updatedAt: new Date(now),
+      updatedAt: now,
     } as Wallet
     return db.rel.save('wallet', newWallet)
   }).then((res) => res.id)
@@ -43,8 +42,9 @@ export function updateWallet(id: ID, name: string): Promise<ID> {
 
       const now = new Date()
       data.name = name
-      data.updatedAt = now
+      data.updatedAt = now.toISOString()
 
+      // TODO: handle conflicts https://github.com/pouchdb-community/relational-pouch?tab=readme-ov-file#managing-revisions-rev
       return db.rel.save('wallet', data)
     })
   ).then((res) => res.id)

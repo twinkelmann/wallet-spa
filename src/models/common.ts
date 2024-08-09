@@ -4,11 +4,11 @@ export interface HasTimestamps {
   /**
    * ISO DateTime String
    */
-  createdAt: Date
+  createdAt: string
   /**
    * ISO DateTime String
    */
-  updatedAt: Date
+  updatedAt: string
 }
 
 export type RelDocument<Content extends {}> = Content & {
@@ -29,3 +29,6 @@ export function deleteById(array: PouchDB.Core.IdMeta[], id: ID) {
 export function capitalizeFirstLetter(s: string) {
   return s[0].toUpperCase() + s.slice(1)
 }
+
+// Copy of the Builtin Record type, since the name clashes with our Record interface
+export type ById<T> = { [P in ID]: T }

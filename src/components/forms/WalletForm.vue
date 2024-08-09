@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { capitalizeFirstLetter } from '@/models/common'
+import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
 import { createWallet, updateWallet, type Wallet } from '@/models/wallet'
-import { useWalletsStore } from '@/stores/wallets'
 
-const { wallet } = defineProps<{ wallet: Wallet | null }>()
+const props = defineProps<{ wallet: RelDocument<Wallet> | null }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
 
 const submit = async (fields: any) => {
   try {
-    if (wallet?.id) {
-      await updateWallet(wallet?.id, fields.name)
+    if (props.wallet) {
+      await updateWallet(props.wallet.id, fields.name)
     } else {
       await createWallet(fields.name)
     }

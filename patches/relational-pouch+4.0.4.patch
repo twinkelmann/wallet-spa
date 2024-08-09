@@ -1,0 +1,13 @@
+diff --git a/node_modules/relational-pouch/lib/index.js b/node_modules/relational-pouch/lib/index.js
+index 50b7872..64262a5 100644
+--- a/node_modules/relational-pouch/lib/index.js
++++ b/node_modules/relational-pouch/lib/index.js
+@@ -363,7 +363,7 @@ function createRel(db, keysToSchemas, schema) {
+         };
+         selector['data.' + belongsToKey] = belongsToId;
+         //only use opts for return ids or whole doc? returning normal documents is not really good
+-        let findRes = await db.find({ selector: selector });
++        let findRes = await db.find({ selector: selector, limit: 2**32-1 });
+         return _parseRelDocs(type, foundObjects, findRes.docs);
+     }
+     function findHasMany(type, belongsToKey, belongsToId) {

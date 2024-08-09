@@ -9,10 +9,10 @@ import { computed } from 'vue'
 const state = useStateStore()
 
 const orderedRecords = computed(() => {
-  const recordsWithDates = state.activeRecords.map((r) => ({
+  const recordsWithDates = [] /* state.activeRecords.map((r) => ({
     ...r,
     datetime: DateTime.fromISO(r.datetime),
-  }))
+  }))*/
   return recordsWithDates
     .sort((a, b) => b.datetime.valueOf() - a.datetime.valueOf())
     .map((r) => ({ ...r, datetime: r.datetime.toISO() || '' }))
@@ -24,10 +24,13 @@ const orderedRecords = computed(() => {
     <h1 class="text-center first-letter:uppercase">
       {{ $t('terminology.record', 2) }}
     </h1>
+    <!-- TODO accounts -->
     <RecordList
       class="m-2 mb-24 w-full lg:mb-0 lg:w-2/3 2xl:w-1/2"
+      :accounts="[]"
       :records="orderedRecords"
     ></RecordList>
-    <CreateRecord></CreateRecord>
+    <!-- TODO accounts -->
+    <CreateRecord :accounts="[]"></CreateRecord>
   </div>
 </template>

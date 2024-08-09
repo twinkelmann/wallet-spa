@@ -1,27 +1,39 @@
 <script setup lang="ts">
-import { useWalletsStore } from '@/stores/wallets'
 import { computed } from 'vue'
-import { useStateStore } from '@/stores/state'
 import { DateTime, Duration } from 'luxon'
-import type { Record } from '@/models/record'
+import { createRecord, deleteRecord, type Record } from '@/models/record'
 import RecordList from '../RecordList.vue'
+import type { RelDocument } from '@/models/common'
+import type { Account } from '@/models/account'
+import { useStateStore } from '@/stores/state'
+import { watch } from 'vue'
 
 const state = useStateStore()
-const wallets = useWalletsStore()
+
+const props = defineProps<{
+  accounts: RelDocument<Account>[]
+  records: RelDocument<Record>[]
+}>()
+
+watch(props.records, (current, previous) => {
+  console.log(current?.length, previous?.length)
+})
 
 // TODO: allow modifying and saving filter
 const filter = Duration.fromObject({ day: 30 })
 const filterDate = DateTime.now().minus(filter)
 
 const orderedRecords = computed(() => {
-  const recordsWithDates = state.activeRecords.map((r) => ({
+  const recordsWithDates = props.records.map((r) => ({
     ...r,
-    datetime: DateTime.fromISO(r.datetime),
+    compare: DateTime.fromISO(r.datetime),
   }))
-  return recordsWithDates
-    .filter((r) => r.datetime >= filterDate)
-    .sort((a, b) => b.datetime.valueOf() - a.datetime.valueOf())
-    .map((r) => ({ ...r, datetime: r.datetime.toISO() || '' }))
+  return (
+    recordsWithDates
+      //.filter((r) => r.compare >= filterDate)
+      .sort((a, b) => b.compare.valueOf() - a.compare.valueOf())
+      .map((r) => ({ ...r, compare: undefined }))
+  )
 })
 
 // TODO: remove test features below
@@ -48,21 +60,32 @@ function randomDate(start: Date, end: Date) {
   )
 }
 
-function addTestData() {
+async function addTestData() {
   if (state.activeWallet) {
-    for (let i = 0; i < 250; i++) {
-      wallets.createRecord(
-        choose(state.activeAccounts).id,
-        +(Math.random() * 1000 - 500).toFixed(2),
-        null,
-        randomText(),
-        randomDate(new Date(2022, 0, 1), new Date()).toISOString()
-      )
+    try {
+      for (let i = 0; i < 250; i++) {
+        console.log(i)
+        await createRecord(
+          choose(props.accounts).id,
+          +(Math.random() * 1000 - 500).toFixed(2),
+          null,
+          randomText(),
+          randomDate(new Date(2022, 0, 1), new Date()).toISOString()
+        )
+      }
+    } catch (e) {
+      console.error(e)
     }
   }
 }
-function deleteAll() {
-  state.activeRecords.forEach((r) => wallets.deleteRecord(r.id))
+async function deleteAll() {
+  try {
+    for (const r of props.records) {
+      await deleteRecord(r.id)
+    }
+  } catch (e) {
+    console.error(e)
+  }
 }
 </script>
 
@@ -77,7 +100,11 @@ function deleteAll() {
       settings
     </button>
   </div>
-  <RecordList class="m-2" :records="orderedRecords"></RecordList>
+  <RecordList
+    class="m-2"
+    :records="orderedRecords"
+    :accounts="accounts"
+  ></RecordList>
   <button
     class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
     @click="addTestData()"

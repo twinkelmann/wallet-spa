@@ -4,9 +4,7 @@ import type { HasTimestamps, ID, RelDocument } from './common'
 export const currencies = ['CHF', 'EUR', 'GBP', 'USD'] as const
 
 export interface Account extends HasTimestamps {
-  wallet: ID
-  records: ID[]
-  monthlies: ID[]
+  walletId: ID
   name: string
   color: string
   balance: number
@@ -23,15 +21,15 @@ export interface Account extends HasTimestamps {
  * @returns The ID of the new Account
  */
 export function createAccount(
-  wallet: ID,
+  walletId: ID,
   name: string,
   color: string,
   currency: string
 ): Promise<ID> {
   return DB.then((db) => {
-    const now = new Date()
+    const now = new Date().toISOString()
     const newAccount = {
-      wallet,
+      walletId,
       name,
       color,
       balance: 0,
@@ -39,7 +37,7 @@ export function createAccount(
       startBalance: 0,
       currency,
       createdAt: now,
-      updatedAt: new Date(now),
+      updatedAt: now,
     } as Account
     return db.rel.save('account', newAccount)
   }).then((res) => res.id)
@@ -55,10 +53,19 @@ export function getAllAccounts(): Promise<RelDocument<Account>[]> {
   return DB.then((db) => db.rel.find('account')).then((res) => res.accounts)
 }
 
+export function getAllAccountsOfWallet(
+  id: ID
+): Promise<RelDocument<Account>[]> {
+  return DB.then((db) => db.rel.findHasMany('account', 'walletId', id)).then(
+    (res) => res.accounts
+  )
+}
+
 export function updateAccount(
   id: ID,
   name: string,
   color: string,
+  balance: number,
   currency: string
 ): Promise<ID> {
   return DB.then((db) =>
@@ -71,8 +78,9 @@ export function updateAccount(
       const now = new Date()
       data.name = name
       data.color = color
+      data.balance = balance
       data.currency = currency
-      data.updatedAt = now
+      data.updatedAt = now.toISOString()
 
       return db.rel.save('account', data)
     })

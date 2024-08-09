@@ -1,23 +1,35 @@
 <script setup lang="ts">
-import { currencies, type Account } from '@/models/account'
-import { capitalizeFirstLetter, type ID } from '@/models/common'
-import { useWalletsStore } from '@/stores/wallets'
+import {
+  createAccount,
+  currencies,
+  updateAccount,
+  type Account,
+} from '@/models/account'
+import {
+  capitalizeFirstLetter,
+  type ID,
+  type RelDocument,
+} from '@/models/common'
 
-const wallets = useWalletsStore()
-
-const { account, walletId } = defineProps<{
-  account: Account | null
+const props = defineProps<{
+  account: RelDocument<Account> | null
   walletId: ID
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
 
 const submit = async (fields: any) => {
   try {
-    if (account?.id) {
-      wallets.updateAccount(account, fields.name, fields.color, fields.currency)
+    if (props.account) {
+      await updateAccount(
+        props.account.id,
+        fields.name,
+        fields.color,
+        props.account.balance,
+        fields.currency
+      )
     } else {
-      wallets.createAccount(
-        walletId,
+      await createAccount(
+        props.walletId,
         fields.name,
         fields.color,
         fields.currency

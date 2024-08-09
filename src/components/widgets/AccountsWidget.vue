@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { type Account } from '@/models/account'
 import { ref } from 'vue'
 import { useStateStore } from '@/stores/state'
 import BaseModal from '../BaseModal.vue'
 import Color from 'colorjs.io'
 import AccountForm from '../forms/AccountForm.vue'
 import { useSettingsStore } from '@/stores/settings'
+import type { ID, RelDocument } from '@/models/common'
+import type { Account } from '@/models/account'
+
+defineProps<{ accounts: RelDocument<Account>[] }>()
 
 const state = useStateStore()
 const settings = useSettingsStore()
 
-function toggleShowAccount(account: Account) {
-  const index = state.shownAccounts.indexOf(account)
-  if (index !== -1) {
-    state.shownAccounts.splice(index, 1)
+function toggleShowAccount(accountId: ID) {
+  if (state.shownAccounts.has(accountId)) {
+    state.shownAccounts.delete(accountId)
   } else {
-    state.shownAccounts.push(account)
+    state.shownAccounts.add(accountId)
   }
 }
 
@@ -40,22 +42,17 @@ function useBlackText(backgroundColor: string) {
     >
   </div>
   <ul class="flex flex-wrap justify-between p-3 sm:justify-center">
-    <li
-      class="w-1/2 p-1 sm:w-72"
-      v-for="account of state.activeAccounts"
-      :key="account.id"
-    >
+    <li class="w-1/2 p-1 sm:w-72" v-for="account of accounts" :key="account.id">
       <div
         :style="`background-color: ${account.color}`"
         :class="`nt-clickable flex flex-col rounded-md p-2 ${
           useBlackText(account.color) ? 'text-black' : 'text-white'
         } ${
-          state.shownAccounts.length > 0 &&
-          !state.shownAccounts.includes(account)
+          state.shownAccounts.size > 0 && !state.shownAccounts.has(account.id)
             ? 'brightness-150 contrast-50 grayscale'
             : ''
         }`"
-        @click="toggleShowAccount(account)"
+        @click="toggleShowAccount(account.id)"
       >
         <span class="truncate text-sm">{{ account.name }}</span>
         <span>{{

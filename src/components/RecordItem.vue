@@ -1,16 +1,21 @@
 <script setup lang="ts">
+import type { Account } from '@/models/account'
+import type { RelDocument } from '@/models/common'
 import type { Record } from '@/models/record'
 import { useSettingsStore } from '@/stores/settings'
-import { useStateStore } from '@/stores/state'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 
-const state = useStateStore()
 const settings = useSettingsStore()
 
-const { record } = defineProps<{ record: Record }>()
+const props = defineProps<{
+  record: RelDocument<Record>
+  account: Account
+}>()
 const desc = computed(() => {
-  return [record.description, record.payee].filter(Boolean).join(' - ')
+  return [props.record.description, props.record.payee]
+    .filter(Boolean)
+    .join(' - ')
 })
 </script>
 <template>
@@ -19,7 +24,7 @@ const desc = computed(() => {
     <div class="h-10 w-10 shrink-0 rounded-full bg-gray-400"></div>
     <div class="flex grow flex-col">
       <span class="font-medium">Category Name</span>
-      <span>{{ state.accountById[record.accountId].name }}</span>
+      <span>{{ account.name }}</span>
       <span class="italic" v-if="desc">"{{ desc }}"</span>
       <!-- TODO: labels -->
       <ul class="flex flex-wrap">
@@ -33,7 +38,7 @@ const desc = computed(() => {
         {{
           record.value.toLocaleString(settings.numberLocale, {
             style: 'currency',
-            currency: state.accountById[record.accountId].currency,
+            currency: account.currency,
           })
         }}</span
       >

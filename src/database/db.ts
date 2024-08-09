@@ -1,55 +1,91 @@
 import Pouch from 'pouchdb'
+import find from 'pouchdb-find'
 import rel from 'relational-pouch'
 
+Pouch.plugin(find)
 Pouch.plugin(rel)
 
 const DB_NAME = 'wallet'
 
 export const DB: Promise<PouchDB.RelDatabase> = new Promise(
-  (resolve, reject) => {
+  async (resolve, reject) => {
     const db = new Pouch(DB_NAME)
-    // TODO: use lazy load where it makes sense, remove hasMany and add indices for reverse lookup
-    // https://github.com/pouchdb-community/relational-pouch?tab=readme-ov-file#dont-save-hasmany
     const relDB = db.setSchema([
       {
         singular: 'account',
         plural: 'accounts',
         relations: {
-          wallet: { belongsTo: 'wallet' },
-          records: { hasMany: 'record' },
-          monthlies: { hasMany: 'monthly' },
+          walletId: { belongsTo: { type: 'wallet', options: { async: true } } },
         },
       },
       {
         singular: 'category',
         plural: 'categories',
         relations: {
-          wallet: { belongsTo: 'wallet' },
-          records: { hasMany: 'record' },
-          categories: { hasMany: 'category' },
-          category: { belongsTo: 'category' },
+          walletId: { belongsTo: { type: 'wallet', options: { async: true } } },
+          categoryId: {
+            belongsTo: { type: 'category', options: { async: true } },
+          },
         },
       },
       {
         singular: 'monthly',
         plural: 'monthlies',
-        relations: { account: { belongsTo: 'account' } },
+        relations: {
+          accountId: {
+            belongsTo: { type: 'account', options: { async: true } },
+          },
+        },
       },
       {
         singular: 'record',
         plural: 'records',
         relations: {
-          account: { belongsTo: 'account' },
-          category: { belongsTo: 'category' },
+          accountId: {
+            belongsTo: { type: 'account', options: { async: true } },
+          },
+          categoryId: {
+            belongsTo: { type: 'category', options: { async: true } },
+          },
         },
       },
       {
         singular: 'wallet',
         plural: 'wallets',
-        relations: { accounts: { hasMany: 'account' } },
       },
     ])
-    console.log('DB open')
-    resolve(relDB)
+    try {
+      // To look up children of wallet (account)
+      await db.createIndex({
+        index: {
+          name: 'idx-wallet',
+          ddoc: 'idx-wallet',
+          fields: ['data.walletId', '_id'],
+        },
+      })
+      // To look up children of account (record, monthly)
+      // TODO: check if flipping order is faster with many records
+      await db.createIndex({
+        index: {
+          name: 'idx-account',
+          ddoc: 'idx-account',
+          fields: ['data.accountId', '_id'],
+        },
+      })
+      // To look up children of category (record, category)
+      await db.createIndex({
+        index: {
+          name: 'idx-category',
+          ddoc: 'idx-category',
+          fields: ['data.categoryId', '_id'],
+        },
+      })
+      console.log('DB open')
+      // TODO: remove
+      ;(window as any).db = relDB
+      resolve(relDB)
+    } catch (e) {
+      reject(e)
+    }
   }
 )

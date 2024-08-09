@@ -2,6 +2,12 @@
 import { ref } from 'vue'
 import BaseModal from './BaseModal.vue'
 import RecordForm from './forms/RecordForm.vue'
+import type { RelDocument } from '@/models/common'
+import type { Account } from '@/models/account'
+
+defineProps<{
+  accounts: RelDocument<Account>[]
+}>()
 
 const showModal = ref(false)
 </script>
@@ -20,7 +26,11 @@ const showModal = ref(false)
       @close="showModal = false"
     >
       <div class="p-4">
-        <RecordForm :record="null" @done="showModal = false"></RecordForm>
+        <RecordForm
+          :record="null"
+          :accounts="accounts"
+          @done="showModal = false"
+        ></RecordForm>
       </div>
     </BaseModal>
   </Teleport>
