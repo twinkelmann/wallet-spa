@@ -24,3 +24,17 @@ export async function updateBalance(accountId: ID) {
     )
   }
 }
+
+export function debounce(func: Function, wait: number) {
+  let timeout: number | undefined = undefined
+  return function (this: any) {
+    const context = this
+    const args = arguments
+    var later = () => {
+      timeout = undefined
+      func.apply(context, args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait) as unknown as number
+  }
+}

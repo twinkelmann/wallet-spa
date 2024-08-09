@@ -20,6 +20,7 @@ watch(props.records, (current, previous) => {
 })
 
 // TODO: allow modifying and saving filter
+// TODO: only query the relevant data from the DB
 const filter = Duration.fromObject({ day: 30 })
 const filterDate = DateTime.now().minus(filter)
 
@@ -28,12 +29,10 @@ const orderedRecords = computed(() => {
     ...r,
     compare: DateTime.fromISO(r.datetime),
   }))
-  return (
-    recordsWithDates
-      //.filter((r) => r.compare >= filterDate)
-      .sort((a, b) => b.compare.valueOf() - a.compare.valueOf())
-      .map((r) => ({ ...r, compare: undefined }))
-  )
+  return recordsWithDates
+    .filter((r) => r.compare >= filterDate)
+    .sort((a, b) => b.compare.valueOf() - a.compare.valueOf())
+    .map((r) => ({ ...r, compare: undefined }))
 })
 
 // TODO: remove test features below
@@ -63,7 +62,7 @@ function randomDate(start: Date, end: Date) {
 async function addTestData() {
   if (state.activeWallet) {
     try {
-      for (let i = 0; i < 250; i++) {
+      for (let i = 0; i < 100; i++) {
         console.log(i)
         await createRecord(
           choose(props.accounts).id,

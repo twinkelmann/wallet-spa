@@ -7,8 +7,13 @@ import {
   getAllAccountsOfWallet,
   type Account,
 } from '@/models/account'
-import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
+import {
+  UPDATE_DATA_DEBOUNCE,
+  capitalizeFirstLetter,
+  type RelDocument,
+} from '@/models/common'
 import { useStateStore } from '@/stores/state'
+import { debounce } from '@/util'
 import { storeToRefs } from 'pinia'
 import type { Ref } from 'vue'
 import { onBeforeUnmount } from 'vue'
@@ -23,6 +28,7 @@ const { t } = useI18n()
 
 const editedAccount: Ref<RelDocument<Account> | null> = ref(null)
 const showModal = ref(false)
+const accounts: Ref<RelDocument<Account>[]> = ref([])
 
 function createAccount() {
   editedAccount.value = null
@@ -44,7 +50,6 @@ async function onDeleteAccount(account: RelDocument<Account>) {
     }
   }
 }
-const allAccounts: Ref<RelDocument<Account>[]> = ref([])
 
 // DB sync
 
@@ -53,11 +58,12 @@ const importantChanges = new Set(['account'])
 
 function updateData() {
   if (state.activeWallet) {
-    getAllAccountsOfWallet(state.activeWallet.id).then((accounts) => {
-      allAccounts.value = accounts
+    getAllAccountsOfWallet(state.activeWallet.id).then((res) => {
+      accounts.value = res
     })
   }
 }
+const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
   if (current && current.id !== previous?.id) {
@@ -79,7 +85,7 @@ onMounted(() => {
       })
       .on('change', (change) => {
         if (importantChanges.has(db.rel.parseDocID(change.id).type)) {
-          updateData()
+          debouncedUpdateData()
         }
       })
       .on('error', console.error)
@@ -102,7 +108,7 @@ onBeforeUnmount(() => {
       class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2"
     >
       <li
-        v-for="account of allAccounts"
+        v-for="account of accounts"
         :key="account.id"
         class="nt-clickable flex rounded-md bg-gray-100"
       >

@@ -32,3 +32,5 @@ export function capitalizeFirstLetter(s: string) {
 
 // Copy of the Builtin Record type, since the name clashes with our Record interface
 export type ById<T> = { [P in ID]: T }
+
+export const UPDATE_DATA_DEBOUNCE = 20

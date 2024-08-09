@@ -1,21 +1,70 @@
 <script setup lang="ts">
 import CreateRecord from '@/components/CreateRecord.vue'
 import RecordList from '@/components/RecordList.vue'
-import type { Record } from '@/models/record'
+import { DB } from '@/database/db'
+import { getAllAccountsOfWallet, type Account } from '@/models/account'
+import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
+import { getAllRecordsOfAccount, type Record } from '@/models/record'
 import { useStateStore } from '@/stores/state'
-import { DateTime } from 'luxon'
-import { computed } from 'vue'
+import { debounce } from '@/util'
+import { storeToRefs } from 'pinia'
+import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 
 const state = useStateStore()
+const stateRefs = storeToRefs(state)
 
-const orderedRecords = computed(() => {
-  const recordsWithDates = [] /* state.activeRecords.map((r) => ({
-    ...r,
-    datetime: DateTime.fromISO(r.datetime),
-  }))*/
-  return recordsWithDates
-    .sort((a, b) => b.datetime.valueOf() - a.datetime.valueOf())
-    .map((r) => ({ ...r, datetime: r.datetime.toISO() || '' }))
+const accounts: Ref<RelDocument<Account>[]> = ref([])
+const records: Ref<RelDocument<Record>[]> = ref([])
+
+// DB sync
+
+let changes: PouchDB.Core.Changes<{}> | null = null
+const importantChanges = new Set(['record'])
+
+function updateData() {
+  if (state.activeWallet) {
+    getAllAccountsOfWallet(state.activeWallet.id)
+      .then((res) => {
+        accounts.value = res
+        return Promise.all(res.map((a) => getAllRecordsOfAccount(a.id)))
+      })
+      .then((res) => {
+        records.value = ([] as RelDocument<Record>[]).concat(...res)
+      })
+  }
+}
+const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
+
+watch(stateRefs.activeWallet, (current, previous) => {
+  if (current && current.id !== previous?.id) {
+    updateData()
+  }
+})
+
+onMounted(() => {
+  if (state.activeWallet) {
+    updateData()
+  }
+
+  DB.then((db) => {
+    changes = db
+      .changes({
+        since: 'now',
+        live: true,
+      })
+      .on('change', (change) => {
+        if (importantChanges.has(db.rel.parseDocID(change.id).type)) {
+          debouncedUpdateData()
+        }
+      })
+      .on('error', console.error)
+  })
+})
+
+onBeforeUnmount(() => {
+  if (changes) {
+    changes.cancel()
+  }
 })
 </script>
 
@@ -24,13 +73,11 @@ const orderedRecords = computed(() => {
     <h1 class="text-center first-letter:uppercase">
       {{ $t('terminology.record', 2) }}
     </h1>
-    <!-- TODO accounts -->
     <RecordList
       class="m-2 mb-24 w-full lg:mb-0 lg:w-2/3 2xl:w-1/2"
-      :accounts="[]"
-      :records="orderedRecords"
+      :accounts="accounts"
+      :records="records"
     ></RecordList>
-    <!-- TODO accounts -->
-    <CreateRecord :accounts="[]"></CreateRecord>
+    <CreateRecord :accounts="accounts"></CreateRecord>
   </div>
 </template>

@@ -5,12 +5,20 @@ import WalletForm from '../components/forms/WalletForm.vue'
 import type { Ref } from 'vue'
 import { type Wallet, deleteWallet, getAllWallets } from '@/models/wallet'
 import LocaleSelector from '@/components/LocaleSelector.vue'
-import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
+import {
+  capitalizeFirstLetter,
+  type RelDocument,
+  UPDATE_DATA_DEBOUNCE,
+} from '@/models/common'
 import { useI18n } from 'vue-i18n'
 import { onMounted } from 'vue'
+import { debounce } from '@/util'
+import { DB } from '@/database/db'
+import { onBeforeUnmount } from 'vue'
 
 const { t } = useI18n()
 
+const wallets: Ref<RelDocument<Wallet>[]> = ref([])
 const editedWallet: Ref<RelDocument<Wallet> | null> = ref(null)
 const showModal = ref(false)
 
@@ -24,36 +32,43 @@ function updateWallet(wallet: RelDocument<Wallet>) {
   showModal.value = true
 }
 
-async function onDeleteWallet(wallet: RelDocument<Wallet>) {
+function onDeleteWallet(wallet: RelDocument<Wallet>) {
   if (confirm(capitalizeFirstLetter(`${t('delete.wallet')} ?`))) {
-    try {
-      await deleteWallet(wallet.id)
-      allWallets.value = await getAllWallets()
-    } catch (e) {
-      // TODO: show errors to user
-      console.error(e)
-    }
+    deleteWallet(wallet.id).catch(console.error)
   }
 }
 
-async function createUpdateDone() {
-  try {
-    allWallets.value = await getAllWallets()
-  } catch (e) {
-    // TODO: show errors to user
-    console.error(e)
-  }
-  showModal.value = false
+// DB sync
+
+let changes: PouchDB.Core.Changes<{}> | null = null
+const importantChanges = new Set(['wallet'])
+
+function updateData() {
+  getAllWallets().then((res) => (wallets.value = res))
 }
+const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
-const allWallets: Ref<RelDocument<Wallet>[]> = ref([])
+onMounted(() => {
+  updateData()
 
-onMounted(async () => {
-  try {
-    allWallets.value = await getAllWallets()
-  } catch (e) {
-    // TODO: show errors to user
-    console.error(e)
+  DB.then((db) => {
+    changes = db
+      .changes({
+        since: 'now',
+        live: true,
+      })
+      .on('change', (change) => {
+        if (importantChanges.has(db.rel.parseDocID(change.id).type)) {
+          debouncedUpdateData()
+        }
+      })
+      .on('error', console.error)
+  })
+})
+
+onBeforeUnmount(() => {
+  if (changes) {
+    changes.cancel()
   }
 })
 </script>
@@ -66,7 +81,7 @@ onMounted(async () => {
     <span class="mb-8 text-center">{{ $t('home.select-wallet') }}</span>
     <ul class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-1/2 lg:w-1/3">
       <li
-        v-for="wallet of allWallets"
+        v-for="wallet of wallets"
         :key="wallet.id"
         class="nt-clickable flex rounded-md bg-gray-100 shadow transition-shadow hover:shadow-md"
       >
@@ -109,7 +124,7 @@ onMounted(async () => {
         <div class="p-4">
           <WalletForm
             :wallet="editedWallet"
-            @done="createUpdateDone()"
+            @done="showModal = false"
           ></WalletForm>
         </div>
       </BaseModal>

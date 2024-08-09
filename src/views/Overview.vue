@@ -4,10 +4,11 @@ import AccountsWidget from '@/components/widgets/AccountsWidget.vue'
 import RecordsWidget from '@/components/widgets/RecordsWidget.vue'
 import { DB } from '@/database/db'
 import { getAllAccountsOfWallet, type Account } from '@/models/account'
-import type { RelDocument } from '@/models/common'
+import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import type { Record } from '@/models/record'
 import { getAllRecordsOfAccount } from '@/models/record'
 import { useStateStore } from '@/stores/state'
+import { debounce } from '@/util'
 import { storeToRefs } from 'pinia'
 import { watch, onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 
@@ -22,23 +23,22 @@ const records: Ref<RelDocument<Record>[]> = ref([])
 let changes: PouchDB.Core.Changes<{}> | null = null
 const importantChanges = new Set(['account', 'record'])
 
-// TODO: try not to do multiple updates at the same time
-// aka debounce db changes
 function updateData() {
   if (state.activeWallet) {
     getAllAccountsOfWallet(state.activeWallet.id)
       .then((res) => {
         accounts.value = res
-        console.log('accounts', res)
+        // console.log('accounts', res)
         return Promise.all(res.map((a) => getAllRecordsOfAccount(a.id)))
       })
       .then((res) => {
-        console.log('records', res)
+        //console.log('records', res)
         records.value = ([] as RelDocument<Record>[]).concat(...res)
-        console.log('combined records', records.value)
+        // console.log('combined records', records.value)
       })
   }
 }
+const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
   if (current && current.id !== previous?.id) {
@@ -59,7 +59,7 @@ onMounted(() => {
       })
       .on('change', (change) => {
         if (importantChanges.has(db.rel.parseDocID(change.id).type)) {
-          updateData()
+          debouncedUpdateData()
         }
       })
       .on('error', console.error)
