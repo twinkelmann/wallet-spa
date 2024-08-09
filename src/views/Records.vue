@@ -7,14 +7,25 @@ import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { getAllRecordsOfAccount, type Record } from '@/models/record'
 import { useStateStore } from '@/stores/state'
 import { debounce } from '@/util'
+import { DateTime } from 'luxon'
 import { storeToRefs } from 'pinia'
-import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 
 const state = useStateStore()
 const stateRefs = storeToRefs(state)
 
 const accounts: Ref<RelDocument<Account>[]> = ref([])
 const records: Ref<RelDocument<Record>[]> = ref([])
+
+const orderedRecords = computed(() => {
+  const recordsWithDates = records.value.map((r) => ({
+    ...r,
+    compare: DateTime.fromISO(r.datetime),
+  }))
+  return recordsWithDates
+    .sort((a, b) => b.compare.valueOf() - a.compare.valueOf())
+    .map((r) => ({ ...r, compare: undefined }))
+})
 
 // DB sync
 
@@ -76,7 +87,7 @@ onBeforeUnmount(() => {
     <RecordList
       class="m-2 mb-24 w-full lg:mb-0 lg:w-2/3 2xl:w-1/2"
       :accounts="accounts"
-      :records="records"
+      :records="orderedRecords"
     ></RecordList>
     <CreateRecord :accounts="accounts"></CreateRecord>
   </div>

@@ -1,4 +1,5 @@
-import type { ID } from './common'
+import { DB } from '@/database/db'
+import type { ID, RelDocument } from './common'
 
 export interface Category {
   walletId: ID
@@ -7,16 +8,71 @@ export interface Category {
   color: string
   icon: string
 }
-/*
 
-export async function getDefaultCategoryTree(): Promise<Category[]> {
-  const res = await fetch('/src/assets/defaultCategories.json')
-  const json = (await res.json()) as any[]
-  const addId = (x: Category): Category => ({
-    ...x,
-    id: crypto.randomUUID(),
-    children: x.children?.length ? x.children.map(addId) : null,
-  })
-  return json.map(addId)
+export function createCategory(
+  walletId: ID,
+  name: string,
+  color: string,
+  icon: string,
+  categoryId?: ID
+): Promise<ID> {
+  return DB.then((db) => {
+    const newCategory = {
+      walletId,
+      categoryId,
+      name,
+      color,
+      icon,
+    } as Category
+    return db.rel.save('category', newCategory)
+  }).then((res) => res.id)
 }
-*/
+
+export function getCategory(id: ID): Promise<RelDocument<Category>> {
+  return DB.then((db) => db.rel.find('category', id)).then(
+    (res) => res.categories[0]
+  )
+}
+
+export function getAllCategories(): Promise<RelDocument<Category>[]> {
+  return DB.then((db) => db.rel.find('category')).then((res) => res.categories)
+}
+
+export function getAllCategoriesOfWallet(
+  id: ID
+): Promise<RelDocument<Category>[]> {
+  return DB.then((db) => db.rel.findHasMany('category', 'walletId', id)).then(
+    (res) => res.categories
+  )
+}
+
+// Import Logic
+
+interface CategoryWithChildren extends Category {
+  children: CategoryWithChildren[]
+}
+
+async function recursiveInsert(
+  walletId: ID,
+  children: CategoryWithChildren[],
+  parent?: ID
+) {
+  for (const cat of children) {
+    const id = await createCategory(
+      walletId,
+      cat.name,
+      cat.color,
+      cat.icon,
+      parent
+    )
+    if (cat.children.length > 0) {
+      await recursiveInsert(walletId, cat.children, id)
+    }
+  }
+}
+
+export async function insertDefaultCategoryTree(walletId: ID): Promise<void> {
+  const res = await fetch('/src/assets/defaultCategories.json')
+  const json = (await res.json()) as CategoryWithChildren[]
+  return recursiveInsert(walletId, json)
+}

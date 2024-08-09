@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Menu from '@/components/Menu.vue'
-// import { getDefaultCategoryTree } from '@/models/category'
 import { getWallet } from '@/models/wallet'
 import { useStateStore } from '@/stores/state'
 import { onMounted } from 'vue'
@@ -27,8 +26,6 @@ onMounted(async () => {
     router.replace('/')
   }
 })
-
-// getDefaultCategoryTree().then(console.log)
 </script>
 
 <template>

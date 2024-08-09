@@ -49,6 +49,7 @@ const desc = computed(() => {
           .toLocaleString({
             month: 'short',
             day: 'numeric',
+            year: 'numeric',
           })
       }}</span>
     </div>
