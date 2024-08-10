@@ -2,6 +2,9 @@ import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
 import { updateBalance } from '@/util'
 
+// TODO: link to transfer
+// TODO: link to debt
+// TODO: link to planned payment ? is that necessary ? maybe not
 export interface Record extends HasTimestamps {
   accountId: ID
   categoryId: ID

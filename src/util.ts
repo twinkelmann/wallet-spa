@@ -43,8 +43,8 @@ export function debounce(func: Function, wait: number) {
 const black = new Color('black')
 const white = new Color('white')
 
+// TODO: could cache this. TBD if useful
 export function useBlackText(backgroundColor: string) {
-  console.log('call')
   const background = new Color(backgroundColor)
   const cBlack = background.contrast(black, 'APCA')
   const cWhite = background.contrast(white, 'APCA')

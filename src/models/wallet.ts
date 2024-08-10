@@ -1,6 +1,7 @@
 import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
 
+// TODO: add setting for number of decimals ?
 export interface Wallet extends HasTimestamps {
   name: string
 }
