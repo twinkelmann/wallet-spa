@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Account } from '@/models/account'
+import type { Category } from '@/models/category'
 import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
 import { createRecord, updateRecord, type Record } from '@/models/record'
@@ -7,6 +8,7 @@ import { DateTime } from 'luxon'
 
 const props = defineProps<{
   accounts: RelDocument<Account>[]
+  categories: RelDocument<Category>[]
   labels: RelDocument<Label>[]
   record: RelDocument<Record> | null
 }>()
@@ -22,6 +24,7 @@ const submit = async (fields: any) => {
       await updateRecord(
         props.record.id,
         fields.accountId,
+        fields.categoryId,
         fields.labelIds,
         stringTo2DecimalNumber(fields.value),
         fields.payee,
@@ -31,6 +34,7 @@ const submit = async (fields: any) => {
     } else {
       await createRecord(
         fields.accountId,
+        fields.categoryId,
         fields.labelIds,
         stringTo2DecimalNumber(fields.value),
         fields.payee,
@@ -63,6 +67,21 @@ const submit = async (fields: any) => {
     >
       <option v-for="account of accounts" :key="account.id" :value="account.id">
         {{ account.name }}
+      </option>
+    </FormKit>
+    <FormKit
+      type="select"
+      name="categoryId"
+      :label="capitalizeFirstLetter($t('terminology.category'))"
+      :value="record?.categoryId || categories[0]?.id"
+      validation="required"
+    >
+      <option
+        v-for="category of categories"
+        :key="category.id"
+        :value="category.id"
+      >
+        {{ category.name }}
       </option>
     </FormKit>
     <FormKit

@@ -36,7 +36,7 @@ onMounted(async () => {
         class="mb-4 flex h-12 w-full items-center justify-between bg-gray-100 print:shrink-0"
       >
         <button
-          class="material-icons nt-focus-ring p-4 md:pointer-events-none md:opacity-0 print:hidden"
+          class="material-icons nt-clickable nt-focus-ring p-4 md:pointer-events-none md:opacity-0 print:hidden"
           @click="show = !show"
           title="Toggle Menu"
         >
@@ -46,7 +46,7 @@ onMounted(async () => {
           {{ state.activeWallet?.name }}
         </h1>
         <RouterLink
-          class="material-icons nt-focus-ring p-4 print:hidden"
+          class="material-icons nt-clickable nt-focus-ring p-4 print:hidden"
           to="/"
           :title="$t('wallet.back')"
         >

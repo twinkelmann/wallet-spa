@@ -22,6 +22,7 @@ main {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+  user-select: none;
   -moz-font-feature-settings: 'liga';
   -moz-osx-font-smoothing: grayscale;
 }

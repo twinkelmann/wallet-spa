@@ -14,6 +14,7 @@ export interface Record extends HasTimestamps {
 
 export function createRecord(
   accountId: ID,
+  categoryId: ID,
   labelIds: ID[],
   value: number,
   payee: string | null,
@@ -24,6 +25,7 @@ export function createRecord(
     const now = new Date().toISOString()
     const newRecord = {
       accountId,
+      categoryId,
       labelIds,
       value,
       payee,
@@ -58,6 +60,7 @@ export function getAllRecordsOfAccount(id: ID): Promise<RelDocument<Record>[]> {
 export function updateRecord(
   id: ID,
   accountId: ID,
+  categoryId: ID,
   labelIds: ID[],
   value: number,
   payee: string | null,
@@ -75,6 +78,7 @@ export function updateRecord(
 
       const now = new Date()
       data.accountId = accountId
+      data.categoryId = categoryId
       data.labelIds = labelIds
       data.value = value
       data.payee = payee
@@ -103,7 +107,10 @@ export function deleteRecord(id: ID): Promise<{ deleted: boolean }> {
       if (!data) {
         throw `Could not find record with id=${id}`
       }
-      return db.rel.del('record', data)
+      return db.rel.del('record', data).then(async (res) => {
+        await updateBalance(data.accountId)
+        return res
+      })
     })
   )
 }

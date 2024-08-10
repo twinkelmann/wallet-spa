@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Account } from '@/models/account'
+import type { Category } from '@/models/category'
 import type { ById, RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
 import type { Record } from '@/models/record'
 import { useSettingsStore } from '@/stores/settings'
+import { useBlackText } from '@/util'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 
@@ -12,6 +14,7 @@ const settings = useSettingsStore()
 const props = defineProps<{
   record: RelDocument<Record>
   account: Account
+  categoriesById: ById<RelDocument<Category>>
   labelsById: ById<RelDocument<Label>>
 }>()
 const desc = computed(() => {
@@ -19,23 +22,40 @@ const desc = computed(() => {
     .filter(Boolean)
     .join(' - ')
 })
+const category = computed(() => {
+  return props.categoriesById[props.record.categoryId]
+})
+const labels = computed(() => {
+  return props.record.labelIds.map((id) => props.labelsById[id])
+})
 </script>
 <template>
   <div class="flex w-full gap-2">
-    <!-- TODO: category -->
-    <div class="h-10 w-10 shrink-0 rounded-full bg-gray-400"></div>
+    <div
+      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+      :style="`background-color: ${category.color}`"
+    >
+      <i
+        :class="`material-icons ${
+          useBlackText(category.color) ? 'text-black' : 'text-white'
+        }`"
+        >{{ category.icon }}</i
+      >
+    </div>
     <div class="flex grow flex-col">
-      <span class="font-medium">Category Name</span>
+      <span class="font-medium">{{ category.name }}</span>
       <span>{{ account.name }}</span>
       <span class="italic" v-if="desc">"{{ desc }}"</span>
       <ul class="flex flex-wrap gap-2">
         <li
-          v-for="labelId of record.labelIds"
-          :key="labelId"
-          :style="`background-color: ${labelsById[labelId].color}`"
-          class="rounded-md p-2 text-sm"
+          v-for="label of labels"
+          :key="label.id"
+          :style="`background-color: ${label.color}`"
+          :class="`rounded-md p-2 text-sm ${
+            useBlackText(label.color) ? 'text-black' : 'text-white'
+          }`"
         >
-          {{ labelsById[labelId].name }}
+          {{ label.name }}
         </li>
       </ul>
     </div>

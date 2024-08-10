@@ -3,16 +3,18 @@ import { computed } from 'vue'
 import { DateTime, Duration } from 'luxon'
 import { createRecord, deleteRecord, type Record } from '@/models/record'
 import RecordList from '../RecordList.vue'
-import type { ID, RelDocument } from '@/models/common'
+import type { RelDocument } from '@/models/common'
 import type { Account } from '@/models/account'
 import { useStateStore } from '@/stores/state'
 import { watch } from 'vue'
 import type { Label } from '@/models/label'
+import type { Category } from '@/models/category'
 
 const state = useStateStore()
 
 const props = defineProps<{
   accounts: RelDocument<Account>[]
+  categories: RelDocument<Category>[]
   labels: RelDocument<Label>[]
   records: RelDocument<Record>[]
 }>()
@@ -45,6 +47,9 @@ function choose<T>(array: T[]): T {
 }
 function chooseMany<T>(array: T[], amount: number): T[] {
   const possibilities = [...array]
+  if (amount >= array.length) {
+    return possibilities
+  }
   const results: T[] = new Array(amount)
   for (let i = 0; i < amount; ++i) {
     const index = Math.random() * possibilities.length
@@ -77,6 +82,7 @@ async function addTestData() {
         console.log(i)
         await createRecord(
           choose(props.accounts).id,
+          choose(props.categories).id,
           chooseMany(
             props.labels,
             Math.round(Math.random() * props.labels.length)
@@ -110,13 +116,17 @@ async function deleteAll() {
         filter.reconfigure({ locale: $i18n.locale }).toHuman()
       }})
     </h2>
-    <button class="material-icons nt-focus-ring rounded-full p-4 print:hidden">
+    <!-- TODO: widget settings -->
+    <button
+      class="material-icons nt-clickable nt-focus-ring rounded-full p-4 print:hidden"
+    >
       settings
     </button>
   </div>
   <RecordList
     class="m-2"
     :accounts="accounts"
+    :categories="categories"
     :labels="labels"
     :records="orderedRecords"
   ></RecordList>

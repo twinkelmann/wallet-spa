@@ -7,7 +7,7 @@ import {
 } from '@/models/category'
 import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { useStateStore } from '@/stores/state'
-import { debounce } from '@/util'
+import { debounce, useBlackText } from '@/util'
 import { storeToRefs } from 'pinia'
 import type { Ref } from 'vue'
 import { onBeforeUnmount } from 'vue'
@@ -82,9 +82,37 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  Categories Page
+  <div class="mx-4 mb-4 flex flex-col items-center">
+    <h1 class="text-center first-letter:uppercase">
+      {{ $t('terminology.category', 2) }}
+    </h1>
+    <ul
+      class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2"
+    >
+      <li
+        v-for="category of categoriesAsTree"
+        :key="category.id"
+        :style="`background-color: ${category.color}`"
+        :class="`flex flex-col overflow-hidden rounded-md ${useBlackText(category.color) ? 'text-black' : 'text-white'}`"
+      >
+        <div class="flex items-center">
+          <i class="material-icons p-4">{{ category.icon }}</i>
+          <span>{{ category.name }}</span>
+        </div>
+        <div
+          class="ml-4 flex items-center"
+          v-for="child of category.children"
+          :key="child.id"
+          :style="`background-color: ${child.color}`"
+        >
+          <i class="material-icons p-4">{{ child.icon }}</i>
+          <span>{{ child.name }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
   <button
-    v-if="state.activeWallet"
+    v-if="state.activeWallet && categories.length === 0"
     class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
     @click="
       insertDefaultCategoryTree(state.activeWallet.id).catch(console.error)
@@ -92,21 +120,4 @@ onBeforeUnmount(() => {
   >
     Import Default Categories
   </button>
-  <div
-    v-for="category of categoriesAsTree"
-    :key="category.id"
-    :style="`background-color: ${category.color}`"
-  >
-    <i class="material-icons">{{ category.icon }}</i>
-    <span>{{ category.name }}</span>
-    <div
-      class="ml-4"
-      v-for="child of category.children"
-      :key="child.id"
-      :style="`background-color: ${child.color}`"
-    >
-      <i class="material-icons">{{ child.icon }}</i>
-      <span>{{ child.name }}</span>
-    </div>
-  </div>
 </template>

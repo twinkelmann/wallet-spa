@@ -1,6 +1,7 @@
 import { getAccount, updateAccount } from './models/account'
 import type { ID } from './models/common'
 import { getAllRecordsOfAccount } from './models/record'
+import Color from 'colorjs.io'
 
 export async function updateBalance(accountId: ID) {
   const account = await getAccount(accountId)
@@ -37,4 +38,15 @@ export function debounce(func: Function, wait: number) {
     clearTimeout(timeout)
     timeout = setTimeout(later, wait) as unknown as number
   }
+}
+
+const black = new Color('black')
+const white = new Color('white')
+
+export function useBlackText(backgroundColor: string) {
+  console.log('call')
+  const background = new Color(backgroundColor)
+  const cBlack = background.contrast(black, 'APCA')
+  const cWhite = background.contrast(white, 'APCA')
+  return Math.abs(cBlack) > Math.abs(cWhite)
 }

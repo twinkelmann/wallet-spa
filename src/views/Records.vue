@@ -3,6 +3,7 @@ import CreateRecord from '@/components/CreateRecord.vue'
 import RecordList from '@/components/RecordList.vue'
 import { DB } from '@/database/db'
 import { getAllAccountsOfWallet, type Account } from '@/models/account'
+import { getAllCategoriesOfWallet, type Category } from '@/models/category'
 import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { getAllLabelsOfWallet, type Label } from '@/models/label'
 import { getAllRecordsOfAccount, type Record } from '@/models/record'
@@ -16,6 +17,7 @@ const state = useStateStore()
 const stateRefs = storeToRefs(state)
 
 const accounts: Ref<RelDocument<Account>[]> = ref([])
+const categories: Ref<RelDocument<Category>[]> = ref([])
 const records: Ref<RelDocument<Record>[]> = ref([])
 const labels: Ref<RelDocument<Label>[]> = ref([])
 
@@ -44,6 +46,9 @@ function updateData() {
       .then((res) => {
         records.value = ([] as RelDocument<Record>[]).concat(...res)
       })
+      .catch(console.error)
+    getAllCategoriesOfWallet(state.activeWallet.id)
+      .then((res) => (categories.value = res))
       .catch(console.error)
     getAllLabelsOfWallet(state.activeWallet.id)
       .then((res) => (labels.value = res))
@@ -93,9 +98,14 @@ onBeforeUnmount(() => {
     <RecordList
       class="m-2 mb-24 w-full lg:mb-0 lg:w-2/3 2xl:w-1/2"
       :accounts="accounts"
+      :categories="categories"
       :labels="labels"
       :records="orderedRecords"
     ></RecordList>
-    <CreateRecord :accounts="accounts" :labels="labels"></CreateRecord>
+    <CreateRecord
+      :accounts="accounts"
+      :categories="categories"
+      :labels="labels"
+    ></CreateRecord>
   </div>
 </template>

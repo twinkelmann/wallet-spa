@@ -39,7 +39,7 @@ defineEmits<{ (e: 'close'): void }>()
               {{ header }}
             </h2>
             <i
-              class="material-icons flex h-14 w-14 cursor-pointer select-none items-center justify-center text-lg text-gray-400"
+              class="material-icons nt-clickable flex h-14 w-14 items-center justify-center text-lg text-gray-400"
               @click="$emit('close')"
               :title="$t('close-modal', { name: header })"
               >close</i

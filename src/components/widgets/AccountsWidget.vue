@@ -2,11 +2,11 @@
 import { ref } from 'vue'
 import { useStateStore } from '@/stores/state'
 import BaseModal from '../BaseModal.vue'
-import Color from 'colorjs.io'
 import AccountForm from '../forms/AccountForm.vue'
 import { useSettingsStore } from '@/stores/settings'
 import type { ID, RelDocument } from '@/models/common'
 import type { Account } from '@/models/account'
+import { useBlackText } from '@/util'
 
 defineProps<{ accounts: RelDocument<Account>[] }>()
 
@@ -22,22 +22,13 @@ function toggleShowAccount(accountId: ID) {
 }
 
 const showModal = ref(false)
-
-const black = new Color('black')
-const white = new Color('white')
-function useBlackText(backgroundColor: string) {
-  const background = new Color(backgroundColor)
-  const cBlack = background.contrast(black, 'APCA')
-  const cWhite = background.contrast(white, 'APCA')
-  return Math.abs(cBlack) > Math.abs(cWhite)
-}
 </script>
 <template>
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">{{ $t('widgets.accounts.title', 2) }}</h2>
     <RouterLink
       :to="`/wallets/${state.activeWallet?.id}/accounts`"
-      class="material-icons nt-focus-ring rounded-full p-4 print:hidden"
+      class="material-icons nt-clickable nt-focus-ring rounded-full p-4 print:hidden"
       >settings</RouterLink
     >
   </div>
