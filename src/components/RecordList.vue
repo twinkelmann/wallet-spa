@@ -6,17 +6,27 @@ import BaseModal from './BaseModal.vue'
 import RecordForm from './forms/RecordForm.vue'
 import type { RelDocument, ById } from '@/models/common'
 import type { Account } from '@/models/account'
+import type { Label } from '@/models/label'
 
 const props = defineProps<{
   class: string
-  records: RelDocument<Record>[]
   accounts: RelDocument<Account>[]
+  labels: RelDocument<Label>[]
+  records: RelDocument<Record>[]
 }>()
 
 const accountsById = computed(() => {
-  const obj: ById<Account> = {}
+  const obj: ById<RelDocument<Account>> = {}
   props.accounts.forEach((a) => {
     obj[a.id] = a
+  })
+  return obj
+})
+
+const labelsById = computed(() => {
+  const obj: ById<RelDocument<Label>> = {}
+  props.labels.forEach((l) => {
+    obj[l.id] = l
   })
   return obj
 })
@@ -40,6 +50,7 @@ function updateRecord(record: Record) {
         <RecordItem
           :record="record"
           :account="accountsById[record.accountId]"
+          :labelsById="labelsById"
         ></RecordItem>
       </button>
     </li>
@@ -54,6 +65,7 @@ function updateRecord(record: Record) {
         <RecordForm
           :record="editedRecord"
           :accounts="accounts"
+          :labels="labels"
           @done="showModal = false"
         ></RecordForm>
       </div>

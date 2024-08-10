@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { Account } from '@/models/account'
 import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
+import type { Label } from '@/models/label'
 import { createRecord, updateRecord, type Record } from '@/models/record'
 import { DateTime } from 'luxon'
 
 const props = defineProps<{
   accounts: RelDocument<Account>[]
+  labels: RelDocument<Label>[]
   record: RelDocument<Record> | null
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
@@ -20,6 +22,7 @@ const submit = async (fields: any) => {
       await updateRecord(
         props.record.id,
         fields.accountId,
+        fields.labelIds,
         stringTo2DecimalNumber(fields.value),
         fields.payee,
         fields.description,
@@ -28,6 +31,7 @@ const submit = async (fields: any) => {
     } else {
       await createRecord(
         fields.accountId,
+        fields.labelIds,
         stringTo2DecimalNumber(fields.value),
         fields.payee,
         fields.description,
@@ -42,6 +46,7 @@ const submit = async (fields: any) => {
 }
 </script>
 <template>
+  <!-- TODO: make this form very pretty (and full screen)-->
   <FormKit
     type="form"
     @submit="submit"
@@ -93,5 +98,14 @@ const submit = async (fields: any) => {
       "
       validation="required"
     />
+    <FormKit
+      type="checkbox"
+      name="labelIds"
+      decorator-icon="check"
+      :label="capitalizeFirstLetter($t('terminology.label', 2))"
+      :value="record?.labelIds || []"
+      :options="labels.map((l) => ({ value: l.id, label: l.name }))"
+    >
+    </FormKit>
   </FormKit>
 </template>

@@ -22,6 +22,7 @@
     "placeholders": {
       "wallet-name": "My Personnal @.capitalize:terminology.wallet",
       "account-name": "Cash",
+      "label-name": "Work",
       "payee": "Groceries Ltd.",
       "description": "Monthly Groceries"
     }
@@ -41,19 +42,22 @@
     "action": "create",
     "wallet": "@:create.action @:terminology.wallet",
     "account": "@:create.action @:terminology.account",
-    "record": "@:create.action @:terminology.record"
+    "record": "@:create.action @:terminology.record",
+    "label": "@:create.action @:terminology.label"
   },
   "update": {
     "action": "update",
     "wallet": "@:update.action @:terminology.wallet",
     "account": "@:update.action @:terminology.account",
-    "record": "@:update.action @:terminology.record"
+    "record": "@:update.action @:terminology.record",
+    "label": "@:update.action @:terminology.label"
   },
   "delete": {
     "action": "delete",
     "wallet": "@:delete.action @:terminology.wallet",
     "account": "@:delete.action @:terminology.account",
-    "record": "@:delete.action @:terminology.record"
+    "record": "@:delete.action @:terminology.record",
+    "label": "@:delete.action @:terminology.label"
   },
   "close-modal": "Close \"{name}\" modal",
   "locale": {

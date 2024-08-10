@@ -29,6 +29,13 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
         },
       },
       {
+        singular: 'label',
+        plural: 'labels',
+        relations: {
+          walletId: { belongsTo: { type: 'wallet', options: { async: true } } },
+        },
+      },
+      {
         singular: 'monthly',
         plural: 'monthlies',
         relations: {
@@ -46,6 +53,9 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           },
           categoryId: {
             belongsTo: { type: 'category', options: { async: true } },
+          },
+          labelIds: {
+            hasMany: { type: 'label', options: { async: true } },
           },
         },
       },

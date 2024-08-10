@@ -57,7 +57,7 @@ export function deleteWallet(id: ID): Promise<{ deleted: boolean }> {
       if (!data) {
         throw `Could not find wallet with id=${id}`
       }
-      // TODO: Delete associated accounts
+      // TODO: Delete associated accounts, categories and labels
       return db.rel.del('wallet', data)
     })
   )

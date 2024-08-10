@@ -5,6 +5,7 @@ import RecordsWidget from '@/components/widgets/RecordsWidget.vue'
 import { DB } from '@/database/db'
 import { getAllAccountsOfWallet, type Account } from '@/models/account'
 import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
+import { getAllLabelsOfWallet, type Label } from '@/models/label'
 import type { Record } from '@/models/record'
 import { getAllRecordsOfAccount } from '@/models/record'
 import { useStateStore } from '@/stores/state'
@@ -17,25 +18,27 @@ const stateRefs = storeToRefs(state)
 
 const accounts: Ref<RelDocument<Account>[]> = ref([])
 const records: Ref<RelDocument<Record>[]> = ref([])
+const labels: Ref<RelDocument<Label>[]> = ref([])
 
 // DB sync
 
 let changes: PouchDB.Core.Changes<{}> | null = null
-const importantChanges = new Set(['account', 'record'])
+const importantChanges = new Set(['account', 'record', 'label'])
 
 function updateData() {
   if (state.activeWallet) {
     getAllAccountsOfWallet(state.activeWallet.id)
       .then((res) => {
         accounts.value = res
-        // console.log('accounts', res)
         return Promise.all(res.map((a) => getAllRecordsOfAccount(a.id)))
       })
       .then((res) => {
-        //console.log('records', res)
         records.value = ([] as RelDocument<Record>[]).concat(...res)
-        // console.log('combined records', records.value)
       })
+      .catch(console.error)
+    getAllLabelsOfWallet(state.activeWallet.id)
+      .then((res) => (labels.value = res))
+      .catch(console.error)
   }
 }
 const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
@@ -75,6 +78,10 @@ onBeforeUnmount(() => {
 
 <template>
   <AccountsWidget :accounts="accounts"></AccountsWidget>
-  <RecordsWidget :accounts="accounts" :records="records"></RecordsWidget>
-  <CreateRecord :accounts="accounts"></CreateRecord>
+  <RecordsWidget
+    :accounts="accounts"
+    :labels="labels"
+    :records="records"
+  ></RecordsWidget>
+  <CreateRecord :accounts="accounts" :labels="labels"></CreateRecord>
 </template>

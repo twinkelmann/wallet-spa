@@ -22,6 +22,7 @@
     "placeholders": {
       "wallet-name": "Mon @.capitalize:terminology.wallet Personnel",
       "account-name": "Espèces",
+      "label-name": "Travail",
       "payee": "Épicerie Sàrl",
       "description": "Courses mensuelles"
     }
@@ -41,19 +42,22 @@
     "action": "créer",
     "wallet": "@:create.action un @:terminology.wallet",
     "account": "@:create.action un @:terminology.account",
-    "record": "@:create.action une @:terminology.record"
+    "record": "@:create.action une @:terminology.record",
+    "label": "@:create.action une @:terminology.label"
   },
   "update": {
     "action": "modifier",
     "wallet": "@:update.action le @:terminology.wallet",
     "account": "@:update.action le @:terminology.account",
-    "record": "@:update.action la @:terminology.record"
+    "record": "@:update.action la @:terminology.record",
+    "label": "@:update.action l'@:terminology.label"
   },
   "delete": {
     "action": "supprimer",
     "wallet": "@:delete.action le @:terminology.wallet",
     "account": "@:delete.action le @:terminology.account",
-    "record": "@:delete.action la @:terminology.record"
+    "record": "@:delete.action la @:terminology.record",
+    "label": "@:delete.action l'@:terminology.label"
   },
   "close-modal": "Fermer la fenêtre contextuelle \"{name}\"",
   "locale": {

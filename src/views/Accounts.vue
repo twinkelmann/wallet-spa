@@ -67,7 +67,6 @@ const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
   if (current && current.id !== previous?.id) {
-    console.log('getting them accounts')
     updateData()
   }
 })

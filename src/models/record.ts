@@ -5,6 +5,7 @@ import { updateBalance } from '@/util'
 export interface Record extends HasTimestamps {
   accountId: ID
   categoryId: ID
+  labelIds: ID[]
   value: number
   payee: string | null
   description: string | null
@@ -13,6 +14,7 @@ export interface Record extends HasTimestamps {
 
 export function createRecord(
   accountId: ID,
+  labelIds: ID[],
   value: number,
   payee: string | null,
   description: string | null,
@@ -22,6 +24,7 @@ export function createRecord(
     const now = new Date().toISOString()
     const newRecord = {
       accountId,
+      labelIds,
       value,
       payee,
       description,
@@ -55,6 +58,7 @@ export function getAllRecordsOfAccount(id: ID): Promise<RelDocument<Record>[]> {
 export function updateRecord(
   id: ID,
   accountId: ID,
+  labelIds: ID[],
   value: number,
   payee: string | null,
   description: string | null,
@@ -71,6 +75,7 @@ export function updateRecord(
 
       const now = new Date()
       data.accountId = accountId
+      data.labelIds = labelIds
       data.value = value
       data.payee = payee
       data.description = description

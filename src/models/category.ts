@@ -34,10 +34,6 @@ export function getCategory(id: ID): Promise<RelDocument<Category>> {
   )
 }
 
-export function getAllCategories(): Promise<RelDocument<Category>[]> {
-  return DB.then((db) => db.rel.find('category')).then((res) => res.categories)
-}
-
 export function getAllCategoriesOfWallet(
   id: ID
 ): Promise<RelDocument<Category>[]> {

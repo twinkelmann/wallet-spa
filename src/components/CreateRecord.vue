@@ -4,9 +4,11 @@ import BaseModal from './BaseModal.vue'
 import RecordForm from './forms/RecordForm.vue'
 import type { RelDocument } from '@/models/common'
 import type { Account } from '@/models/account'
+import type { Label } from '@/models/label'
 
 defineProps<{
   accounts: RelDocument<Account>[]
+  labels: RelDocument<Label>[]
 }>()
 
 const showModal = ref(false)
@@ -29,6 +31,7 @@ const showModal = ref(false)
         <RecordForm
           :record="null"
           :accounts="accounts"
+          :labels="labels"
           @done="showModal = false"
         ></RecordForm>
       </div>
