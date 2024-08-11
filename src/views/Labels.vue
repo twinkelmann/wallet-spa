@@ -50,7 +50,7 @@ const importantChanges = new Set(['label'])
 
 function updateData() {
   if (state.activeWallet) {
-    getAllLabelsOfWallet(state.activeWallet.id).then((res) => {
+    getAllLabelsOfWallet(state.activeWallet).then((res) => {
       labels.value = res
     })
   }
@@ -58,7 +58,7 @@ function updateData() {
 const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
-  if (current && current.id !== previous?.id) {
+  if (current && current !== previous) {
     updateData()
   }
 })
@@ -134,7 +134,7 @@ onBeforeUnmount(() => {
       >
         <div class="p-4" v-if="state.activeWallet">
           <LabelForm
-            :wallet-id="state.activeWallet.id"
+            :wallet-id="state.activeWallet"
             :label="editedLabel"
             @done="showModal = false"
           ></LabelForm>

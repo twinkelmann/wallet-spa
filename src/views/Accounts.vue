@@ -58,7 +58,7 @@ const importantChanges = new Set(['account'])
 
 function updateData() {
   if (state.activeWallet) {
-    getAllAccountsOfWallet(state.activeWallet.id).then((res) => {
+    getAllAccountsOfWallet(state.activeWallet).then((res) => {
       accounts.value = res
     })
   }
@@ -66,7 +66,7 @@ function updateData() {
 const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
-  if (current && current.id !== previous?.id) {
+  if (current && current !== previous) {
     updateData()
   }
 })
@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
       >
         <div class="p-4" v-if="state.activeWallet">
           <AccountForm
-            :wallet-id="state.activeWallet.id"
+            :wallet-id="state.activeWallet"
             :account="editedAccount"
             @done="showModal = false"
           ></AccountForm>

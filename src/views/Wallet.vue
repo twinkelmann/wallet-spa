@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import Menu from '@/components/Menu.vue'
-import { getWallet } from '@/models/wallet'
+import type { RelDocument } from '@/models/common'
+import { getWallet, type Wallet } from '@/models/wallet'
 import { useStateStore } from '@/stores/state'
+import type { Ref } from 'vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
@@ -12,17 +14,21 @@ const state = useStateStore()
 
 router.afterEach(() => (show.value = false))
 
+const wallet: Ref<RelDocument<Wallet> | undefined> = ref(undefined)
 const show = ref(false)
 
 onMounted(async () => {
   // Try to auto-select wallet based on URL
-  state.activeWallet = await getWallet(
-    Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
-  )
-  state.shownAccounts = new Set()
-  if (!state.activeWallet) {
+  const id = Array.isArray(route.params.id)
+    ? route.params.id[0]
+    : route.params.id
+  wallet.value = await getWallet(id)
+  if (!wallet.value) {
     // If the wallet is not found, redirect to home page
     router.replace('/')
+  } else {
+    state.activeWallet = id
+    state.shownAccounts = new Set()
   }
 })
 </script>
@@ -42,7 +48,7 @@ onMounted(async () => {
           menu
         </button>
         <h1 class="mx-2 grow truncate text-center">
-          {{ state.activeWallet?.name }}
+          {{ wallet?.name }}
         </h1>
         <RouterLink
           class="material-icons nt-clickable nt-focus-ring p-4 print:hidden"

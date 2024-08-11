@@ -38,7 +38,7 @@ const importantChanges = new Set(['category'])
 
 function updateData() {
   if (state.activeWallet) {
-    getAllCategoriesOfWallet(state.activeWallet.id).then((res) => {
+    getAllCategoriesOfWallet(state.activeWallet).then((res) => {
       categories.value = res
     })
   }
@@ -46,7 +46,7 @@ function updateData() {
 const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
-  if (current && current.id !== previous?.id) {
+  if (current && current !== previous) {
     updateData()
   }
 })

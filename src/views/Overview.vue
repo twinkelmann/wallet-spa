@@ -27,13 +27,13 @@ const importantChanges = new Set(['account', 'record', 'label'])
 
 function updateData() {
   if (state.activeWallet) {
-    getAllAccountsOfWallet(state.activeWallet.id)
+    getAllAccountsOfWallet(state.activeWallet)
       .then((res) => (accounts.value = res))
       .catch(console.error)
-    getAllCategoriesOfWallet(state.activeWallet.id)
+    getAllCategoriesOfWallet(state.activeWallet)
       .then((res) => (categories.value = res))
       .catch(console.error)
-    getAllLabelsOfWallet(state.activeWallet.id)
+    getAllLabelsOfWallet(state.activeWallet)
       .then((res) => (labels.value = res))
       .catch(console.error)
   }
@@ -41,7 +41,7 @@ function updateData() {
 const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
 
 watch(stateRefs.activeWallet, (current, previous) => {
-  if (current && current.id !== previous?.id) {
+  if (current && current !== previous) {
     updateData()
   }
 })

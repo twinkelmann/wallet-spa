@@ -9,7 +9,7 @@ defineProps<{ show: boolean }>()
 defineEmits<{ (e: 'close'): void }>()
 
 const state = useStateStore()
-const basePath = computed(() => `/wallets/${state.activeWallet?.id}`)
+const basePath = computed(() => `/wallets/${state.activeWallet}`)
 </script>
 <template>
   <div

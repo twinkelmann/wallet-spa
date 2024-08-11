@@ -32,7 +32,7 @@ const showModal = ref(false)
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">{{ $t('widgets.accounts.title', 2) }}</h2>
     <RouterLink
-      :to="`/wallets/${state.activeWallet?.id}/accounts`"
+      :to="`/wallets/${state.activeWallet}/accounts`"
       class="material-icons nt-clickable nt-focus-ring rounded-full p-4 print:hidden"
       >settings</RouterLink
     >
@@ -83,7 +83,7 @@ const showModal = ref(false)
     >
       <div class="p-4" v-if="state.activeWallet">
         <AccountForm
-          :wallet-id="state.activeWallet.id"
+          :wallet-id="state.activeWallet"
           :account="null"
           @done="showModal = false"
         ></AccountForm>

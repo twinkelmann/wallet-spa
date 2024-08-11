@@ -78,6 +78,7 @@ const labels = computed(() => {
           .toLocaleString({
             month: 'short',
             day: 'numeric',
+            // TODO: don't show the year if current year
             year: 'numeric',
           })
       }}</span>

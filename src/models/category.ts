@@ -83,7 +83,7 @@ async function recursiveInsert(
 }
 
 export async function insertDefaultCategoryTree(walletId: ID): Promise<void> {
-  const res = await fetch('/src/assets/defaultCategories.json')
+  const res = await fetch('/assets/defaultCategories.json')
   const json = (await res.json()) as CategoryWithChildren[]
   return recursiveInsert(walletId, json)
 }
