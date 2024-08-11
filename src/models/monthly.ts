@@ -89,7 +89,7 @@ export function updateMonthly(id: ID, balance: number): Promise<void> {
   return DB.then((db) =>
     db.rel.find('monthly', id).then((res) => {
       const data = res.monthlies[0] as RelDocument<Monthly>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find monthly with id=${id}`
       }
 
@@ -110,7 +110,7 @@ export function deleteMonthly(
   return DB.then((db) =>
     db.rel.find('monthly', id).then((res) => {
       const data = res.monthlies[0] as RelDocument<Monthly>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find monthly with id=${id}`
       }
       return db.rel.del('monthly', data).then(async (res) => {

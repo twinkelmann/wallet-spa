@@ -36,7 +36,7 @@ export function updateLabel(id: ID, name: string, color: string): Promise<ID> {
   return DB.then((db) =>
     db.rel.find('label', id).then((res) => {
       const data = res.labels[0] as RelDocument<Label>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find label with id=${id}`
       }
 
@@ -52,7 +52,7 @@ export function deleteLabel(id: ID): Promise<{ deleted: boolean }> {
   return DB.then((db) =>
     db.rel.find('label', id).then((res) => {
       const data = res.labels[0] as RelDocument<Label>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find label with id=${id}`
       }
       // TODO: delete reference from records

@@ -74,7 +74,7 @@ export function updateAccount(
   return DB.then((db) =>
     db.rel.find('account', id).then((res) => {
       const data = res.accounts[0] as RelDocument<Account>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find account with id=${id}`
       }
 
@@ -95,7 +95,7 @@ export function deleteAccount(id: ID): Promise<{ deleted: boolean }> {
   return DB.then((db) =>
     db.rel.find('account', id).then((res) => {
       const data = res.accounts[0] as RelDocument<Account>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find account with id=${id}`
       }
       return db.rel.del('account', data).then(async (res) => {

@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { DB } from '@/database/db'
-import {
-  getAllCategoriesOfWallet,
-  type Category,
-  insertDefaultCategoryTree,
-} from '@/models/category'
+import { getAllCategoriesOfWallet, type Category } from '@/models/category'
 import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { useStateStore } from '@/stores/state'
 import { debounce, useBlackText } from '@/util'
@@ -28,6 +24,7 @@ const categoriesAsTree = computed(() => {
     const children = categories.value
       .filter((cx) => cx.categoryId === c.id)
       .sort((a, b) => a.name.localeCompare(b.name))
+    // TODO: handle arbitrary category depth
     // we cannot know the depth of the tree... need to like remove the used categories, and stop when the list is empty
     return { ...c, children }
   })
@@ -111,13 +108,4 @@ onBeforeUnmount(() => {
       </li>
     </ul>
   </div>
-  <button
-    v-if="state.activeWallet && categories.length === 0"
-    class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
-    @click="
-      insertDefaultCategoryTree(state.activeWallet.id).catch(console.error)
-    "
-  >
-    Import Default Categories
-  </button>
 </template>

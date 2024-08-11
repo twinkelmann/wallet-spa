@@ -207,7 +207,7 @@ export function deleteRecord(
   return DB.then((db) =>
     db.rel.find('record', id).then((res) => {
       const data = res.records[0] as RelDocument<Record>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find record with id=${id}`
       }
       return db.rel.del('record', data).then(async (res) => {

@@ -44,6 +44,19 @@ export function getAllCategoriesOfWallet(
   )
 }
 
+export function deleteCategory(id: ID): Promise<{ deleted: boolean }> {
+  return DB.then((db) =>
+    db.rel.find('category', id).then((res) => {
+      const data = res.categories[0] as RelDocument<Category>
+      if (!id || !data) {
+        throw `Could not find category with id=${id}`
+      }
+      // TODO: delete reference from records
+      return db.rel.del('category', data)
+    })
+  )
+}
+
 // Import Logic
 
 interface CategoryWithChildren extends Category {
