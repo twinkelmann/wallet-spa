@@ -194,6 +194,7 @@ async function addTestData() {
         await updateBalance(id)
       }
     } catch (e) {
+      alert(e)
       console.error(e)
     }
   }
@@ -215,6 +216,7 @@ async function deleteAll() {
       await updateBalance(account.id)
     }
   } catch (e) {
+    alert(e)
     console.error(e)
   }
 }

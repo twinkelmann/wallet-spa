@@ -45,7 +45,7 @@ async function onDeleteAccount(account: RelDocument<Account>) {
     try {
       await deleteAccount(account.id)
     } catch (e) {
-      // TODO: show errors to user
+      alert(e)
       console.error(e)
     }
   }

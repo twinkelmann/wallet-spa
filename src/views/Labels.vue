@@ -37,7 +37,7 @@ async function onDeletLabel(label: RelDocument<Label>) {
     try {
       await deleteLabel(label.id)
     } catch (e) {
-      // TODO: show errors to user
+      alert(e)
       console.error(e)
     }
   }
