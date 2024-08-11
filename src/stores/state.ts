@@ -5,7 +5,7 @@ import type { ID, RelDocument } from '@/models/common'
 
 export const useStateStore = defineStore('state', () => {
   // TODO: probably only store the wallet ID
-  const activeWallet: Ref<RelDocument<Wallet> | null> = ref(null)
+  const activeWallet: Ref<RelDocument<Wallet> | undefined> = ref(undefined)
   const shownAccounts: Ref<Set<ID>> = ref(new Set())
 
   return {

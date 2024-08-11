@@ -1,7 +1,13 @@
+import { DateTime, type DateObjectUnits } from 'luxon'
 import { getAccount, updateAccount } from './models/account'
 import type { ID } from './models/common'
-import { getAllRecordsOfAccount } from './models/record'
+import { getAllRecordsOfAccountByDate } from './models/record'
 import Color from 'colorjs.io'
+import {
+  createMonthly,
+  getAllMonthliesOfAccountByDate,
+  updateMonthly,
+} from './models/monthly'
 
 /**
  * In case better UTF16/Locales support is needed, see https://stackoverflow.com/a/53930826
@@ -10,27 +16,115 @@ export function capitalizeFirstLetter(s: string) {
   return s[0].toUpperCase() + s.slice(1)
 }
 
+const MONTH_START: DateObjectUnits = {
+  day: 1,
+  hour: 0,
+  minute: 0,
+  second: 0,
+  millisecond: 0,
+}
+
 export async function updateBalance(accountId: ID) {
+  const currentMonthStart = DateTime.utc().set(MONTH_START).toMillis()
   const account = await getAccount(accountId)
   if (account) {
-    // TODO: use monthlies to optimize computation of balance
-    // recompute all monthlies after the modified record, then use the last monthly and the remaining records to compute balance
-    const accountRecords = await getAllRecordsOfAccount(accountId)
-    const balance =
+    const lastMonthly = await getAllMonthliesOfAccountByDate(
+      accountId,
+      currentMonthStart,
+      currentMonthStart,
+      1,
+      true,
+      true
+    )
+    console.log(lastMonthly)
+
+    const startBalance = lastMonthly[0]?.balance || 0
+
+    const records = await getAllRecordsOfAccountByDate(
+      accountId,
+      currentMonthStart,
+      new Date().valueOf(),
+      null,
+      true,
+      true
+    )
+    console.log({ records })
+
+    const finalBalance =
       Math.round(
-        accountRecords.reduce(
-          (balance, r) => balance + r.value,
-          account.startBalance
-        ) * 100
-      ) / 100
+        records.reduce((balance, r) => balance + r.value, startBalance) * 100
+      ) /
+        100 +
+      account.startBalance
+
     return updateAccount(
       accountId,
       account.name,
       account.color,
-      balance,
+      finalBalance,
       account.currency
     )
   }
+}
+
+/**
+ * Recomputes the monthlies starting from the month that contains `dateChanged`
+ * @param dateChanged Unix EPOCH at which some record changed, prompting the recompute of monthlies
+ */
+export async function updateMonthlies(accountId: ID, dateChanged: number) {
+  const currentMonthStart = DateTime.utc().set(MONTH_START)
+
+  // monthlies are always stored at UTC start of months
+  // They represent the balance of the account at the end of the previous month (ie the sum of all records up to but not including their `datetime` value)
+  let start = DateTime.fromMillis(dateChanged, { zone: 'UTC' }).set(MONTH_START)
+
+  while (!start.equals(currentMonthStart)) {
+    // recompute monthly then move to next month
+    const end = start.plus({ month: 1 })
+    const startMillis = start.toMillis()
+    const endMillis = end.toMillis()
+
+    // we expect this request to return between 0 and 2 values
+    const monthlies = await getAllMonthliesOfAccountByDate(
+      accountId,
+      startMillis,
+      endMillis,
+      null,
+      true,
+      true
+    )
+    // check if there exists a monthly for the "previous" month (the base to compute the current one)
+    const previousMonthly = monthlies.find((m) => m.datetime === startMillis)
+    // as well as for the "current" month
+    const currentMonthly = monthlies.find((m) => m.datetime === endMillis)
+    // if the monthly doesn't exist, if we consider the DB to be consistant, that means this is the first month (there is no data before this)
+    const baseBalance = previousMonthly?.balance || 0
+
+    // compute this monthly's sum
+    const records = await getAllRecordsOfAccountByDate(
+      accountId,
+      startMillis,
+      endMillis
+    )
+
+    const monthlyBalance =
+      Math.round(
+        records.reduce((balance, r) => balance + r.value, baseBalance) * 100
+      ) / 100
+
+    // attempt to update an existing monthly. otherwise, create it
+    if (currentMonthly) {
+      await updateMonthly(currentMonthly.id, monthlyBalance)
+    } else {
+      await createMonthly(accountId, monthlyBalance, endMillis)
+    }
+    // TODO: the result from above will be the `previousMonthly` of the next iteration
+    // we could optimize by storing it outside the loop
+    // but we need to perform `getAllMonthliesOfAccountByDate` anyways, so not sure how much perf we gain
+
+    start = end
+  }
+  // no monthly is computed for the running month. we are done
 }
 
 export function debounce(func: Function, wait: number) {

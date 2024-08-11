@@ -23,7 +23,7 @@ export function createWallet(name: string): Promise<ID> {
   }).then((res) => res.id)
 }
 
-export function getWallet(id: ID): Promise<RelDocument<Wallet>> {
+export function getWallet(id: ID): Promise<RelDocument<Wallet> | undefined> {
   return DB.then((db) => db.rel.find('wallet', id)).then(
     (res) => res.wallets[0]
   )

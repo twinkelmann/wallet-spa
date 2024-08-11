@@ -65,6 +65,17 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
       },
     ])
     try {
+      // TODO: probably not necessary to rebuild the index on every launch
+      /*
+      await Promise.all(
+        (await db.getIndexes()).indexes
+          .filter((index) => index.ddoc)
+          .map((index) => {
+            console.log(index)
+            return db.deleteIndex({ ddoc: index.ddoc || '', name: index.name })
+          })
+      )
+          */
       // To look up children of wallet (account)
       await db.createIndex({
         index: {
@@ -88,6 +99,14 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           name: 'idx-category',
           ddoc: 'idx-category',
           fields: ['data.categoryId', '_id'],
+        },
+      })
+      // To look up records and monthlies by datetime and accountId
+      await db.createIndex({
+        index: {
+          name: 'idx-datetime',
+          ddoc: 'idx-datetime',
+          fields: ['data.datetime', 'data.accountId', '_id'],
         },
       })
       console.log('DB open')

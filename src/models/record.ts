@@ -1,6 +1,6 @@
 import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
-import { updateBalance } from '@/util'
+import { updateBalance, updateMonthlies } from '@/util'
 
 // TODO: link to transfer
 // TODO: link to debt
@@ -41,13 +41,14 @@ export function createRecord(
       updatedAt: now,
     } as Record
     return db.rel.save('record', newRecord).then(async (res) => {
+      await updateMonthlies(accountId, datetime)
       await updateBalance(accountId)
       return res
     })
   }).then((res) => res.id)
 }
 
-export function getRecord(id: ID): Promise<RelDocument<Record>> {
+export function getRecord(id: ID): Promise<RelDocument<Record> | undefined> {
   return DB.then((db) => db.rel.find('record', id)).then(
     (res) => res.records[0]
   )
@@ -61,6 +62,48 @@ export function getAllRecordsOfAccount(id: ID): Promise<RelDocument<Record>[]> {
   return DB.then((db) => db.rel.findHasMany('record', 'accountId', id)).then(
     (res) => res.records
   )
+}
+
+export function getAllRecordsOfAccountByDate(
+  id: ID,
+  minDatetime: number,
+  maxDatetime: number,
+  limit: number | null = null,
+  includeLowerBound: boolean = true,
+  includeUpperBound: boolean = false
+): Promise<RelDocument<Record>[]> {
+  return DB.then((db) => {
+    return db
+      .find({
+        selector: {
+          $and: [
+            {
+              'data.datetime': {
+                [includeLowerBound ? '$gte' : '$gt']: minDatetime,
+                [includeUpperBound ? '$lte' : '$lt']: maxDatetime,
+              },
+            },
+            {
+              'data.accountId': {
+                $eq: id,
+              },
+            },
+            {
+              _id: {
+                $gt: db.rel.makeDocID({ type: 'record' }),
+                $lt: db.rel.makeDocID({ type: 'record', id: {} }),
+              },
+            },
+          ],
+        },
+        sort: ['data.datetime'],
+        limit: limit ? limit : 2 ** 32 - 1,
+      })
+      .then((data) => {
+        return db.rel.parseRelDocs('record', data.docs)
+      })
+      .then((res) => res.records)
+  })
 }
 
 export function updateRecord(
@@ -94,10 +137,18 @@ export function updateRecord(
 
       return db.rel.save('record', data).then(async (res) => {
         const updates = []
-        updates.push(updateBalance(accountId))
+        updates.push(
+          updateMonthlies(accountId, datetime).then(() =>
+            updateBalance(accountId)
+          )
+        )
         if (oldAccountId !== accountId) {
           // if the record was moved to another account, update the balance of both accounts
-          updates.push(updateBalance(oldAccountId))
+          updates.push(
+            updateMonthlies(oldAccountId, datetime).then(() =>
+              updateBalance(oldAccountId)
+            )
+          )
         }
         await Promise.all(updates)
         return res
@@ -114,6 +165,7 @@ export function deleteRecord(id: ID): Promise<{ deleted: boolean }> {
         throw `Could not find record with id=${id}`
       }
       return db.rel.del('record', data).then(async (res) => {
+        await updateMonthlies(data.accountId, data.datetime)
         await updateBalance(data.accountId)
         return res
       })

@@ -43,7 +43,7 @@ export function createAccount(
   }).then((res) => res.id)
 }
 
-export function getAccount(id: ID): Promise<RelDocument<Account>> {
+export function getAccount(id: ID): Promise<RelDocument<Account> | undefined> {
   return DB.then((db) => db.rel.find('account', id)).then(
     (res) => res.accounts[0]
   )

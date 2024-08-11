@@ -22,7 +22,7 @@ export function createLabel(
   }).then((res) => res.id)
 }
 
-export function getLabel(id: ID): Promise<RelDocument<Label>> {
+export function getLabel(id: ID): Promise<RelDocument<Label> | undefined> {
   return DB.then((db) => db.rel.find('label', id)).then((res) => res.labels[0])
 }
 

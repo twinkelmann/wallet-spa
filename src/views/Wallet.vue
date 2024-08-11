@@ -16,12 +16,11 @@ const show = ref(false)
 
 onMounted(async () => {
   // Try to auto-select wallet based on URL
-  state.activeWallet =
-    (await getWallet(
-      Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
-    )) || null
+  state.activeWallet = await getWallet(
+    Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
+  )
   state.shownAccounts = new Set()
-  if (state.activeWallet === null) {
+  if (!state.activeWallet) {
     // If the wallet is not found, redirect to home page
     router.replace('/')
   }

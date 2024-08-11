@@ -28,7 +28,9 @@ export function createCategory(
   }).then((res) => res.id)
 }
 
-export function getCategory(id: ID): Promise<RelDocument<Category>> {
+export function getCategory(
+  id: ID
+): Promise<RelDocument<Category> | undefined> {
   return DB.then((db) => db.rel.find('category', id)).then(
     (res) => res.categories[0]
   )
