@@ -72,7 +72,7 @@ const labels = computed(() => {
       >
       <!-- TODO maybe: intermediary value -->
       <span class="text-sm">{{
-        DateTime.fromISO(record.datetime)
+        DateTime.fromMillis(record.datetime)
           .reconfigure({ locale: $i18n.locale })
           .toLocaleString({
             month: 'short',

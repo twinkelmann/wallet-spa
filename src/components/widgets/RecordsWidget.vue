@@ -26,17 +26,12 @@ watch(props.records, (current, previous) => {
 // TODO: allow modifying and saving filter
 // TODO: only query the relevant data from the DB
 const filter = Duration.fromObject({ day: 30 })
-const filterDate = DateTime.now().minus(filter)
+const filterDate = DateTime.now().minus(filter).toMillis()
 
 const orderedRecords = computed(() => {
-  const recordsWithDates = props.records.map((r) => ({
-    ...r,
-    compare: DateTime.fromISO(r.datetime),
-  }))
-  return recordsWithDates
-    .filter((r) => r.compare >= filterDate)
-    .sort((a, b) => b.compare.valueOf() - a.compare.valueOf())
-    .map((r) => ({ ...r, compare: undefined }))
+  return props.records
+    .filter((r) => r.datetime >= filterDate)
+    .sort((a, b) => b.datetime - a.datetime)
 })
 
 // TODO: remove test features below
@@ -90,7 +85,7 @@ async function addTestData() {
           +(Math.random() * 1000 - 500).toFixed(2),
           null,
           randomText(),
-          randomDate(new Date(2022, 0, 1), new Date()).toISOString()
+          randomDate(new Date(2022, 0, 1), new Date()).valueOf()
         )
       }
     } catch (e) {

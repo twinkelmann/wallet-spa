@@ -27,7 +27,7 @@ export function createAccount(
   currency: string
 ): Promise<ID> {
   return DB.then((db) => {
-    const now = new Date().toISOString()
+    const now = new Date().valueOf()
     const newAccount = {
       walletId,
       name,
@@ -75,12 +75,12 @@ export function updateAccount(
         throw `Could not find account with id=${id}`
       }
 
-      const now = new Date()
+      const now = new Date().valueOf()
       data.name = name
       data.color = color
       data.balance = balance
       data.currency = currency
-      data.updatedAt = now.toISOString()
+      data.updatedAt = now
 
       return db.rel.save('account', data)
     })

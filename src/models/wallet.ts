@@ -13,7 +13,7 @@ export interface Wallet extends HasTimestamps {
  */
 export function createWallet(name: string): Promise<ID> {
   return DB.then((db) => {
-    const now = new Date().toISOString()
+    const now = new Date().valueOf()
     const newWallet = {
       name,
       createdAt: now,
@@ -41,9 +41,9 @@ export function updateWallet(id: ID, name: string): Promise<ID> {
         throw `Could not find wallet with id=${id}`
       }
 
-      const now = new Date()
+      const now = new Date().valueOf()
       data.name = name
-      data.updatedAt = now.toISOString()
+      data.updatedAt = now
 
       // TODO: handle conflicts https://github.com/pouchdb-community/relational-pouch?tab=readme-ov-file#managing-revisions-rev
       return db.rel.save('wallet', data)

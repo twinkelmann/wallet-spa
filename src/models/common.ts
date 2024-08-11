@@ -2,13 +2,13 @@ export type ID = PouchDB.Core.DocumentId
 
 export interface HasTimestamps {
   /**
-   * ISO DateTime String
+   * Unix EPOCH
    */
-  createdAt: string
+  createdAt: number
   /**
-   * ISO DateTime String
+   * Unix EPOCH
    */
-  updatedAt: string
+  updatedAt: number
 }
 
 export type RelDocument<Content extends {}> = Content & {

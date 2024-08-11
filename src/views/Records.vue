@@ -9,7 +9,6 @@ import { getAllLabelsOfWallet, type Label } from '@/models/label'
 import { getAllRecordsOfAccount, type Record } from '@/models/record'
 import { useStateStore } from '@/stores/state'
 import { debounce } from '@/util'
-import { DateTime } from 'luxon'
 import { storeToRefs } from 'pinia'
 import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 
@@ -22,13 +21,7 @@ const records: Ref<RelDocument<Record>[]> = ref([])
 const labels: Ref<RelDocument<Label>[]> = ref([])
 
 const orderedRecords = computed(() => {
-  const recordsWithDates = records.value.map((r) => ({
-    ...r,
-    compare: DateTime.fromISO(r.datetime),
-  }))
-  return recordsWithDates
-    .sort((a, b) => b.compare.valueOf() - a.compare.valueOf())
-    .map((r) => ({ ...r, compare: undefined }))
+  return records.value.sort((a, b) => b.datetime - a.datetime)
 })
 
 // DB sync

@@ -12,7 +12,10 @@ export interface Record extends HasTimestamps {
   value: number
   payee: string | null
   description: string | null
-  datetime: string
+  /**
+   * Unix EPOCH
+   */
+  datetime: number
 }
 
 export function createRecord(
@@ -22,10 +25,10 @@ export function createRecord(
   value: number,
   payee: string | null,
   description: string | null,
-  datetime: string
+  datetime: number
 ): Promise<ID> {
   return DB.then((db) => {
-    const now = new Date().toISOString()
+    const now = new Date().valueOf()
     const newRecord = {
       accountId,
       categoryId,
@@ -68,7 +71,7 @@ export function updateRecord(
   value: number,
   payee: string | null,
   description: string | null,
-  datetime: string
+  datetime: number
 ): Promise<void> {
   return DB.then((db) =>
     db.rel.find('record', id).then((res) => {
@@ -79,7 +82,7 @@ export function updateRecord(
 
       const oldAccountId = data.accountId
 
-      const now = new Date()
+      const now = new Date().valueOf()
       data.accountId = accountId
       data.categoryId = categoryId
       data.labelIds = labelIds
@@ -87,7 +90,7 @@ export function updateRecord(
       data.payee = payee
       data.description = description
       data.datetime = datetime
-      data.updatedAt = now.toISOString()
+      data.updatedAt = now
 
       return db.rel.save('record', data).then(async (res) => {
         const updates = []

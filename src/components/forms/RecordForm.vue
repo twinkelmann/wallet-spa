@@ -19,6 +19,7 @@ function stringTo2DecimalNumber(input: string) {
 }
 
 const submit = async (fields: any) => {
+  const datetime = DateTime.fromISO(fields.datetime).toMillis()
   try {
     if (props.record) {
       await updateRecord(
@@ -29,7 +30,7 @@ const submit = async (fields: any) => {
         stringTo2DecimalNumber(fields.value),
         fields.payee,
         fields.description,
-        fields.datetime
+        datetime
       )
     } else {
       await createRecord(
@@ -39,7 +40,7 @@ const submit = async (fields: any) => {
         stringTo2DecimalNumber(fields.value),
         fields.payee,
         fields.description,
-        fields.datetime
+        datetime
       )
     }
   } catch (e) {
@@ -111,7 +112,10 @@ const submit = async (fields: any) => {
       name="datetime"
       :label="$t('forms.labels.datetime')"
       :value="
-        (record?.datetime ? DateTime.fromISO(record.datetime) : DateTime.now())
+        (record?.datetime
+          ? DateTime.fromMillis(record.datetime)
+          : DateTime.now()
+        )
           .set({ second: 0, millisecond: 0 })
           .toISO({ includeOffset: false, suppressSeconds: true })
       "

@@ -4,7 +4,7 @@ export interface Monthly {
   accountId: ID
   balance: number
   /**
-   * ISO DateTime String
+   * Unix EPOCH
    */
-  datetime: string
+  datetime: number
 }

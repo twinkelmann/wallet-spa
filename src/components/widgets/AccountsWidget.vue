@@ -7,8 +7,9 @@ import { useSettingsStore } from '@/stores/settings'
 import type { ID, RelDocument } from '@/models/common'
 import type { Account } from '@/models/account'
 import { useBlackText } from '@/util'
+import { computed } from 'vue'
 
-defineProps<{ accounts: RelDocument<Account>[] }>()
+const props = defineProps<{ accounts: RelDocument<Account>[] }>()
 
 const state = useStateStore()
 const settings = useSettingsStore()
@@ -20,6 +21,10 @@ function toggleShowAccount(accountId: ID) {
     state.shownAccounts.add(accountId)
   }
 }
+
+const orderedAccounts = computed(() =>
+  props.accounts.sort((a, b) => a.name.localeCompare(b.name))
+)
 
 const showModal = ref(false)
 </script>
@@ -33,7 +38,11 @@ const showModal = ref(false)
     >
   </div>
   <ul class="flex flex-wrap justify-between p-3 sm:justify-center">
-    <li class="w-1/2 p-1 sm:w-72" v-for="account of accounts" :key="account.id">
+    <li
+      class="w-1/2 p-1 sm:w-72"
+      v-for="account of orderedAccounts"
+      :key="account.id"
+    >
       <div
         :style="`background-color: ${account.color}`"
         :class="`nt-clickable flex flex-col rounded-md p-2 ${
