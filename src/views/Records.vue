@@ -6,11 +6,11 @@ import { getAllAccountsOfWallet, type Account } from '@/models/account'
 import { getAllCategoriesOfWallet, type Category } from '@/models/category'
 import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { getAllLabelsOfWallet, type Label } from '@/models/label'
-import { getAllRecordsOfAccount, type Record } from '@/models/record'
+import { getAllRecordsOfAccounts, type Record } from '@/models/record'
 import { useStateStore } from '@/stores/state'
 import { debounce } from '@/util'
 import { storeToRefs } from 'pinia'
-import { computed, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 
 const state = useStateStore()
 const stateRefs = storeToRefs(state)
@@ -19,10 +19,6 @@ const accounts: Ref<RelDocument<Account>[]> = ref([])
 const categories: Ref<RelDocument<Category>[]> = ref([])
 const records: Ref<RelDocument<Record>[]> = ref([])
 const labels: Ref<RelDocument<Label>[]> = ref([])
-
-const orderedRecords = computed(() => {
-  return records.value.sort((a, b) => b.datetime - a.datetime)
-})
 
 // DB sync
 
@@ -34,11 +30,13 @@ function updateData() {
     getAllAccountsOfWallet(state.activeWallet.id)
       .then((res) => {
         accounts.value = res
-        return Promise.all(res.map((a) => getAllRecordsOfAccount(a.id)))
+        return getAllRecordsOfAccounts(
+          res.map((a) => a.id),
+          null,
+          false
+        )
       })
-      .then((res) => {
-        records.value = ([] as RelDocument<Record>[]).concat(...res)
-      })
+      .then((res) => (records.value = res))
       .catch(console.error)
     getAllCategoriesOfWallet(state.activeWallet.id)
       .then((res) => (categories.value = res))
@@ -93,7 +91,7 @@ onBeforeUnmount(() => {
       :accounts="accounts"
       :categories="categories"
       :labels="labels"
-      :records="orderedRecords"
+      :records="records"
     ></RecordList>
     <CreateRecord
       :accounts="accounts"

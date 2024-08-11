@@ -1,37 +1,132 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import { DateTime, Duration } from 'luxon'
-import { createRecord, deleteRecord, type Record } from '@/models/record'
+import {
+  createRecord,
+  getAllRecordsOfAccountsByDate,
+  type Record,
+} from '@/models/record'
 import RecordList from '../RecordList.vue'
-import type { RelDocument } from '@/models/common'
+import {
+  UPDATE_DATA_DEBOUNCE,
+  type ID,
+  type RelDocument,
+} from '@/models/common'
 import type { Account } from '@/models/account'
 import { useStateStore } from '@/stores/state'
 import { watch } from 'vue'
 import type { Label } from '@/models/label'
 import type { Category } from '@/models/category'
+import type { Ref } from 'vue'
+import { ref } from 'vue'
+import { debounce } from '@/util'
+import { storeToRefs } from 'pinia'
+import { onMounted } from 'vue'
+import { DB } from '@/database/db'
+import { onBeforeUnmount } from 'vue'
+import { getAllRecordsOfAccount } from '@/models/record'
+import { deleteRecord } from '@/models/record'
 
 const state = useStateStore()
+const stateRefs = storeToRefs(state)
 
 const props = defineProps<{
   accounts: RelDocument<Account>[]
   categories: RelDocument<Category>[]
   labels: RelDocument<Label>[]
-  records: RelDocument<Record>[]
 }>()
 
-watch(props.records, (current, previous) => {
-  console.log(current?.length, previous?.length)
+const records: Ref<RelDocument<Record>[]> = ref([])
+
+const filters = [
+  { days: 7 },
+  { days: 30 },
+  { weeks: 12 },
+  { months: 6 },
+  { years: 1 },
+  { years: 5 },
+].map((x) => Duration.fromObject(x))
+
+const filter = defineModel({ default: 1 })
+
+// DB sync
+
+let changes: PouchDB.Core.Changes<{}> | null = null
+const importantChanges = new Set(['record'])
+
+function updateData() {
+  if (state.activeWallet) {
+    let accounts: ID[]
+    if (state.shownAccounts.size === 0) {
+      accounts = props.accounts.map((a) => a.id)
+    } else {
+      accounts = [...state.shownAccounts]
+    }
+    const now = DateTime.now()
+    const filterDate = DateTime.now().minus(filters[filter.value]).toMillis()
+
+    getAllRecordsOfAccountsByDate(
+      accounts,
+      filterDate,
+      now.toMillis(),
+      null,
+      true,
+      true,
+      false
+    )
+      .then((res) => {
+        records.value = res
+        console.log(res)
+      })
+      .catch(console.error)
+  }
+}
+const debouncedUpdateData = debounce(updateData, UPDATE_DATA_DEBOUNCE)
+
+watch(stateRefs.activeWallet, (current, previous) => {
+  if (current && current.id !== previous?.id) {
+    updateData()
+  }
 })
 
-// TODO: allow modifying and saving filter
-// TODO: only query the relevant data from the DB
-const filter = Duration.fromObject({ day: 30 })
-const filterDate = DateTime.now().minus(filter).toMillis()
+watch(
+  () => props.accounts,
+  (current, previous) => {
+    if (current.length > 0 && current.length !== previous.length) {
+      updateData()
+    }
+  }
+)
+watch(
+  () => state.shownAccounts.size,
 
-const orderedRecords = computed(() => {
-  return props.records
-    .filter((r) => r.datetime >= filterDate)
-    .sort((a, b) => b.datetime - a.datetime)
+  updateData
+)
+watch(filter, updateData)
+
+onMounted(() => {
+  if (state.activeWallet) {
+    updateData()
+  }
+
+  DB.then((db) => {
+    changes = db
+      .changes({
+        since: 'now',
+        live: true,
+      })
+      .on('change', (change) => {
+        if (importantChanges.has(db.rel.parseDocID(change.id).type)) {
+          debouncedUpdateData()
+        }
+      })
+      .on('error', console.error)
+  })
+})
+
+onBeforeUnmount(() => {
+  if (changes) {
+    changes.cancel()
+  }
 })
 
 // TODO: remove test features below
@@ -95,8 +190,11 @@ async function addTestData() {
 }
 async function deleteAll() {
   try {
-    for (const r of props.records) {
-      await deleteRecord(r.id)
+    for (const account of props.accounts) {
+      const records = await getAllRecordsOfAccount(account.id)
+      for (const r of records) {
+        await deleteRecord(r.id)
+      }
     }
   } catch (e) {
     console.error(e)
@@ -108,22 +206,21 @@ async function deleteAll() {
   <div class="mx-4 flex items-center justify-between">
     <h2 class="text-lg font-medium">
       {{ $t('widgets.records.title', 2) }} ({{
-        filter.reconfigure({ locale: $i18n.locale }).toHuman()
+        filters[filter].reconfigure({ locale: $i18n.locale }).toHuman()
       }})
     </h2>
-    <!-- TODO: widget settings -->
-    <button
-      class="material-icons nt-clickable nt-focus-ring rounded-full p-4 print:hidden"
-    >
-      settings
-    </button>
+    <FormKit type="select" name="filter" v-model="filter" validation="required">
+      <option v-for="(f, index) in filters" :key="index" :value="index">
+        {{ f.reconfigure({ locale: $i18n.locale }).toHuman() }}
+      </option>
+    </FormKit>
   </div>
   <RecordList
     class="m-2"
     :accounts="accounts"
     :categories="categories"
     :labels="labels"
-    :records="orderedRecords"
+    :records="records"
   ></RecordList>
   <button
     class="nt-button m-4 shrink-0 bg-red-900 print:hidden"

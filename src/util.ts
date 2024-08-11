@@ -1,7 +1,7 @@
 import { DateTime, type DateObjectUnits } from 'luxon'
 import { getAccount, updateAccount } from './models/account'
 import type { ID } from './models/common'
-import { getAllRecordsOfAccountByDate } from './models/record'
+import { getAllRecordsOfAccountsByDate } from './models/record'
 import Color from 'colorjs.io'
 import {
   createMonthly,
@@ -36,19 +36,17 @@ export async function updateBalance(accountId: ID) {
       true,
       true
     )
-    console.log(lastMonthly)
 
     const startBalance = lastMonthly[0]?.balance || 0
 
-    const records = await getAllRecordsOfAccountByDate(
-      accountId,
+    const records = await getAllRecordsOfAccountsByDate(
+      [accountId],
       currentMonthStart,
       new Date().valueOf(),
       null,
       true,
       true
     )
-    console.log({ records })
 
     const finalBalance =
       Math.round(
@@ -101,8 +99,8 @@ export async function updateMonthlies(accountId: ID, dateChanged: number) {
     const baseBalance = previousMonthly?.balance || 0
 
     // compute this monthly's sum
-    const records = await getAllRecordsOfAccountByDate(
-      accountId,
+    const records = await getAllRecordsOfAccountsByDate(
+      [accountId],
       startMillis,
       endMillis
     )

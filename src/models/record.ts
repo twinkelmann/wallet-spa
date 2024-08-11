@@ -64,13 +64,53 @@ export function getAllRecordsOfAccount(id: ID): Promise<RelDocument<Record>[]> {
   )
 }
 
-export function getAllRecordsOfAccountByDate(
-  id: ID,
+export function getAllRecordsOfAccounts(
+  ids: ID[],
+  limit: number | null = null,
+  asc = true
+): Promise<RelDocument<Record>[]> {
+  return DB.then((db) => {
+    return db
+      .find({
+        selector: {
+          $and: [
+            {
+              // required to be able to sort by this field
+              'data.datetime': {
+                $gt: null,
+              },
+            },
+            {
+              'data.accountId': {
+                $in: ids,
+              },
+            },
+            {
+              _id: {
+                $gt: db.rel.makeDocID({ type: 'record' }),
+                $lt: db.rel.makeDocID({ type: 'record', id: {} }),
+              },
+            },
+          ],
+        },
+        sort: [{ 'data.datetime': asc ? 'asc' : 'desc' }],
+        limit: limit ? limit : 2 ** 32 - 1,
+      })
+      .then((data) => {
+        return db.rel.parseRelDocs('record', data.docs)
+      })
+      .then((res) => res.records)
+  })
+}
+
+export function getAllRecordsOfAccountsByDate(
+  ids: ID[],
   minDatetime: number,
   maxDatetime: number,
   limit: number | null = null,
   includeLowerBound: boolean = true,
-  includeUpperBound: boolean = false
+  includeUpperBound: boolean = false,
+  asc = true
 ): Promise<RelDocument<Record>[]> {
   return DB.then((db) => {
     return db
@@ -85,7 +125,7 @@ export function getAllRecordsOfAccountByDate(
             },
             {
               'data.accountId': {
-                $eq: id,
+                $in: ids,
               },
             },
             {
@@ -96,7 +136,7 @@ export function getAllRecordsOfAccountByDate(
             },
           ],
         },
-        sort: ['data.datetime'],
+        sort: [{ 'data.datetime': asc ? 'asc' : 'desc' }],
         limit: limit ? limit : 2 ** 32 - 1,
       })
       .then((data) => {
@@ -119,7 +159,7 @@ export function updateRecord(
   return DB.then((db) =>
     db.rel.find('record', id).then((res) => {
       const data = res.records[0] as RelDocument<Record>
-      if (!data) {
+      if (!id || !data) {
         throw `Could not find record with id=${id}`
       }
 

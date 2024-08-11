@@ -71,7 +71,6 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
         (await db.getIndexes()).indexes
           .filter((index) => index.ddoc)
           .map((index) => {
-            console.log(index)
             return db.deleteIndex({ ddoc: index.ddoc || '', name: index.name })
           })
       )
