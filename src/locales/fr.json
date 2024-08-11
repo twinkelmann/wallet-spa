@@ -15,9 +15,10 @@
       "value": "Montant",
       "payee": "Bénéficiaire",
       "description": "Description",
-      "datetime": "Datetime",
+      "datetime": "Date et heure",
       "color": "Couleur",
-      "currency": "Devise"
+      "currency": "Devise",
+      "start-balance": "Montant initial"
     },
     "placeholders": {
       "wallet-name": "Mon @.capitalize:terminology.wallet Personnel",

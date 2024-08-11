@@ -56,10 +56,13 @@ const showModal = ref(false)
       >
         <span class="truncate text-sm">{{ account.name }}</span>
         <span>{{
-          account.balance.toLocaleString(settings.numberLocale, {
-            style: 'currency',
-            currency: account.currency,
-          })
+          (account.balance + account.startBalance).toLocaleString(
+            settings.numberLocale,
+            {
+              style: 'currency',
+              currency: account.currency,
+            }
+          )
         }}</span>
       </div>
     </li>

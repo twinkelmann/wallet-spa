@@ -73,10 +73,7 @@ function updateData() {
       true,
       false
     )
-      .then((res) => {
-        records.value = res
-        console.log(res)
-      })
+      .then((res) => (records.value = res))
       .catch(console.error)
   }
 }

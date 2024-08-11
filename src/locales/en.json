@@ -15,9 +15,10 @@
       "value": "Value",
       "payee": "Payee",
       "description": "Description",
-      "datetime": "Date et heure",
+      "datetime": "Datetime",
       "color": "Color",
-      "currency": "Currency"
+      "currency": "Currency",
+      "start-balance": "Start balance"
     },
     "placeholders": {
       "wallet-name": "My Personnal @.capitalize:terminology.wallet",

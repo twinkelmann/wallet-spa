@@ -65,7 +65,7 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
       },
     ])
     try {
-      // TODO: probably not necessary to rebuild the index on every launch
+      // OPTIMIZE: probably not necessary to rebuild the index on every launch
       /*
       await Promise.all(
         (await db.getIndexes()).indexes
@@ -84,7 +84,7 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
         },
       })
       // To look up children of account (record, monthly)
-      // TODO: check if flipping order is faster with many records
+      // OPTIMIZE: check if flipping order is faster with many records
       await db.createIndex({
         index: {
           name: 'idx-account',

@@ -30,7 +30,7 @@ const labels = computed(() => {
 })
 </script>
 <template>
-  <div class="flex w-full gap-2">
+  <div class="flex w-full gap-4">
     <div
       class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
       :style="`background-color: ${category.color}`"
@@ -51,7 +51,7 @@ const labels = computed(() => {
           v-for="label of labels"
           :key="label.id"
           :style="`background-color: ${label.color}`"
-          :class="`rounded-md p-2 text-sm ${
+          :class="`rounded-lg px-3 py-1 text-sm ${
             useBlackText(label.color) ? 'text-black' : 'text-white'
           }`"
         >

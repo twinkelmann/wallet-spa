@@ -6,7 +6,7 @@ import {
   type Account,
 } from '@/models/account'
 import { type ID, type RelDocument } from '@/models/common'
-import { capitalizeFirstLetter } from '@/util'
+import { capitalizeFirstLetter, to2DecimalNumber } from '@/util'
 
 const props = defineProps<{
   account: RelDocument<Account> | null
@@ -22,6 +22,7 @@ const submit = async (fields: any) => {
         fields.name,
         fields.color,
         props.account.balance,
+        to2DecimalNumber(fields.startBalance),
         fields.currency
       )
     } else {
@@ -29,6 +30,7 @@ const submit = async (fields: any) => {
         props.walletId,
         fields.name,
         fields.color,
+        to2DecimalNumber(fields.startBalance),
         fields.currency
       )
     }
@@ -63,6 +65,14 @@ const submit = async (fields: any) => {
       :label="$t('forms.labels.color')"
       :value="account?.color || '#FF0000'"
       validation="required"
+    />
+    <FormKit
+      type="number"
+      name="startBalance"
+      :label="$t('forms.labels.start-balance')"
+      :value="String(account?.startBalance || 0)"
+      validation="required"
+      step=".01"
     />
     <FormKit
       type="select"

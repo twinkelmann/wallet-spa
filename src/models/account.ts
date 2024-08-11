@@ -24,6 +24,7 @@ export function createAccount(
   walletId: ID,
   name: string,
   color: string,
+  startBalance: number,
   currency: string
 ): Promise<ID> {
   return DB.then((db) => {
@@ -33,8 +34,7 @@ export function createAccount(
       name,
       color,
       balance: 0,
-      // TODO: make this a parameter
-      startBalance: 0,
+      startBalance,
       currency,
       createdAt: now,
       updatedAt: now,
@@ -66,6 +66,7 @@ export function updateAccount(
   name: string,
   color: string,
   balance: number,
+  startBalance: number,
   currency: string
 ): Promise<ID> {
   return DB.then((db) =>
@@ -79,6 +80,7 @@ export function updateAccount(
       data.name = name
       data.color = color
       data.balance = balance
+      data.startBalance = startBalance
       data.currency = currency
       data.updatedAt = now
 

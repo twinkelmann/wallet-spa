@@ -4,7 +4,7 @@ import type { Category } from '@/models/category'
 import { type RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
 import { createRecord, updateRecord, type Record } from '@/models/record'
-import { capitalizeFirstLetter } from '@/util'
+import { capitalizeFirstLetter, to2DecimalNumber } from '@/util'
 import { DateTime } from 'luxon'
 
 const props = defineProps<{
@@ -15,10 +15,6 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
 
-function stringTo2DecimalNumber(input: string) {
-  return Math.round(parseFloat(input) * 100) / 100
-}
-
 const submit = async (fields: any) => {
   const datetime = DateTime.fromISO(fields.datetime).toMillis()
   try {
@@ -28,7 +24,7 @@ const submit = async (fields: any) => {
         fields.accountId,
         fields.categoryId,
         fields.labelIds,
-        stringTo2DecimalNumber(fields.value),
+        to2DecimalNumber(fields.value),
         fields.payee,
         fields.description,
         datetime
@@ -38,7 +34,7 @@ const submit = async (fields: any) => {
         fields.accountId,
         fields.categoryId,
         fields.labelIds,
-        stringTo2DecimalNumber(fields.value),
+        to2DecimalNumber(fields.value),
         fields.payee,
         fields.description,
         datetime

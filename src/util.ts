@@ -48,18 +48,16 @@ export async function updateBalance(accountId: ID) {
       true
     )
 
-    const finalBalance =
-      Math.round(
-        records.reduce((balance, r) => balance + r.value, startBalance) * 100
-      ) /
-        100 +
-      account.startBalance
+    const finalBalance = to2DecimalNumber(
+      records.reduce((balance, r) => balance + r.value, startBalance)
+    )
 
     return updateAccount(
       accountId,
       account.name,
       account.color,
       finalBalance,
+      account.startBalance,
       account.currency
     )
   }
@@ -105,10 +103,9 @@ export async function updateMonthlies(accountId: ID, dateChanged: number) {
       endMillis
     )
 
-    const monthlyBalance =
-      Math.round(
-        records.reduce((balance, r) => balance + r.value, baseBalance) * 100
-      ) / 100
+    const monthlyBalance = to2DecimalNumber(
+      records.reduce((balance, r) => balance + r.value, baseBalance)
+    )
 
     // attempt to update an existing monthly. otherwise, create it
     if (currentMonthly) {
@@ -116,7 +113,7 @@ export async function updateMonthlies(accountId: ID, dateChanged: number) {
     } else {
       await createMonthly(accountId, monthlyBalance, endMillis)
     }
-    // TODO: the result from above will be the `previousMonthly` of the next iteration
+    // OPTIMIZE: the result from above will be the `previousMonthly` of the next iteration
     // we could optimize by storing it outside the loop
     // but we need to perform `getAllMonthliesOfAccountByDate` anyways, so not sure how much perf we gain
 
@@ -142,10 +139,14 @@ export function debounce(func: Function, wait: number) {
 const black = new Color('black')
 const white = new Color('white')
 
-// TODO: could cache this. TBD if useful
+// OPTIMIZE: could cache this. TBD if useful
 export function useBlackText(backgroundColor: string) {
   const background = new Color(backgroundColor)
   const cBlack = background.contrast(black, 'APCA')
   const cWhite = background.contrast(white, 'APCA')
   return Math.abs(cBlack) > Math.abs(cWhite)
+}
+
+export function to2DecimalNumber(input: string | number) {
+  return Math.round(parseFloat(input as string) * 100) / 100
 }
