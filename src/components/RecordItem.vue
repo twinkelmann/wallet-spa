@@ -26,7 +26,8 @@ const category = computed(() => {
   return props.categoriesById[props.record.categoryId]
 })
 const labels = computed(() => {
-  return props.record.labelIds.map((id) => props.labelsById[id])
+  // for now we need to filter, because when labels are deleted, the reference ID is still here
+  return props.record.labelIds.map((id) => props.labelsById[id]).filter(Boolean)
 })
 </script>
 <template>
