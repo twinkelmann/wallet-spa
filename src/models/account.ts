@@ -1,5 +1,7 @@
 import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
+import { deleteRecord, getAllRecordsOfAccount } from './record'
+import { deleteMonthly, getAllMonthliesOfAccount } from './monthly'
 
 export const currencies = ['CHF', 'EUR', 'GBP', 'USD'] as const
 
@@ -96,8 +98,17 @@ export function deleteAccount(id: ID): Promise<{ deleted: boolean }> {
       if (!data) {
         throw `Could not find account with id=${id}`
       }
-      // TODO: Delete associated records and monthlies
-      return db.rel.del('account', data)
+      return db.rel.del('account', data).then(async (res) => {
+        if (res.deleted) {
+          await getAllRecordsOfAccount(id).then((records) =>
+            Promise.all(records.map((r) => deleteRecord(r.id, false)))
+          )
+          await getAllMonthliesOfAccount(id).then((monthlies) =>
+            Promise.all(monthlies.map((m) => deleteMonthly(m.id, false)))
+          )
+        }
+        return res
+      })
     })
   )
 }

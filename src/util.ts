@@ -120,6 +120,7 @@ export async function updateMonthlies(accountId: ID, dateChanged: number) {
     start = end
   }
   // no monthly is computed for the running month. we are done
+  // TODO: there should be a way to detect that a monthly is not needed anymore (when we delete the last record of a month). right now we have some leftovers in the DB, but that's not too bad
 }
 
 export function debounce(func: Function, wait: number) {

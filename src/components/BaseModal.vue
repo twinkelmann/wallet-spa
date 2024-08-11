@@ -16,6 +16,11 @@ function preventClose() {
   canClickToClose = false
 }
 
+function allowClose(event: MouseEvent) {
+  event.stopPropagation()
+  canClickToClose = true
+}
+
 function attemptClose() {
   if (canClickToClose) {
     emit('close')
@@ -42,6 +47,7 @@ function attemptClose() {
         <div
           :class="`modal-container flex max-h-full max-w-full flex-col rounded-lg bg-white shadow-2xl transition-transform ${modalClasses}`"
           @mousedown="preventClose()"
+          @mouseup="allowClose($event)"
         >
           <!-- modal header -->
           <div

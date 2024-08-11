@@ -18,7 +18,7 @@ import type { Label } from '@/models/label'
 import type { Category } from '@/models/category'
 import type { Ref } from 'vue'
 import { ref } from 'vue'
-import { debounce } from '@/util'
+import { debounce, updateMonthlies, updateBalance } from '@/util'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import { DB } from '@/database/db'
@@ -165,10 +165,16 @@ function randomDate(start: Date, end: Date) {
 async function addTestData() {
   if (state.activeWallet) {
     try {
+      const oldest: { [x: ID]: number } = {}
       for (let i = 0; i < 100; i++) {
         console.log(i)
+        const accountId = choose(props.accounts).id
+        const datetime = randomDate(new Date(2022, 0, 1), new Date()).valueOf()
+        if (!oldest[accountId] || datetime < oldest[accountId]) {
+          oldest[accountId] = datetime
+        }
         await createRecord(
-          choose(props.accounts).id,
+          accountId,
           choose(props.categories).id,
           chooseMany(
             props.labels,
@@ -177,8 +183,15 @@ async function addTestData() {
           +(Math.random() * 1000 - 500).toFixed(2),
           null,
           randomText(),
-          randomDate(new Date(2022, 0, 1), new Date()).valueOf()
+          datetime,
+          // don't recompute monthlies to gain some perf
+          false
         )
+      }
+      // update monthlies only once per account, manually
+      for (const id in oldest) {
+        await updateMonthlies(id, oldest[id])
+        await updateBalance(id)
       }
     } catch (e) {
       console.error(e)
@@ -188,10 +201,18 @@ async function addTestData() {
 async function deleteAll() {
   try {
     for (const account of props.accounts) {
+      let oldest = Infinity
       const records = await getAllRecordsOfAccount(account.id)
       for (const r of records) {
-        await deleteRecord(r.id)
+        if (r.datetime < oldest) {
+          oldest = r.datetime
+        }
+        // don't recompute monthlies to gain some perf
+        await deleteRecord(r.id, false)
       }
+      // update monthlies only once, manually
+      await updateMonthlies(account.id, oldest)
+      await updateBalance(account.id)
     }
   } catch (e) {
     console.error(e)

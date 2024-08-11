@@ -25,7 +25,8 @@ export function createRecord(
   value: number,
   payee: string | null,
   description: string | null,
-  datetime: number
+  datetime: number,
+  doUpdateMonthliesBalance = true
 ): Promise<ID> {
   return DB.then((db) => {
     const now = new Date().valueOf()
@@ -41,8 +42,10 @@ export function createRecord(
       updatedAt: now,
     } as Record
     return db.rel.save('record', newRecord).then(async (res) => {
-      await updateMonthlies(accountId, datetime)
-      await updateBalance(accountId)
+      if (doUpdateMonthliesBalance) {
+        await updateMonthlies(accountId, datetime)
+        await updateBalance(accountId)
+      }
       return res
     })
   }).then((res) => res.id)
@@ -197,7 +200,10 @@ export function updateRecord(
   ).then((res) => res.id)
 }
 
-export function deleteRecord(id: ID): Promise<{ deleted: boolean }> {
+export function deleteRecord(
+  id: ID,
+  doUpdateMonthliesBalance = true
+): Promise<{ deleted: boolean }> {
   return DB.then((db) =>
     db.rel.find('record', id).then((res) => {
       const data = res.records[0] as RelDocument<Record>
@@ -205,8 +211,10 @@ export function deleteRecord(id: ID): Promise<{ deleted: boolean }> {
         throw `Could not find record with id=${id}`
       }
       return db.rel.del('record', data).then(async (res) => {
-        await updateMonthlies(data.accountId, data.datetime)
-        await updateBalance(data.accountId)
+        if (doUpdateMonthliesBalance) {
+          await updateMonthlies(data.accountId, data.datetime)
+          await updateBalance(data.accountId)
+        }
         return res
       })
     })
