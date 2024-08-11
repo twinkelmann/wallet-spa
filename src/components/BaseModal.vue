@@ -8,7 +8,21 @@ defineProps({
   modalClasses: String,
 })
 
-defineEmits<{ (e: 'close'): void }>()
+const emit = defineEmits<{ (e: 'close'): void }>()
+
+let canClickToClose = true
+
+function preventClose() {
+  canClickToClose = false
+}
+
+function attemptClose() {
+  if (canClickToClose) {
+    emit('close')
+  } else {
+    canClickToClose = true
+  }
+}
 </script>
 <template>
   <Transition name="modal">
@@ -20,14 +34,14 @@ defineEmits<{ (e: 'close'): void }>()
     <div
       v-if="show"
       class="absolute left-0 top-0 z-[2000] h-screen w-screen bg-black/75 transition-opacity"
-      @click="$emit('close')"
+      @mouseup="attemptClose()"
     >
       <!-- div that is actually the size of the screen, to center the modal -->
       <div class="flex h-screen w-screen items-center justify-center">
         <!-- modal -->
         <div
           :class="`modal-container flex max-h-full max-w-full flex-col rounded-lg bg-white shadow-2xl transition-transform ${modalClasses}`"
-          @click="$event.stopPropagation()"
+          @mousedown="preventClose()"
         >
           <!-- modal header -->
           <div
