@@ -5,14 +5,10 @@ import WalletForm from '../components/forms/WalletForm.vue'
 import type { Ref } from 'vue'
 import { type Wallet, deleteWallet, getAllWallets } from '@/models/wallet'
 import LocaleSelector from '@/components/LocaleSelector.vue'
-import {
-  capitalizeFirstLetter,
-  type RelDocument,
-  UPDATE_DATA_DEBOUNCE,
-} from '@/models/common'
+import { type RelDocument, UPDATE_DATA_DEBOUNCE } from '@/models/common'
 import { useI18n } from 'vue-i18n'
 import { onMounted } from 'vue'
-import { debounce } from '@/util'
+import { capitalizeFirstLetter, debounce } from '@/util'
 import { DB } from '@/database/db'
 import { onBeforeUnmount } from 'vue'
 

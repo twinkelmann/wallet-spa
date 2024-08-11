@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { createLabel, updateLabel, type Label } from '@/models/label'
-import {
-  capitalizeFirstLetter,
-  type ID,
-  type RelDocument,
-} from '@/models/common'
+import { type ID, type RelDocument } from '@/models/common'
+import { capitalizeFirstLetter } from '@/util'
 
 const props = defineProps<{
   label: RelDocument<Label> | null

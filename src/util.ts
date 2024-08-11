@@ -3,6 +3,13 @@ import type { ID } from './models/common'
 import { getAllRecordsOfAccount } from './models/record'
 import Color from 'colorjs.io'
 
+/**
+ * In case better UTF16/Locales support is needed, see https://stackoverflow.com/a/53930826
+ */
+export function capitalizeFirstLetter(s: string) {
+  return s[0].toUpperCase() + s.slice(1)
+}
+
 export async function updateBalance(accountId: ID) {
   const account = await getAccount(accountId)
   if (account) {

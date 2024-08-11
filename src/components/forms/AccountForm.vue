@@ -5,11 +5,8 @@ import {
   updateAccount,
   type Account,
 } from '@/models/account'
-import {
-  capitalizeFirstLetter,
-  type ID,
-  type RelDocument,
-} from '@/models/common'
+import { type ID, type RelDocument } from '@/models/common'
+import { capitalizeFirstLetter } from '@/util'
 
 const props = defineProps<{
   account: RelDocument<Account> | null

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
+import { type RelDocument } from '@/models/common'
 import { createWallet, updateWallet, type Wallet } from '@/models/wallet'
+import { capitalizeFirstLetter } from '@/util'
 
 const props = defineProps<{ wallet: RelDocument<Wallet> | null }>()
 const emit = defineEmits<{ (e: 'done'): void }>()

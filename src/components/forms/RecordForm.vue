@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Account } from '@/models/account'
 import type { Category } from '@/models/category'
-import { capitalizeFirstLetter, type RelDocument } from '@/models/common'
+import { type RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
 import { createRecord, updateRecord, type Record } from '@/models/record'
+import { capitalizeFirstLetter } from '@/util'
 import { DateTime } from 'luxon'
 
 const props = defineProps<{

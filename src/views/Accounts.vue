@@ -7,13 +7,9 @@ import {
   getAllAccountsOfWallet,
   type Account,
 } from '@/models/account'
-import {
-  UPDATE_DATA_DEBOUNCE,
-  capitalizeFirstLetter,
-  type RelDocument,
-} from '@/models/common'
+import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { useStateStore } from '@/stores/state'
-import { debounce } from '@/util'
+import { capitalizeFirstLetter, debounce } from '@/util'
 import { storeToRefs } from 'pinia'
 import type { Ref } from 'vue'
 import { computed, onBeforeUnmount } from 'vue'

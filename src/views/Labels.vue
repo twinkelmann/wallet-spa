@@ -2,14 +2,10 @@
 import BaseModal from '@/components/BaseModal.vue'
 import LabelForm from '@/components/forms/LabelForm.vue'
 import { DB } from '@/database/db'
-import {
-  UPDATE_DATA_DEBOUNCE,
-  capitalizeFirstLetter,
-  type RelDocument,
-} from '@/models/common'
+import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
 import { deleteLabel, getAllLabelsOfWallet, type Label } from '@/models/label'
 import { useStateStore } from '@/stores/state'
-import { debounce } from '@/util'
+import { capitalizeFirstLetter, debounce } from '@/util'
 import { storeToRefs } from 'pinia'
 import type { Ref } from 'vue'
 import { onBeforeUnmount } from 'vue'
