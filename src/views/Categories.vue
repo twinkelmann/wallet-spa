@@ -80,9 +80,9 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="mx-4 mb-4 flex flex-col items-center">
-    <h1 class="text-center first-letter:uppercase">
+    <h2 class="text-center text-lg font-medium first-letter:uppercase">
       {{ $t('terminology.category', 2) }}
-    </h1>
+    </h2>
     <ul
       class="flex w-full flex-col gap-2 p-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2"
     >

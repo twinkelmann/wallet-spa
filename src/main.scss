@@ -34,7 +34,7 @@ main {
 
 // Any focusable interface control should use this focus ring for consistant styling and to facilitate keyboard navigation
 .nt-focus-ring {
-  @apply ring-cyan-400 ring-opacity-50 transition-shadow focus:ring-2;
+  @apply outline-none ring-indigo-200 ring-opacity-50 transition-shadow focus:ring-2;
 }
 
 // Standard style for an input. Gives it an outline, focus ring, fixed height and padding.
@@ -74,7 +74,7 @@ main {
 // Custom CSS for the basic button
 // Combine this component with a width/grow/padding-x and a background color
 .nt-button {
-  @apply nt-focus-ring h-9 select-none rounded-md border-none font-medium leading-none text-gray-100 transition duration-75;
+  @apply nt-focus-ring h-9 select-none rounded-md border-none font-medium leading-none transition duration-75;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -83,7 +83,7 @@ main {
 
   &:hover:not(:disabled) {
     @apply shadow;
-    filter: brightness(105%) grayscale(0.2);
+    // filter: brightness(105%) grayscale(0.2);
   }
 
   &:active:not(:disabled) {
@@ -164,4 +164,20 @@ main {
 
 .nt-clickable {
   @apply cursor-pointer select-none;
+}
+
+.bg-wallet-primary {
+  @apply bg-size-200 bg-pos-0 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-400 text-emerald-50 transition-all duration-300;
+
+  &:hover {
+    @apply bg-pos-100 text-white;
+  }
+}
+
+.bg-wallet-secondary {
+  @apply bg-size-200 bg-pos-0 bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-300 text-yellow-950 transition-all duration-300;
+
+  &:hover {
+    @apply bg-pos-100 text-black;
+  }
 }

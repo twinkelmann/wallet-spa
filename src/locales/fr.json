@@ -37,6 +37,9 @@
     },
     "records": {
       "title": "Aperçu des dernières @:terminology.record"
+    },
+    "total": {
+      "title": "Total des @:terminology.account"
     }
   },
   "create": {

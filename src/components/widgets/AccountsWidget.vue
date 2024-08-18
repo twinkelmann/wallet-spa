@@ -68,7 +68,7 @@ const showModal = ref(false)
     </li>
     <li class="w-1/2 p-1 sm:w-72 print:hidden">
       <button
-        class="h-full w-full rounded-md border border-gray-400 p-2 text-gray-600 first-letter:uppercase"
+        class="h-full w-full rounded-md border border-gray-400 p-2 text-gray-600 first-letter:uppercase hover:border-gray-600 hover:text-gray-800"
         @click="showModal = true"
       >
         {{ $t('create.account') }}

@@ -2,6 +2,7 @@
 import CreateRecord from '@/components/CreateRecord.vue'
 import AccountsWidget from '@/components/widgets/AccountsWidget.vue'
 import RecordsWidget from '@/components/widgets/RecordsWidget.vue'
+import TotalWidget from '@/components/widgets/TotalWidget.vue'
 import { DB } from '@/database/db'
 import { getAllAccountsOfWallet, type Account } from '@/models/account'
 import { getAllCategoriesOfWallet, type Category } from '@/models/category'
@@ -74,6 +75,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <TotalWidget :accounts="accounts"></TotalWidget>
   <AccountsWidget :accounts="accounts"></AccountsWidget>
   <RecordsWidget
     :accounts="accounts"

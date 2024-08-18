@@ -38,7 +38,7 @@ onMounted(async () => {
     <Menu :show="show" @close="show = false"></Menu>
     <div class="flex grow flex-col">
       <header
-        class="mb-4 flex h-12 w-full items-center justify-between bg-gray-100 print:shrink-0"
+        class="mb-4 flex w-full items-center justify-between text-lg print:shrink-0"
       >
         <button
           class="material-icons nt-clickable nt-focus-ring p-4 md:pointer-events-none md:opacity-0 print:hidden"

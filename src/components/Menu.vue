@@ -17,26 +17,19 @@ const basePath = computed(() => `/wallets/${state.activeWallet}`)
     @click="$emit('close')"
   >
     <ul
-      :class="`menu-container flex h-full w-3/4 flex-col bg-white shadow-2xl transition-transform md:fixed md:w-64 md:shadow-lg ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
+      :class="`flex h-full w-3/4 flex-col overflow-y-auto bg-white shadow-2xl transition-transform md:fixed md:w-64 md:shadow-lg ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
       @click="$event.stopPropagation()"
     >
-      <li
-        v-for="entry in menuEntries"
-        :key="entry.path"
-        class="border-b border-gray-100"
-      >
+      <li v-for="entry in menuEntries" :key="entry.path">
         <RouterLink
           :to="`${basePath}/${entry.path}`"
-          class="flex h-full w-full items-center p-4"
-          exactActiveClass="bg-gray-100"
+          class="nt-focus-ring m-2 flex items-center rounded-lg p-3"
+          exactActiveClass="bg-wallet-secondary"
           ><i class="material-icons mr-2">{{ entry.icon }}</i>
           <span class="first-letter:uppercase">{{
             $t(entry.name as string, 2)
           }}</span>
         </RouterLink>
-      </li>
-      <li>
-        <button>Dark Mode</button>
       </li>
       <li class="m-4">
         <LocaleSelector></LocaleSelector>

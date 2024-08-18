@@ -37,6 +37,9 @@
     },
     "records": {
       "title": "Last @:terminology.record overview"
+    },
+    "total": {
+      "title": "All @:terminology.account"
     }
   },
   "create": {

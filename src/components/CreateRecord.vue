@@ -18,7 +18,7 @@ const showModal = ref(false)
 
 <template>
   <button
-    class="nt-clickable nt-focus-ring material-icons fixed bottom-8 right-8 rounded-full bg-blue-400 p-5 text-lg text-white shadow-lg print:hidden"
+    class="nt-clickable nt-focus-ring bg-wallet-primary material-icons fixed bottom-8 right-8 rounded-full p-5 text-lg shadow-lg print:hidden"
     @click="showModal = true"
   >
     add

@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
       </li>
       <li>
         <button
-          class="nt-button w-full bg-emerald-800 first-letter:uppercase"
+          class="nt-button bg-wallet-primary w-full first-letter:uppercase"
           @click="createWallet()"
         >
           {{ $t('create.wallet') }}

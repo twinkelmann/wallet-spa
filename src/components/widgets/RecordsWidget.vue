@@ -242,16 +242,20 @@ async function deleteAll() {
     :labels="labels"
     :records="records"
   ></RecordList>
-  <button
-    class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
-    @click="addTestData()"
-  >
-    Add test data
-  </button>
-  <button
-    class="nt-button m-4 shrink-0 bg-red-900 print:hidden"
-    @click="deleteAll()"
-  >
-    Delete all records in active Wallet
-  </button>
+  <div class="flex flex-wrap justify-center gap-4 print:hidden">
+    <button
+      class="nt-button bg-wallet-secondary flex items-center px-4"
+      @click="addTestData()"
+    >
+      <i class="material-icons pr-2">data_object</i>
+      Add test data
+    </button>
+    <button
+      class="nt-button bg-wallet-secondary flex items-center px-4"
+      @click="deleteAll()"
+    >
+      <i class="material-icons pr-2">data_object</i>
+      Delete all records in active Wallet
+    </button>
+  </div>
 </template>
