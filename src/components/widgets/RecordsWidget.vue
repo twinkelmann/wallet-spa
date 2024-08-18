@@ -180,6 +180,7 @@ async function addTestData() {
             props.labels,
             Math.round(Math.random() * props.labels.length)
           ).map((x) => x.id),
+          null,
           +(Math.random() * 1000 - 500).toFixed(2),
           null,
           randomText(),

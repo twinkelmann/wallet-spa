@@ -23,7 +23,7 @@ const labels: Ref<RelDocument<Label>[]> = ref([])
 // DB sync
 
 let changes: PouchDB.Core.Changes<{}> | null = null
-const importantChanges = new Set(['record'])
+const importantChanges = new Set(['account', 'category', 'record', 'label'])
 
 function updateData() {
   if (state.activeWallet) {

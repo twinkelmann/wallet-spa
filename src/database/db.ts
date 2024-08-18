@@ -29,6 +29,13 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
         },
       },
       {
+        singular: 'debt',
+        plural: 'debts',
+        relations: {
+          walletId: { belongsTo: { type: 'wallet', options: { async: true } } },
+        },
+      },
+      {
         singular: 'label',
         plural: 'labels',
         relations: {
@@ -56,6 +63,9 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           },
           labelIds: {
             hasMany: { type: 'label', options: { async: true } },
+          },
+          debtId: {
+            belongsTo: { type: 'debt', options: { async: true } },
           },
         },
       },
@@ -98,6 +108,14 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           name: 'idx-category',
           ddoc: 'idx-category',
           fields: ['data.categoryId', '_id'],
+        },
+      })
+      // To look up children of debt (record)
+      await db.createIndex({
+        index: {
+          name: 'idx-debt',
+          ddoc: 'idx-debt',
+          fields: ['data.debtId', '_id'],
         },
       })
       // To look up records and monthlies by datetime and accountId

@@ -3,12 +3,12 @@ import type { HasTimestamps, ID, RelDocument } from './common'
 import { updateBalance, updateMonthlies } from '@/util'
 
 // TODO: link to transfer
-// TODO: link to debt
 // TODO: link to planned payment ? is that necessary ? maybe not
 export interface Record extends HasTimestamps {
   accountId: ID
   categoryId: ID
   labelIds: ID[]
+  debtId: ID | null
   value: number
   payee: string | null
   description: string | null
@@ -22,6 +22,7 @@ export function createRecord(
   accountId: ID,
   categoryId: ID,
   labelIds: ID[],
+  debtId: ID | null,
   value: number,
   payee: string | null,
   description: string | null,
@@ -34,6 +35,7 @@ export function createRecord(
       accountId,
       categoryId,
       labelIds,
+      debtId,
       value,
       payee,
       description,

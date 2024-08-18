@@ -47,14 +47,16 @@
     "wallet": "@:create.action @:terminology.wallet",
     "account": "@:create.action @:terminology.account",
     "record": "@:create.action @:terminology.record",
-    "label": "@:create.action @:terminology.label"
+    "label": "@:create.action @:terminology.label",
+    "debt": "@:create.action @:terminology.debt"
   },
   "update": {
     "action": "update",
     "wallet": "@:update.action @:terminology.wallet",
     "account": "@:update.action @:terminology.account",
     "record": "@:update.action @:terminology.record",
-    "label": "@:update.action @:terminology.label"
+    "label": "@:update.action @:terminology.label",
+    "debt": "@:update.action @:terminology.debt"
   },
   "delete": {
     "action": "delete",
@@ -74,6 +76,15 @@
   },
   "wallet": {
     "back": "Back to @:terminology.wallet selection"
+  },
+  "debt": {
+    "ignore": "Ignore @:terminology.debt",
+    "forgive": "Forgive @:terminology.debt",
+    "lent": "Lent",
+    "borrowed": "Borrowed",
+    "closed": "Closed",
+    "i-owe": "I owe {payee}",
+    "owes-me": "{payee} owes me"
   },
   "currencies": {
     "CHF": "Swiss franc",
