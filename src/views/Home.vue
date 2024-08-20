@@ -71,7 +71,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <main class="flex flex-col items-center">
+  <main class="flex h-screen flex-col items-center">
     <h1 class="mb-4 mt-12 flex items-center text-3xl">
       <i class="material-icons mr-2">account_balance_wallet</i> Wallet
     </h1>

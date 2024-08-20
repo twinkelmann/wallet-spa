@@ -172,7 +172,7 @@ onBeforeUnmount(() => {
       @update="onUpdateDebt($event)"
       @close="onCloseDebt($event)"
     ></DebtList>
-    <div class="flex w-full px-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2">
+    <div class="mt-4 flex w-full px-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2">
       <button
         class="nt-button wallet-primary w-full first-letter:uppercase"
         @click="createDebt()"

@@ -38,14 +38,14 @@ function attemptClose() {
 -->
     <div
       v-if="show"
-      class="absolute left-0 top-0 z-[2000] h-screen w-screen bg-black/75 transition-opacity"
+      class="fixed left-0 top-0 z-[2000] h-screen w-screen bg-black/75 transition-opacity"
       @mouseup="attemptClose()"
     >
       <!-- div that is actually the size of the screen, to center the modal -->
       <div class="flex h-screen w-screen items-center justify-center">
         <!-- modal -->
         <div
-          :class="`modal-container flex max-h-full max-w-full flex-col rounded-lg bg-white shadow-2xl transition-transform dark:bg-zinc-900 ${modalClasses}`"
+          :class="`modal-container flex max-h-[80%] max-w-full flex-col overflow-y-auto overscroll-contain rounded-lg bg-white shadow-2xl transition-transform dark:bg-zinc-900 ${modalClasses}`"
           @mousedown="preventClose()"
           @mouseup="allowClose($event)"
         >

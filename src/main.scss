@@ -2,16 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#app {
-  @apply h-screen overflow-hidden;
-}
-//  TODO: scroll the page instead
-main {
-  @apply h-screen overflow-y-auto;
-}
-
 .material-icons {
   font-family: 'Material Symbols Outlined';
   font-weight: normal;
@@ -191,6 +181,7 @@ body {
   @apply bg-white text-black dark:bg-black dark:text-white;
 }
 
+html.dark,
 html.dark * {
   scrollbar-color: theme('colors.zinc.600') theme('colors.zinc.800');
 }
