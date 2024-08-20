@@ -18,7 +18,7 @@ const basePath = computed(() => `/wallets/${state.activeWallet}`)
     @click="$emit('close')"
   >
     <ul
-      :class="`flex h-full w-3/4 flex-col overflow-y-auto overscroll-contain bg-white shadow-2xl transition-transform dark:bg-zinc-900 dark:shadow-none md:fixed md:w-64 md:shadow-lg ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
+      :class="`flex h-full w-3/4 flex-col overflow-y-auto overscroll-contain bg-white shadow-2xl transition-transform dark:bg-zinc-900 dark:shadow-none md:fixed md:w-64 md:shadow-lg print:overflow-hidden ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
       @click="$event.stopPropagation()"
     >
       <li v-for="entry in menuEntries" :key="entry.path">

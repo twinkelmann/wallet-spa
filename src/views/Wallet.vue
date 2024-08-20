@@ -47,7 +47,7 @@ onMounted(async () => {
         >
           menu
         </button>
-        <h1 class="mx-2 grow truncate text-center">
+        <h1 class="mx-2 w-0 grow truncate text-center">
           {{ wallet?.name }}
         </h1>
         <RouterLink
