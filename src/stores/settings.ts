@@ -34,7 +34,6 @@ export const useSettingsStore = defineStore('settings', () => {
         ? window.matchMedia('(prefers-color-scheme: dark)').matches
         : t === 'dark'
 
-    console.log('called the watcher', t, isDark)
     if (isDark) {
       document.documentElement.classList.add('dark')
     } else {

@@ -14,11 +14,11 @@ const basePath = computed(() => `/wallets/${state.activeWallet}`)
 </script>
 <template>
   <div
-    :class="`absolute left-0 top-0 z-[2000] h-screen w-screen shrink-0 bg-black/75 transition-opacity md:relative md:w-64 md:bg-transparent ${show ? 'pointer-events-auto opacity-100' : 'max-md:pointer-events-none max-md:opacity-0'}`"
+    :class="`fixed left-0 top-0 z-[2000] h-full w-full shrink-0 bg-black/75 transition-opacity md:relative md:w-64 md:bg-transparent ${show ? 'pointer-events-auto opacity-100' : 'max-md:pointer-events-none max-md:opacity-0'}`"
     @click="$emit('close')"
   >
     <ul
-      :class="`flex h-full w-3/4 flex-col overflow-y-auto bg-white shadow-2xl transition-transform dark:bg-zinc-900 dark:shadow-none md:fixed md:w-64 md:shadow-lg ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
+      :class="`flex h-full w-3/4 flex-col overflow-y-auto overscroll-contain bg-white shadow-2xl transition-transform dark:bg-zinc-900 dark:shadow-none md:fixed md:w-64 md:shadow-lg ${show ? 'translate-x-0' : 'max-md:-translate-x-full'}`"
       @click="$event.stopPropagation()"
     >
       <li v-for="entry in menuEntries" :key="entry.path">
