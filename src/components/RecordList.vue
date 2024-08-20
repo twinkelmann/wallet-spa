@@ -54,7 +54,7 @@ function updateRecord(record: Record) {
   <ul :class="class">
     <li v-for="record of records" :key="record.id">
       <button
-        class="nt-clickable nt-focus-ring w-full border-b border-gray-100 p-2 text-left last:border-none"
+        class="nt-clickable nt-focus-ring w-full p-2 text-left"
         @click="updateRecord(record)"
       >
         <RecordItem

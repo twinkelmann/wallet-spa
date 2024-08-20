@@ -10,6 +10,9 @@ export const useSettingsStore = defineStore('settings', () => {
     fallbackInterfaceLocale
   )
 
+  const supportedThemes = ['auto', 'light', 'dark'] as const
+  const theme: Ref<(typeof supportedThemes)[number]> = ref('auto')
+
   const supportedNumberLocales = [
     'en-us',
     'fr-fr',
@@ -25,11 +28,31 @@ export const useSettingsStore = defineStore('settings', () => {
     i18n.locale.value = locale
   })
 
+  function updateTheme(t: (typeof supportedThemes)[number]) {
+    const isDark =
+      t === 'auto'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        : t === 'dark'
+
+    console.log('called the watcher', t, isDark)
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
+
+  // toggle dark class on the html node
+  watch(theme, updateTheme)
+
   return {
     interfaceLocale,
     numberLocale,
     supportedInterfaceLocales,
     supportedNumberLocales,
+    theme,
+    supportedThemes,
+    updateTheme,
     /**
      * See localStoragePlugin
      */

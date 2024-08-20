@@ -29,18 +29,18 @@ main {
 
 // Standard style for any label
 .nt-form-label {
-  @apply font-medium text-gray-700;
+  @apply font-medium text-zinc-700 dark:text-zinc-300;
 }
 
 // Any focusable interface control should use this focus ring for consistant styling and to facilitate keyboard navigation
 .nt-focus-ring {
-  @apply outline-none ring-indigo-200 ring-opacity-50 transition-shadow focus:ring-2;
+  @apply outline-none ring-indigo-200 ring-opacity-50 transition-shadow focus:ring-2 dark:ring-indigo-900;
 }
 
 // Standard style for an input. Gives it an outline, focus ring, fixed height and padding.
 // For use with textarea, override the height with an important rule
 .nt-form-input {
-  @apply nt-focus-ring h-9 rounded-md border border-solid border-gray-300 bg-white px-4 font-normal text-gray-700 placeholder:font-light placeholder:text-gray-500;
+  @apply nt-focus-ring h-9 rounded-md border border-solid border-zinc-300 bg-white px-4 font-normal text-zinc-700 placeholder:font-light placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-black dark:text-zinc-300;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -49,7 +49,7 @@ main {
 }
 
 .nt-form-color-input {
-  @apply nt-focus-ring h-9 rounded-md border border-solid border-gray-300 bg-white p-0;
+  @apply nt-focus-ring h-9 rounded-md border border-solid border-zinc-300 bg-white p-0 dark:border-zinc-800 dark:bg-black;
   appearance: none;
 
   &:disabled {
@@ -74,7 +74,7 @@ main {
 // Custom CSS for the basic button
 // Combine this component with a width/grow/padding-x and a background color
 .nt-button {
-  @apply nt-focus-ring h-9 select-none rounded-md border-none font-medium leading-none transition duration-75;
+  @apply nt-focus-ring h-9 select-none rounded-md border-none leading-none transition duration-75;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -89,6 +89,10 @@ main {
   &:active:not(:disabled) {
     @apply shadow-none brightness-95;
   }
+}
+
+.dark .nt-button:disabled {
+  filter: contrast(0.2) brightness(120%) grayscale(1);
 }
 
 // See documentation for how to use vk-dropdown (Javascript custom dropdown menus) and vk-select (native select element with consistant styling)
@@ -132,7 +136,7 @@ main {
   @apply relative;
   > button,
   > ul {
-    @apply w-full rounded-md border border-solid border-gray-300 bg-white;
+    @apply w-full rounded-md border border-solid border-zinc-300 bg-white dark:border-zinc-800 dark:bg-black;
   }
 
   > button {
@@ -166,18 +170,27 @@ main {
   @apply cursor-pointer select-none;
 }
 
-.bg-wallet-primary {
-  @apply bg-size-200 bg-pos-0 bg-gradient-to-r from-emerald-600 via-green-500 to-teal-400 text-emerald-50 transition-all duration-300;
+.wallet-primary {
+  @apply bg-gradient-to-r from-emerald-600 via-green-500 to-teal-400 bg-size-200 bg-pos-0 font-medium text-emerald-50 transition-[background] duration-300;
 
   &:hover {
     @apply bg-pos-100 text-white;
   }
 }
 
-.bg-wallet-secondary {
-  @apply bg-size-200 bg-pos-0 bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-300 text-yellow-950 transition-all duration-300;
+.wallet-secondary {
+  @apply bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-300 bg-size-200 bg-pos-0 text-yellow-950 transition-[background] duration-300;
 
   &:hover {
     @apply bg-pos-100 text-black;
   }
+}
+
+// base of dark theme
+body {
+  @apply bg-white text-black dark:bg-black dark:text-white;
+}
+
+html.dark * {
+  scrollbar-color: theme('colors.zinc.600') theme('colors.zinc.800');
 }

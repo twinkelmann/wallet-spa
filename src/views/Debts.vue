@@ -139,7 +139,10 @@ onBeforeUnmount(() => {
     <h2 class="text-center text-lg font-medium first-letter:uppercase">
       {{ $t('terminology.debt', 2) }}
     </h2>
-    <h3 class="mt-4 font-medium text-red-700" v-if="lent.length">
+    <h3
+      class="mt-4 font-medium text-red-700 dark:text-red-400"
+      v-if="lent.length"
+    >
       {{ $t('debt.lent') }}
     </h3>
     <DebtList
@@ -148,7 +151,10 @@ onBeforeUnmount(() => {
       @update="onUpdateDebt($event)"
       @close="onCloseDebt($event)"
     ></DebtList>
-    <h3 class="mt-4 font-medium text-green-700" v-if="borrowed.length">
+    <h3
+      class="mt-4 font-medium text-green-700 dark:text-green-400"
+      v-if="borrowed.length"
+    >
       {{ $t('debt.borrowed') }}
     </h3>
     <DebtList
@@ -168,7 +174,7 @@ onBeforeUnmount(() => {
     ></DebtList>
     <div class="flex w-full px-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2">
       <button
-        class="nt-button bg-wallet-primary w-full first-letter:uppercase"
+        class="nt-button wallet-primary w-full first-letter:uppercase"
         @click="createDebt()"
       >
         {{ $t('create.debt') }}

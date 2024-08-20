@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
       <li
         v-for="account of orderedAccounts"
         :key="account.id"
-        class="nt-clickable flex rounded-md bg-gray-100"
+        class="nt-clickable flex rounded-md bg-zinc-100 dark:bg-zinc-900"
       >
         <button
           class="nt-focus-ring flex w-0 grow items-center rounded-l-md p-4"
@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
       </li>
       <li>
         <button
-          class="nt-button bg-wallet-primary w-full first-letter:uppercase"
+          class="nt-button wallet-primary w-full first-letter:uppercase"
           @click="createAccount()"
         >
           {{ $t('create.account') }}

@@ -71,6 +71,12 @@
     "interface": "Interface",
     "number": "Numbers"
   },
+  "theme": {
+    "title": "Theme",
+    "auto": "Auto",
+    "light": "Light",
+    "dark": "Dark"
+  },
   "home": {
     "select-wallet": "Please select a @:terminology.wallet or @:create.action a new one"
   },

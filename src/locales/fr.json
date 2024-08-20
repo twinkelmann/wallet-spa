@@ -71,6 +71,12 @@
     "interface": "Interface",
     "number": "Nombres"
   },
+  "theme": {
+    "title": "Thème",
+    "auto": "Auto",
+    "light": "Clair",
+    "dark": "Foncé"
+  },
   "home": {
     "select-wallet": "Sélectionnez un @:terminology.wallet ou créez-en un nouveau"
   },

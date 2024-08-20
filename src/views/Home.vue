@@ -11,6 +11,7 @@ import { onMounted } from 'vue'
 import { capitalizeFirstLetter, debounce } from '@/util'
 import { DB } from '@/database/db'
 import { onBeforeUnmount } from 'vue'
+import ThemeSelector from '@/components/ThemeSelector.vue'
 
 const { t } = useI18n()
 
@@ -79,7 +80,7 @@ onBeforeUnmount(() => {
       <li
         v-for="wallet of wallets"
         :key="wallet.id"
-        class="nt-clickable flex rounded-md bg-gray-100 shadow transition-shadow hover:shadow-md"
+        class="nt-clickable flex rounded-md bg-zinc-100 shadow transition-shadow hover:shadow-md dark:bg-zinc-900"
       >
         <RouterLink
           :to="`wallets/${wallet.id}`"
@@ -101,14 +102,17 @@ onBeforeUnmount(() => {
       </li>
       <li>
         <button
-          class="nt-button bg-wallet-primary w-full first-letter:uppercase"
+          class="nt-button wallet-primary w-full first-letter:uppercase"
           @click="createWallet()"
         >
           {{ $t('create.wallet') }}
         </button>
       </li>
     </ul>
-    <div class="mb-4 mt-auto rounded-md bg-gray-100 p-4 shadow-md">
+    <div
+      class="mb-4 mt-auto rounded-md bg-zinc-100 p-4 shadow-md dark:bg-zinc-900"
+    >
+      <ThemeSelector></ThemeSelector>
       <LocaleSelector></LocaleSelector>
     </div>
     <Teleport to="body">

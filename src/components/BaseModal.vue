@@ -45,21 +45,21 @@ function attemptClose() {
       <div class="flex h-screen w-screen items-center justify-center">
         <!-- modal -->
         <div
-          :class="`modal-container flex max-h-full max-w-full flex-col rounded-lg bg-white shadow-2xl transition-transform ${modalClasses}`"
+          :class="`modal-container flex max-h-full max-w-full flex-col rounded-lg bg-white shadow-2xl transition-transform dark:bg-zinc-900 ${modalClasses}`"
           @mousedown="preventClose()"
           @mouseup="allowClose($event)"
         >
           <!-- modal header -->
           <div
-            class="flex items-center justify-between border-0 border-b border-solid border-gray-200"
+            class="flex items-center justify-between border-0 border-b border-solid border-zinc-200 dark:border-zinc-800"
           >
             <h2
-              class="color-gray-900 m-0 ml-5 text-base font-medium leading-none first-letter:uppercase"
+              class="m-0 ml-5 text-base font-medium leading-none text-zinc-900 first-letter:uppercase dark:text-zinc-100"
             >
               {{ header }}
             </h2>
             <i
-              class="material-icons nt-clickable flex h-14 w-14 items-center justify-center text-lg text-gray-400"
+              class="material-icons nt-clickable flex h-14 w-14 items-center justify-center text-lg text-zinc-400 dark:text-zinc-500"
               @click="$emit('close')"
               :title="$t('close-modal', { name: header })"
               >close</i

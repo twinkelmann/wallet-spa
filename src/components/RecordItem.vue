@@ -62,7 +62,7 @@ const labels = computed(() => {
     </div>
     <div class="flex shrink-0 flex-col text-right">
       <span
-        :class="`font-medium ${record.value >= 0 ? 'text-green-700' : 'text-red-700'}`"
+        :class="`font-medium ${record.value >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`"
       >
         {{
           record.value.toLocaleString(settings.numberLocale, {

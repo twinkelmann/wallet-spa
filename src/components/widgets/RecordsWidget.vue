@@ -245,14 +245,14 @@ async function deleteAll() {
   ></RecordList>
   <div class="flex flex-wrap justify-center gap-4 print:hidden">
     <button
-      class="nt-button bg-wallet-secondary flex items-center px-4"
+      class="nt-button wallet-secondary flex items-center px-4"
       @click="addTestData()"
     >
       <i class="material-icons pr-2">data_object</i>
       Add test data
     </button>
     <button
-      class="nt-button bg-wallet-secondary flex items-center px-4"
+      class="nt-button wallet-secondary flex items-center px-4"
       @click="deleteAll()"
     >
       <i class="material-icons pr-2">data_object</i>
