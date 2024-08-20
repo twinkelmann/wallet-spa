@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
       <li
         v-for="wallet of wallets"
         :key="wallet.id"
-        class="nt-clickable flex rounded-md bg-zinc-100 shadow transition-shadow hover:shadow-md dark:bg-zinc-900"
+        class="nt-clickable flex rounded-md bg-zinc-100 transition-shadow hover:shadow-md dark:bg-zinc-900"
       >
         <RouterLink
           :to="`wallets/${wallet.id}`"
