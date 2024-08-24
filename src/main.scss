@@ -84,7 +84,7 @@
 // Custom CSS for the icon button
 // Combine this component with a background color and put an icon name inside it
 .nt-icon-button {
-  @apply nt-focus-ring material-icons select-none rounded-full p-5 text-lg shadow-lg transition duration-75;
+  @apply nt-focus-ring material-icons select-none rounded-full p-5 text-lg shadow-md transition duration-75;
 
   &:disabled {
     @apply cursor-not-allowed;
@@ -92,12 +92,12 @@
   }
 
   &:hover:not(:disabled) {
-    @apply shadow;
+    @apply shadow-lg;
     // filter: brightness(105%) grayscale(0.2);
   }
 
   &:active:not(:disabled) {
-    @apply shadow-none brightness-95;
+    @apply shadow brightness-95;
   }
 }
 

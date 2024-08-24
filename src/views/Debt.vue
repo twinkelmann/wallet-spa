@@ -173,13 +173,13 @@ onBeforeUnmount(() => {
         add
       </button>
       <button
-        class="nt-icon-button wallet-primary print:hidden"
+        class="nt-icon-button wallet-secondary print:hidden"
         @click="showDebtModal = true"
       >
         edit
       </button>
       <button
-        class="nt-icon-button wallet-primary print:hidden"
+        class="nt-icon-button wallet-secondary print:hidden"
         @click="toggleCloseDebt()"
         :disabled="debt?.closed && debt?.balance === 0"
       >

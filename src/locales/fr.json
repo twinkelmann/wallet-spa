@@ -90,7 +90,7 @@
     "repay": "{amount} pour rembourser",
     "lent": "Prêté",
     "borrowed": "Emprunté",
-    "closed": "Fermées",
+    "closed": "Fermée | Fermées",
     "i-owe": "je dois à {payee}",
     "owes-me": "{payee} me doit"
   },

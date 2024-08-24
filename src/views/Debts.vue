@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
     </h3>
     <DebtList v-if="borrowed.length" :debts="borrowed"></DebtList>
     <h3 class="mt-4 font-medium" v-if="closed.length">
-      {{ $t('debt.closed') }}
+      {{ $t('debt.closed', 2) }}
     </h3>
     <DebtList v-if="closed.length" :debts="closed"></DebtList>
     <div class="mt-4 flex w-full px-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2">
