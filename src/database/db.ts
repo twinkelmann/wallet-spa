@@ -126,7 +126,6 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           fields: ['data.datetime', 'data.accountId', '_id'],
         },
       })
-      console.log('DB open')
       // TODO: remove
       ;(window as any).db = relDB
       resolve(relDB)
