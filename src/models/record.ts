@@ -1,6 +1,6 @@
 import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
-import { updateBalance, updateMonthlies } from '@/util'
+import { updateBalance, updateDebtBalance, updateMonthlies } from '@/util'
 
 // TODO: link to transfer
 // TODO: link to planned payment ? is that necessary ? maybe not
@@ -47,6 +47,9 @@ export function createRecord(
       if (doUpdateMonthliesBalance) {
         await updateMonthlies(accountId, datetime)
         await updateBalance(accountId)
+      }
+      if (debtId) {
+        await updateDebtBalance(debtId)
       }
       return res
     })
@@ -151,6 +154,12 @@ export function getAllRecordsOfAccountsByDate(
   })
 }
 
+export function getAllRecordsOfDebt(id: ID): Promise<RelDocument<Record>[]> {
+  return DB.then((db) => db.rel.findHasMany('record', 'debtId', id)).then(
+    (res) => res.records
+  )
+}
+
 export function updateRecord(
   id: ID,
   accountId: ID,
@@ -169,6 +178,8 @@ export function updateRecord(
       }
 
       const oldAccountId = data.accountId
+      const accountChanged = oldAccountId !== accountId
+      const valueChanged = value !== data.value
 
       const now = new Date().valueOf()
       data.accountId = accountId
@@ -182,18 +193,23 @@ export function updateRecord(
 
       return db.rel.save('record', data).then(async (res) => {
         const updates = []
-        updates.push(
-          updateMonthlies(accountId, datetime).then(() =>
-            updateBalance(accountId)
-          )
-        )
-        if (oldAccountId !== accountId) {
-          // if the record was moved to another account, update the balance of both accounts
+        if (valueChanged || accountChanged) {
           updates.push(
-            updateMonthlies(oldAccountId, datetime).then(() =>
-              updateBalance(oldAccountId)
+            updateMonthlies(accountId, datetime).then(() =>
+              updateBalance(accountId)
             )
           )
+          if (accountChanged) {
+            // if the record was moved to another account, update the balance of both accounts
+            updates.push(
+              updateMonthlies(oldAccountId, datetime).then(() =>
+                updateBalance(oldAccountId)
+              )
+            )
+          }
+        }
+        if (valueChanged && data.debtId) {
+          updates.push(updateDebtBalance(data.debtId))
         }
         await Promise.all(updates)
         return res

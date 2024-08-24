@@ -1,5 +1,6 @@
 import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
+import { getAllRecordsOfDebt, updateRecord } from './record'
 
 export interface Debt extends HasTimestamps {
   walletId: ID
@@ -61,6 +62,8 @@ export function updateDebt(
         throw `Could not find debt with id=${id}`
       }
 
+      const payeeChanged = payee !== data.payee
+
       const now = new Date().valueOf()
       data.balance = balance
       data.payee = payee
@@ -68,7 +71,28 @@ export function updateDebt(
       data.closed = closed
       data.updatedAt = now
 
-      return db.rel.save('debt', data)
+      return db.rel.save('debt', data).then(async (res) => {
+        // if payee changed, update all records
+        if (payeeChanged) {
+          const records = await getAllRecordsOfDebt(id)
+          for (const r of records) {
+            // update sequentially even if that's not very efficient
+            // since this is not a recurrent action
+            await updateRecord(
+              r.id,
+              r.accountId,
+              r.categoryId,
+              r.labelIds,
+              r.value,
+              payee,
+              r.description,
+              r.datetime
+            )
+          }
+        }
+
+        return res
+      })
     })
   ).then((res) => res.id)
 }

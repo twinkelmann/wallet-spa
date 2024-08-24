@@ -9,6 +9,7 @@ import Planned from '@/views/Planned.vue'
 import Debts from '@/views/Debts.vue'
 import Categories from '@/views/Categories.vue'
 import Labels from '@/views/Labels.vue'
+import Debt from '@/views/Debt.vue'
 
 export const menuEntries: (RouteRecordRaw & {
   icon: string
@@ -74,7 +75,16 @@ const router = createRouter({
     {
       path: '/wallets/:id',
       component: Layout,
-      children: menuEntries,
+      children: [
+        ...menuEntries,
+        {
+          path: 'debts/:debtId',
+          meta: {
+            hideMenu: true,
+          },
+          component: Debt,
+        },
+      ],
     },
   ],
 })

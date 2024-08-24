@@ -18,13 +18,18 @@ const emit = defineEmits<{ (e: 'done'): void }>()
 const submit = async (fields: any) => {
   const datetime = DateTime.fromISO(fields.datetime).toMillis()
   try {
+    const value = to2DecimalNumber(fields.value)
     if (props.record) {
+      // TODO: find a way to support custom categories but still auto assign this
+      const category = value < 0 ? 'Loan, interests' : 'Lending, renting'
       await updateRecord(
         props.record.id,
         fields.accountId,
-        fields.categoryId,
+        props.record.debtId
+          ? props.categories.find((c) => c.name === category)?.id
+          : fields.categoryId,
         fields.labelIds,
-        to2DecimalNumber(fields.value),
+        value,
         fields.payee,
         fields.description,
         datetime
@@ -35,7 +40,7 @@ const submit = async (fields: any) => {
         fields.categoryId,
         fields.labelIds,
         null,
-        to2DecimalNumber(fields.value),
+        value,
         fields.payee,
         fields.description,
         datetime
@@ -74,6 +79,7 @@ const submit = async (fields: any) => {
       :label="capitalizeFirstLetter($t('terminology.category'))"
       :value="record?.categoryId || categories[0]?.id"
       validation="required"
+      :disabled="record?.debtId"
     >
       <option
         v-for="category of categories"

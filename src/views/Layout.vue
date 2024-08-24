@@ -4,6 +4,7 @@ import type { RelDocument } from '@/models/common'
 import { getWallet, type Wallet } from '@/models/wallet'
 import { useStateStore } from '@/stores/state'
 import type { Ref } from 'vue'
+import { computed } from 'vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
@@ -16,6 +17,16 @@ router.afterEach(() => (show.value = false))
 
 const wallet: Ref<RelDocument<Wallet> | undefined> = ref(undefined)
 const show = ref(false)
+
+const hideMenu = computed(() => route.meta.hideMenu as boolean)
+
+function attemptBack() {
+  if (window.history.state.back) {
+    router.back()
+  } else {
+    router.push(`/wallets/${route.params.id}`)
+  }
+}
 
 onMounted(async () => {
   // Try to auto-select wallet based on URL
@@ -35,17 +46,17 @@ onMounted(async () => {
 
 <template>
   <main class="flex">
-    <Menu :show="show" @close="show = false"></Menu>
+    <Menu v-if="!hideMenu" :show="show" @close="show = false"></Menu>
     <div class="flex grow flex-col">
       <header
         class="mb-4 flex w-full items-center justify-between text-lg print:shrink-0"
       >
         <button
-          class="material-icons nt-clickable nt-focus-ring p-4 md:pointer-events-none md:opacity-0 print:hidden"
-          @click="show = !show"
-          title="Toggle Menu"
+          :class="`material-icons nt-clickable nt-focus-ring p-4 print:hidden ${hideMenu ? '' : 'md:pointer-events-none md:opacity-0'}`"
+          @click="hideMenu ? attemptBack() : (show = !show)"
+          :title="hideMenu ? 'Back' : 'Toggle Menu'"
         >
-          menu
+          {{ hideMenu ? 'arrow_back_ios_new' : 'menu' }}
         </button>
         <h1 class="mx-2 w-0 grow truncate text-center">
           {{ wallet?.name }}

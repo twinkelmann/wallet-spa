@@ -38,9 +38,12 @@ const submit = async (fields: any) => {
         fields.payee,
         fields.description
       )
+      // TODO: find a way to support custom categories but still auto assign this
+      const category = balance < 0 ? 'Loan, interests' : 'Lending, renting'
       await createRecord(
         fields.accountId,
-        fields.categoryId,
+        props.categories.find((c) => c.name === category)?.id ??
+          props.categories[0].id,
         fields.labelIds,
         debtId,
         balance,
@@ -70,6 +73,7 @@ const submit = async (fields: any) => {
       :label="$t('forms.labels.payee')"
       :placeholder="$t('forms.placeholders.payee')"
       :value="debt?.payee || ''"
+      validation="required"
     />
     <FormKit
       type="text"
@@ -90,22 +94,6 @@ const submit = async (fields: any) => {
     >
       <option v-for="account of accounts" :key="account.id" :value="account.id">
         {{ account.name }}
-      </option>
-    </FormKit>
-    <FormKit
-      v-if="!debt"
-      type="select"
-      name="categoryId"
-      :label="capitalizeFirstLetter($t('terminology.category'))"
-      :value="categories[0]?.id"
-      validation="required"
-    >
-      <option
-        v-for="category of categories"
-        :key="category.id"
-        :value="category.id"
-      >
-        {{ category.name }}
       </option>
     </FormKit>
     <FormKit

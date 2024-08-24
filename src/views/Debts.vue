@@ -6,10 +6,10 @@ import { DB } from '@/database/db'
 import { getAllAccountsOfWallet, type Account } from '@/models/account'
 import { getAllCategoriesOfWallet, type Category } from '@/models/category'
 import { UPDATE_DATA_DEBOUNCE, type RelDocument } from '@/models/common'
-import { getAllDebtsOfWallet, updateDebt, type Debt } from '@/models/debt'
+import { getAllDebtsOfWallet, type Debt } from '@/models/debt'
 import { getAllLabelsOfWallet, type Label } from '@/models/label'
 import { useStateStore } from '@/stores/state'
-import { capitalizeFirstLetter, debounce } from '@/util'
+import { debounce } from '@/util'
 import { storeToRefs } from 'pinia'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -17,60 +17,24 @@ import { onBeforeUnmount } from 'vue'
 import { watch } from 'vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 const state = useStateStore()
 const stateRefs = storeToRefs(state)
-const { t } = useI18n()
 
-const editedDebt: Ref<RelDocument<Debt> | null> = ref(null)
 const showModal = ref(false)
 const accounts: Ref<RelDocument<Account>[]> = ref([])
 const categories: Ref<RelDocument<Category>[]> = ref([])
 const labels: Ref<RelDocument<Label>[]> = ref([])
 const debts: Ref<RelDocument<Debt>[]> = ref([])
 
-const orderByCreated = (a: Debt, b: Debt) => a.createdAt - b.createdAt
+const order = (a: Debt, b: Debt) => a.updatedAt - b.updatedAt
 
-const sorted = computed(() => debts.value.sort(orderByCreated))
+const sorted = computed(() => debts.value.sort(order))
 const lent = computed(() => sorted.value.filter((d) => d.balance < 0))
 const borrowed = computed(() => sorted.value.filter((d) => d.balance > 0))
 const closed = computed(() =>
   sorted.value.filter((d) => d.closed || d.balance === 0)
 )
-
-function createDebt() {
-  editedDebt.value = null
-  showModal.value = true
-}
-
-function onUpdateDebt(debt: RelDocument<Debt>) {
-  editedDebt.value = debt
-  showModal.value = true
-}
-
-async function onCloseDebt(debt: RelDocument<Debt>) {
-  if (
-    confirm(
-      capitalizeFirstLetter(
-        `${t(debt.balance > 0 ? 'debt.ignore' : 'debt.forgive')} ?`
-      )
-    )
-  ) {
-    try {
-      await updateDebt(
-        debt.id,
-        debt.balance,
-        debt.payee,
-        debt.description,
-        true
-      )
-    } catch (e) {
-      alert(e)
-      console.error(e)
-    }
-  }
-}
 
 // DB sync
 
@@ -145,51 +109,36 @@ onBeforeUnmount(() => {
     >
       {{ $t('debt.lent') }}
     </h3>
-    <DebtList
-      v-if="lent.length"
-      :debts="lent"
-      @update="onUpdateDebt($event)"
-      @close="onCloseDebt($event)"
-    ></DebtList>
+    <DebtList v-if="lent.length" :debts="lent"></DebtList>
     <h3
       class="mt-4 font-medium text-green-700 dark:text-green-400"
       v-if="borrowed.length"
     >
       {{ $t('debt.borrowed') }}
     </h3>
-    <DebtList
-      v-if="borrowed.length"
-      :debts="borrowed"
-      @update="onUpdateDebt($event)"
-      @close="onCloseDebt($event)"
-    ></DebtList>
+    <DebtList v-if="borrowed.length" :debts="borrowed"></DebtList>
     <h3 class="mt-4 font-medium" v-if="closed.length">
       {{ $t('debt.closed') }}
     </h3>
-    <DebtList
-      v-if="closed.length"
-      :debts="closed"
-      @update="onUpdateDebt($event)"
-      @close="onCloseDebt($event)"
-    ></DebtList>
+    <DebtList v-if="closed.length" :debts="closed"></DebtList>
     <div class="mt-4 flex w-full px-4 sm:w-2/3 md:w-full lg:w-2/3 2xl:w-1/2">
       <button
         class="nt-button wallet-primary w-full first-letter:uppercase"
-        @click="createDebt()"
+        @click="showModal = true"
       >
         {{ $t('create.debt') }}
       </button>
     </div>
     <Teleport to="body">
       <BaseModal
-        :header="editedDebt ? $t('update.debt') : $t('create.debt')"
+        :header="$t('create.debt')"
         :show="showModal"
         @close="showModal = false"
       >
         <div class="p-4" v-if="state.activeWallet">
           <DebtForm
             :wallet-id="state.activeWallet"
-            :debt="editedDebt"
+            :debt="null"
             :accounts="accounts"
             :categories="categories"
             :labels="labels"

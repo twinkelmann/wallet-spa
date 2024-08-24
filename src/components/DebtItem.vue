@@ -11,7 +11,7 @@ defineProps<{
 }>()
 </script>
 <template>
-  <div class="flex w-full gap-4">
+  <div class="flex w-full gap-4 p-2">
     <div
       class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-300"
     >
@@ -38,7 +38,7 @@ defineProps<{
         }}</span
       >
       <span class="text-sm">{{
-        DateTime.fromMillis(debt.createdAt)
+        DateTime.fromMillis(debt.updatedAt)
           .reconfigure({ locale: $i18n.locale })
           .toLocaleString({
             month: 'short',

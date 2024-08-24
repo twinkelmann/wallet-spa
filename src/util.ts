@@ -1,13 +1,17 @@
 import { DateTime, type DateObjectUnits } from 'luxon'
 import { getAccount, updateAccount } from './models/account'
 import type { ID } from './models/common'
-import { getAllRecordsOfAccountsByDate } from './models/record'
+import {
+  getAllRecordsOfAccountsByDate,
+  getAllRecordsOfDebt,
+} from './models/record'
 import Color from 'colorjs.io'
 import {
   createMonthly,
   getAllMonthliesOfAccountByDate,
   updateMonthly,
 } from './models/monthly'
+import { getDebt, updateDebt } from './models/debt'
 
 /**
  * In case better UTF16/Locales support is needed, see https://stackoverflow.com/a/53930826
@@ -61,6 +65,24 @@ export async function updateBalance(accountId: ID) {
       account.currency
     )
   }
+}
+
+export async function updateDebtBalance(debtId: ID) {
+  const debt = await getDebt(debtId)
+
+  if (!debt) {
+    return
+  }
+
+  const records = await getAllRecordsOfDebt(debtId)
+
+  const finalBalance = to2DecimalNumber(
+    records.reduce((balance, r) => balance + r.value, 0)
+  )
+
+  const closed = finalBalance === 0
+
+  return updateDebt(debtId, finalBalance, debt.payee, debt.description, closed)
 }
 
 /**

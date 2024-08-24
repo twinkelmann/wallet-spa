@@ -84,8 +84,10 @@
     "back": "Retour à la sélection du @:terminology.wallet"
   },
   "debt": {
-    "ignore": "Ignorer la @:terminology.debt",
-    "forgive": "Renoncer à la @:terminology.debt",
+    "ignore": "ignorer la @:terminology.debt",
+    "forgive": "renoncer à la @:terminology.debt",
+    "reopen": "réouvrir la @:terminology.debt",
+    "repay": "{amount} pour rembourser",
     "lent": "Prêté",
     "borrowed": "Emprunté",
     "closed": "Fermées",
