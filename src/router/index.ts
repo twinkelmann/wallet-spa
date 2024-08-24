@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Home from '../views/Home.vue'
-import Wallet from '@/views/Wallet.vue'
+import Layout from '@/views/Layout.vue'
 import Overview from '@/views/Overview.vue'
 import Accounts from '@/views/Accounts.vue'
 import Records from '@/views/Records.vue'
@@ -73,7 +73,7 @@ const router = createRouter({
     },
     {
       path: '/wallets/:id',
-      component: Wallet,
+      component: Layout,
       children: menuEntries,
     },
   ],
