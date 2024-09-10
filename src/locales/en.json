@@ -7,7 +7,8 @@
     "planned": "planned payment | planned payments",
     "debt": "debt | debts",
     "category": "category | categories",
-    "label": "label | labels"
+    "label": "label | labels",
+    "transfer": "transfer | transfers"
   },
   "forms": {
     "labels": {
@@ -18,7 +19,9 @@
       "datetime": "Datetime",
       "color": "Color",
       "currency": "Currency",
-      "start-balance": "Start balance"
+      "start-balance": "Start balance",
+      "from-account": "From @:terminology.account",
+      "to-account": "To @:terminology.account"
     },
     "placeholders": {
       "wallet-name": "My Personnal @.capitalize:terminology.wallet",
@@ -48,7 +51,8 @@
     "account": "@:create.action @:terminology.account",
     "record": "@:create.action @:terminology.record",
     "label": "@:create.action @:terminology.label",
-    "debt": "@:create.action @:terminology.debt"
+    "debt": "@:create.action @:terminology.debt",
+    "transfer": "@:create.action @:terminology.transfer"
   },
   "update": {
     "action": "update",

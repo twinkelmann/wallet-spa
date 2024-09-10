@@ -7,7 +7,8 @@
     "planned": "paiement planifié | paiements planifiés",
     "debt": "dette | dettes",
     "category": "catégorie | catégories",
-    "label": "étiquette | étiquettes"
+    "label": "étiquette | étiquettes",
+    "transfer": "transfère | transfères"
   },
   "forms": {
     "labels": {
@@ -18,7 +19,9 @@
       "datetime": "Date et heure",
       "color": "Couleur",
       "currency": "Devise",
-      "start-balance": "Montant initial"
+      "start-balance": "Montant initial",
+      "from-account": "Du @:terminology.account",
+      "to-account": "Au @:terminology.account"
     },
     "placeholders": {
       "wallet-name": "Mon @.capitalize:terminology.wallet Personnel",
@@ -48,7 +51,8 @@
     "account": "@:create.action un @:terminology.account",
     "record": "@:create.action une @:terminology.record",
     "label": "@:create.action une @:terminology.label",
-    "debt": "@:create.action une @:terminology.debt"
+    "debt": "@:create.action une @:terminology.debt",
+    "transfer": "@:create.action un @:terminology.transfer"
   },
   "update": {
     "action": "modifier",

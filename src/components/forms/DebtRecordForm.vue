@@ -29,6 +29,7 @@ const submit = async (fields: any) => {
         props.categories[0].id,
       fields.labelIds,
       props.debt.id,
+      null,
       value,
       props.debt.payee,
       fields.description,

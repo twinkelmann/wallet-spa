@@ -2,13 +2,13 @@ import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
 import { updateBalance, updateDebtBalance, updateMonthlies } from '@/util'
 
-// TODO: link to transfer
 // TODO: link to planned payment ? is that necessary ? maybe not
 export interface Record extends HasTimestamps {
   accountId: ID
   categoryId: ID
   labelIds: ID[]
   debtId: ID | null
+  transferId: ID | null
   value: number
   payee: string | null
   description: string | null
@@ -23,6 +23,7 @@ export function createRecord(
   categoryId: ID,
   labelIds: ID[],
   debtId: ID | null,
+  transferId: ID | null,
   value: number,
   payee: string | null,
   description: string | null,
@@ -36,6 +37,7 @@ export function createRecord(
       categoryId,
       labelIds,
       debtId,
+      transferId,
       value,
       payee,
       description,
@@ -165,6 +167,7 @@ export function updateRecord(
   accountId: ID,
   categoryId: ID,
   labelIds: ID[],
+  transferId: ID | null,
   value: number,
   payee: string | null,
   description: string | null,
@@ -185,6 +188,7 @@ export function updateRecord(
       data.accountId = accountId
       data.categoryId = categoryId
       data.labelIds = labelIds
+      data.transferId = transferId
       data.value = value
       data.payee = payee
       data.description = description
@@ -232,6 +236,17 @@ export function deleteRecord(
         if (doUpdateMonthliesBalance) {
           await updateMonthlies(data.accountId, data.datetime)
           await updateBalance(data.accountId)
+        }
+
+        // delete associated transfer record
+        if (data.transferId) {
+          try {
+            // always update the transfer's monthlies and balance
+            // if the caller doesn't want to update, it's because they will handle it manually. but they cannot know what other accounts where affected by transfers !
+            await deleteRecord(data.transferId)
+          } catch (e) {
+            // ignore if the other record was already deleted
+          }
         }
         return res
       })

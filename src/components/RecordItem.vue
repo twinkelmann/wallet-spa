@@ -5,9 +5,11 @@ import type { ById, RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
 import type { Record } from '@/models/record'
 import { useSettingsStore } from '@/stores/settings'
-import { useBlackText } from '@/util'
+import { capitalizeFirstLetter, useBlackText } from '@/util'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
+
+const transferColor = '#206270'
 
 const settings = useSettingsStore()
 
@@ -34,17 +36,23 @@ const labels = computed(() => {
   <div class="flex w-full gap-4">
     <div
       class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-      :style="`background-color: ${category.color}`"
+      :style="`background-color: ${record.transferId ? transferColor : category.color}`"
     >
       <i
         :class="`material-icons ${
-          useBlackText(category.color) ? 'text-black' : 'text-white'
+          useBlackText(record.transferId ? transferColor : category.color)
+            ? 'text-black'
+            : 'text-white'
         }`"
-        >{{ category.icon }}</i
+        >{{ record.transferId ? 'sync_alt' : category.icon }}</i
       >
     </div>
     <div class="flex grow flex-col">
-      <span class="font-medium">{{ category.name }}</span>
+      <span class="font-medium">{{
+        record.transferId
+          ? capitalizeFirstLetter($t('terminology.transfer'))
+          : category.name
+      }}</span>
       <span>{{ account.name }}</span>
       <span class="italic" v-if="desc">"{{ desc }}"</span>
       <ul class="flex flex-wrap gap-2">

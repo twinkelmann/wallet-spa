@@ -3,17 +3,26 @@ import type { Account } from '@/models/account'
 import type { Category } from '@/models/category'
 import { type RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
-import { createRecord, updateRecord, type Record } from '@/models/record'
+import {
+  createRecord,
+  getRecord,
+  updateRecord,
+  type Record,
+} from '@/models/record'
 import { capitalizeFirstLetter, to2DecimalNumber } from '@/util'
 import { DateTime } from 'luxon'
+import { computed } from 'vue'
 
 const props = defineProps<{
   accounts: RelDocument<Account>[]
   categories: RelDocument<Category>[]
   labels: RelDocument<Label>[]
   record: RelDocument<Record> | null
+  createTransfer?: boolean
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
+
+const defaultCategoryId = computed(() => props.categories[0].id)
 
 const submit = async (fields: any) => {
   const datetime = DateTime.fromISO(fields.datetime).toMillis()
@@ -27,24 +36,72 @@ const submit = async (fields: any) => {
         fields.accountId,
         props.record.debtId
           ? props.categories.find((c) => c.name === category)?.id
-          : fields.categoryId,
+          : props.record.transferId
+            ? defaultCategoryId.value
+            : fields.categoryId,
         fields.labelIds,
+        props.record.transferId,
         value,
         fields.payee,
         fields.description,
         datetime
       )
+
+      if (props.record.transferId) {
+        const transfer = await getRecord(props.record.transferId)
+        if (transfer) {
+          await updateRecord(
+            transfer.id,
+            transfer.accountId,
+            // debts are not transfers, ignore special case
+            defaultCategoryId.value,
+            fields.labelIds,
+            props.record.id,
+            -value,
+            fields.payee,
+            fields.description,
+            datetime
+          )
+        }
+      }
     } else {
-      await createRecord(
+      const recId = await createRecord(
         fields.accountId,
-        fields.categoryId,
+        props.createTransfer ? defaultCategoryId.value : fields.categoryId,
         fields.labelIds,
         null,
-        value,
+        null,
+        props.createTransfer ? -value : value,
         fields.payee,
         fields.description,
         datetime
       )
+
+      if (props.createTransfer) {
+        const transferId = await createRecord(
+          fields.toAccountId,
+          defaultCategoryId.value,
+          fields.labelIds,
+          null,
+          recId,
+          value,
+          fields.payee,
+          fields.description,
+          datetime
+        )
+
+        await updateRecord(
+          recId,
+          fields.accountId,
+          defaultCategoryId.value,
+          fields.labelIds,
+          transferId,
+          -value,
+          fields.payee,
+          fields.description,
+          datetime
+        )
+      }
     }
   } catch (e) {
     alert(e)
@@ -59,13 +116,23 @@ const submit = async (fields: any) => {
     type="form"
     @submit="submit"
     :submit-label="
-      capitalizeFirstLetter(record ? $t('update.record') : $t('create.record'))
+      capitalizeFirstLetter(
+        record
+          ? $t('update.record')
+          : createTransfer
+            ? $t('create.transfer')
+            : $t('create.record')
+      )
     "
   >
     <FormKit
       type="select"
       name="accountId"
-      :label="capitalizeFirstLetter($t('terminology.account'))"
+      :label="
+        createTransfer
+          ? $t('forms.labels.from-account')
+          : capitalizeFirstLetter($t('terminology.account'))
+      "
       :value="record?.accountId || accounts[0]?.id"
       validation="required"
     >
@@ -74,6 +141,19 @@ const submit = async (fields: any) => {
       </option>
     </FormKit>
     <FormKit
+      v-if="createTransfer"
+      type="select"
+      name="toAccountId"
+      :label="$t('forms.labels.to-account')"
+      :value="record?.accountId || accounts[0]?.id"
+      validation="required"
+    >
+      <option v-for="account of accounts" :key="account.id" :value="account.id">
+        {{ account.name }}
+      </option>
+    </FormKit>
+    <FormKit
+      v-if="!createTransfer"
       type="select"
       name="categoryId"
       :label="capitalizeFirstLetter($t('terminology.category'))"

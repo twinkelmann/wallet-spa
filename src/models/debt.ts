@@ -83,6 +83,7 @@ export function updateDebt(
               r.accountId,
               r.categoryId,
               r.labelIds,
+              null,
               r.value,
               payee,
               r.description,
