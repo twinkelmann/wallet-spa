@@ -41,10 +41,10 @@ const categoriesById = computed(() => {
   return obj
 })
 
-const editedRecord: Ref<Record | null> = ref(null)
+const editedRecord: Ref<RelDocument<Record> | null> = ref(null)
 const showModal = ref(false)
 
-function updateRecord(record: Record) {
+function updateRecord(record: RelDocument<Record>) {
   editedRecord.value = record
   showModal.value = true
 }

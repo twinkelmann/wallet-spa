@@ -159,7 +159,7 @@ const submit = async (fields: any) => {
       :label="capitalizeFirstLetter($t('terminology.category'))"
       :value="record?.categoryId || categories[0]?.id"
       validation="required"
-      :disabled="record?.debtId"
+      :disabled="Boolean(record?.debtId)"
     >
       <option
         v-for="category of categories"
@@ -173,7 +173,7 @@ const submit = async (fields: any) => {
       type="number"
       name="value"
       :label="$t('forms.labels.value')"
-      :value="record?.value"
+      :value="record?.value.toString()"
       validation="required"
       step=".01"
     />
@@ -183,7 +183,7 @@ const submit = async (fields: any) => {
       :label="$t('forms.labels.payee')"
       :placeholder="$t('forms.placeholders.payee')"
       :value="record?.payee || ''"
-      :disabled="record?.debtId"
+      :disabled="Boolean(record?.debtId)"
     />
     <FormKit
       type="text"
@@ -202,7 +202,7 @@ const submit = async (fields: any) => {
           : DateTime.now()
         )
           .set({ second: 0, millisecond: 0 })
-          .toISO({ includeOffset: false, suppressSeconds: true })
+          .toISO({ includeOffset: false, suppressSeconds: true }) as any
       "
       validation="required"
     />

@@ -81,7 +81,7 @@ const submit = async (fields: any) => {
       :value="
         DateTime.now()
           .set({ second: 0, millisecond: 0 })
-          .toISO({ includeOffset: false, suppressSeconds: true })
+          .toISO({ includeOffset: false, suppressSeconds: true }) as any
       "
       validation="required"
     />

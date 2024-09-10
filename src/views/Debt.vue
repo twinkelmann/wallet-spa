@@ -27,7 +27,7 @@ const state = useStateStore()
 const stateRefs = storeToRefs(state)
 const { t } = useI18n()
 
-const debt: Ref<RelDocument<Debt> | undefined> = ref(undefined)
+const debt: Ref<RelDocument<Debt> | null> = ref(null)
 const accounts: Ref<RelDocument<Account>[]> = ref([])
 const categories: Ref<RelDocument<Category>[]> = ref([])
 const records: Ref<RelDocument<Record>[]> = ref([])
@@ -78,7 +78,7 @@ const importantChanges = new Set([
 
 async function updateData() {
   if (state.activeWallet && id) {
-    debt.value = await getDebt(id)
+    debt.value = (await getDebt(id)) || null
     if (!debt.value) {
       // If the debt is not found, redirect to debts page
       return router.replace(`/wallets/${state.activeWallet}/debts`)
