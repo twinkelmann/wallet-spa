@@ -238,6 +238,10 @@ export function deleteRecord(
           await updateBalance(data.accountId)
         }
 
+        if (data.debtId) {
+          await updateDebtBalance(data.debtId)
+        }
+
         // delete associated transfer record
         if (data.transferId) {
           try {

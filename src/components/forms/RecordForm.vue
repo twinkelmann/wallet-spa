@@ -5,6 +5,7 @@ import { type RelDocument } from '@/models/common'
 import type { Label } from '@/models/label'
 import {
   createRecord,
+  deleteRecord,
   getRecord,
   updateRecord,
   type Record,
@@ -12,6 +13,9 @@ import {
 import { capitalizeFirstLetter, to2DecimalNumber } from '@/util'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   accounts: RelDocument<Account>[]
@@ -21,6 +25,21 @@ const props = defineProps<{
   createTransfer?: boolean
 }>()
 const emit = defineEmits<{ (e: 'done'): void }>()
+
+async function confirmDelete() {
+  if (
+    props.record &&
+    confirm(capitalizeFirstLetter(`${t('delete.record')} ?`))
+  ) {
+    try {
+      await deleteRecord(props.record.id)
+      emit('done')
+    } catch (e) {
+      alert(e)
+      console.error(e)
+    }
+  }
+}
 
 const defaultCategoryId = computed(() => props.categories[0].id)
 
@@ -215,5 +234,14 @@ const submit = async (fields: any) => {
       :options="labels.map((l) => ({ value: l.id, label: l.name }))"
     >
     </FormKit>
+    <button
+      v-if="record"
+      type="button"
+      class="nt-button wallet-secondary flex w-full items-center justify-center"
+      @click="confirmDelete()"
+    >
+      <i class="material-icons pr-2">delete</i>
+      <span class="first-letter:capitalize">{{ $t('delete.record') }}</span>
+    </button>
   </FormKit>
 </template>
