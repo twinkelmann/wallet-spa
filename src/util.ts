@@ -62,8 +62,42 @@ export async function updateBalance(accountId: ID) {
       account.color,
       finalBalance,
       account.startBalance,
+      account.startBalanceDate,
       account.currency
     )
+  }
+}
+
+export async function updateStartBalance(accountId: ID) {
+  const account = await getAccount(accountId)
+  if (account) {
+    // get all records in account before the startBalanceDate
+    const records = await getAllRecordsOfAccountsByDate(
+      [accountId],
+      null,
+      account.startBalanceDate
+    )
+
+    if (records?.length > 0) {
+      const oldestRecord = records[0]
+
+      const startBalance = to2DecimalNumber(
+        records.reduce((balance, r) => balance - r.value, account.startBalance)
+      )
+
+      // TODO: make this visible in UI
+      console.log(`Updated ${account.name}'s start balance`)
+
+      return updateAccount(
+        accountId,
+        account.name,
+        account.color,
+        account.balance,
+        startBalance,
+        oldestRecord.datetime,
+        account.currency
+      )
+    }
   }
 }
 

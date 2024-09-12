@@ -1,6 +1,11 @@
 import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
-import { updateBalance, updateDebtBalance, updateMonthlies } from '@/util'
+import {
+  updateBalance,
+  updateDebtBalance,
+  updateMonthlies,
+  updateStartBalance,
+} from '@/util'
 
 // TODO: link to planned payment ? is that necessary ? maybe not
 export interface Record extends HasTimestamps {
@@ -49,6 +54,7 @@ export function createRecord(
       if (doUpdateMonthliesBalance) {
         await updateMonthlies(accountId, datetime)
         await updateBalance(accountId)
+        await updateStartBalance(accountId)
       }
       if (debtId) {
         await updateDebtBalance(debtId)
@@ -115,23 +121,30 @@ export function getAllRecordsOfAccounts(
 
 export function getAllRecordsOfAccountsByDate(
   ids: ID[],
-  minDatetime: number,
-  maxDatetime: number,
+  minDatetime: number | null,
+  maxDatetime: number | null,
   limit: number | null = null,
   includeLowerBound: boolean = true,
   includeUpperBound: boolean = false,
   asc = true
 ): Promise<RelDocument<Record>[]> {
   return DB.then((db) => {
+    if (minDatetime === null && maxDatetime === null) {
+      throw new Error('One of minDatetime or maxDatetime must be provided')
+    }
+    const dateTimeFilter: { [x: string]: number } = {}
+    if (minDatetime) {
+      dateTimeFilter[includeLowerBound ? '$gte' : '$gt'] = minDatetime
+    }
+    if (maxDatetime) {
+      dateTimeFilter[includeUpperBound ? '$lte' : '$lt'] = maxDatetime
+    }
     return db
       .find({
         selector: {
           $and: [
             {
-              'data.datetime': {
-                [includeLowerBound ? '$gte' : '$gt']: minDatetime,
-                [includeUpperBound ? '$lte' : '$lt']: maxDatetime,
-              },
+              'data.datetime': dateTimeFilter,
             },
             {
               'data.accountId': {
@@ -183,6 +196,7 @@ export function updateRecord(
       const oldAccountId = data.accountId
       const accountChanged = oldAccountId !== accountId
       const valueChanged = value !== data.value
+      const dateChangedBefore = datetime < data.datetime
 
       const now = new Date().valueOf()
       data.accountId = accountId
@@ -210,6 +224,9 @@ export function updateRecord(
                 updateBalance(oldAccountId)
               )
             )
+          }
+          if (accountChanged || dateChangedBefore) {
+            updates.push(updateStartBalance(accountId))
           }
         }
         if (valueChanged && data.debtId) {

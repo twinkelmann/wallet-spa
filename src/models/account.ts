@@ -2,6 +2,7 @@ import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
 import { deleteRecord, getAllRecordsOfAccount } from './record'
 import { deleteMonthly, getAllMonthliesOfAccount } from './monthly'
+import { updateStartBalance } from '@/util'
 
 export const currencies = ['CHF', 'EUR', 'GBP', 'USD'] as const
 
@@ -11,6 +12,10 @@ export interface Account extends HasTimestamps {
   color: string
   balance: number
   startBalance: number
+  /**
+   * Unix EPOCH
+   */
+  startBalanceDate: number
   currency: string
 }
 
@@ -27,6 +32,7 @@ export function createAccount(
   name: string,
   color: string,
   startBalance: number,
+  startBalanceDate: number,
   currency: string
 ): Promise<ID> {
   return DB.then((db) => {
@@ -37,6 +43,7 @@ export function createAccount(
       color,
       balance: 0,
       startBalance,
+      startBalanceDate,
       currency,
       createdAt: now,
       updatedAt: now,
@@ -69,6 +76,7 @@ export function updateAccount(
   color: string,
   balance: number,
   startBalance: number,
+  startBalanceDate: number,
   currency: string
 ): Promise<ID> {
   return DB.then((db) =>
@@ -78,15 +86,24 @@ export function updateAccount(
         throw `Could not find account with id=${id}`
       }
 
+      const startBalanceDateChangedAfter =
+        startBalanceDate > data.startBalanceDate
+
       const now = new Date().valueOf()
       data.name = name
       data.color = color
       data.balance = balance
       data.startBalance = startBalance
+      data.startBalanceDate = startBalanceDate
       data.currency = currency
       data.updatedAt = now
 
-      return db.rel.save('account', data)
+      return db.rel.save('account', data).then(async (res) => {
+        if (startBalanceDateChangedAfter) {
+          await updateStartBalance(id)
+        }
+        return res
+      })
     })
   ).then((res) => res.id)
 }

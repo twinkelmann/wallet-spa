@@ -20,6 +20,7 @@
       "color": "Color",
       "currency": "Currency",
       "start-balance": "Start balance",
+      "start-balance-datetime": "Start balance datetime",
       "from-account": "From @:terminology.account",
       "to-account": "To @:terminology.account"
     },

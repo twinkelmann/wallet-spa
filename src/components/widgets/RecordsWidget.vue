@@ -18,7 +18,12 @@ import type { Label } from '@/models/label'
 import type { Category } from '@/models/category'
 import type { Ref } from 'vue'
 import { ref } from 'vue'
-import { debounce, updateMonthlies, updateBalance } from '@/util'
+import {
+  debounce,
+  updateMonthlies,
+  updateBalance,
+  updateStartBalance,
+} from '@/util'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
 import { DB } from '@/database/db'
@@ -186,14 +191,15 @@ async function addTestData() {
           null,
           randomText(),
           datetime,
-          // don't recompute monthlies to gain some perf
+          // don't recompute monthlies and start balance to gain some perf
           false
         )
       }
-      // update monthlies only once per account, manually
+      // update monthlies and start balance only once per account, manually
       for (const id in oldest) {
         await updateMonthlies(id, oldest[id])
         await updateBalance(id)
+        await updateStartBalance(id)
       }
     } catch (e) {
       alert(e)

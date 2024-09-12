@@ -20,6 +20,7 @@
       "color": "Couleur",
       "currency": "Devise",
       "start-balance": "Montant initial",
+      "start-balance-datetime": "Date du montant initial",
       "from-account": "Du @:terminology.account",
       "to-account": "Au @:terminology.account"
     },

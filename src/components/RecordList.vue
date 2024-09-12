@@ -58,6 +58,7 @@ function updateRecord(record: RelDocument<Record>) {
         @click="updateRecord(record)"
       >
         <RecordItem
+          v-if="accountsById[record.accountId]"
           :record="record"
           :account="accountsById[record.accountId]"
           :categoriesById="categoriesById"

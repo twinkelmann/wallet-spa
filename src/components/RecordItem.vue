@@ -25,7 +25,13 @@ const desc = computed(() => {
     .join(' - ')
 })
 const category = computed(() => {
-  return props.categoriesById[props.record.categoryId]
+  return (
+    props.categoriesById[props.record.categoryId] || {
+      color: '#333',
+      icon: 'question_mark',
+      name: 'Unknown',
+    }
+  )
 })
 const labels = computed(() => {
   // for now we need to filter, because when labels are deleted, the reference ID is still here
