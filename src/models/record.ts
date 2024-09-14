@@ -7,13 +7,13 @@ import {
   updateStartBalance,
 } from '@/util'
 
-// TODO: link to planned payment ? is that necessary ? maybe not
 export interface Record extends HasTimestamps {
   accountId: ID
   categoryId: ID
   labelIds: ID[]
   debtId: ID | null
   transferId: ID | null
+  plannedId: ID | null
   value: number
   payee: string | null
   description: string | null
@@ -29,6 +29,7 @@ export function createRecord(
   labelIds: ID[],
   debtId: ID | null,
   transferId: ID | null,
+  plannedId: ID | null,
   value: number,
   payee: string | null,
   description: string | null,
@@ -43,6 +44,7 @@ export function createRecord(
       labelIds,
       debtId,
       transferId,
+      plannedId,
       value,
       payee,
       description,
@@ -181,6 +183,7 @@ export function updateRecord(
   categoryId: ID,
   labelIds: ID[],
   transferId: ID | null,
+  plannedId: ID | null,
   value: number,
   payee: string | null,
   description: string | null,
@@ -203,6 +206,7 @@ export function updateRecord(
       data.categoryId = categoryId
       data.labelIds = labelIds
       data.transferId = transferId
+      data.plannedId = plannedId
       data.value = value
       data.payee = payee
       data.description = description

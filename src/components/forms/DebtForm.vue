@@ -47,6 +47,7 @@ const submit = async (fields: any) => {
         fields.labelIds,
         debtId,
         null,
+        null,
         balance,
         fields.payee,
         fields.description,

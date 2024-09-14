@@ -83,7 +83,8 @@ export function updateDebt(
               r.accountId,
               r.categoryId,
               r.labelIds,
-              null,
+              null, // debts are not transfers
+              null, // debts are not planned
               r.value,
               payee,
               r.description,

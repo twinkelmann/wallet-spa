@@ -38,6 +38,8 @@ import { onBeforeUnmount } from 'vue'
 import { getAllRecordsOfAccount } from '@/models/record'
 import { deleteRecord } from '@/models/record'
 import { createDebt } from '@/models/debt'
+import { createPlanned } from '@/models/planned'
+import type { PlannedEntry } from '@/models/planned'
 
 const state = useStateStore()
 const stateRefs = storeToRefs(state)
@@ -195,6 +197,7 @@ async function addTestData() {
           ).map((x) => x.id),
           null,
           null,
+          null,
           +(Math.random() * 1000 - 500).toFixed(2),
           null,
           randomText(),
@@ -255,6 +258,9 @@ async function importOldData(event: Event) {
 
     // accounts
     for (const account of data.Account) {
+      if (account._deleted) {
+        continue
+      }
       const id = await createAccount(
         state.activeWallet,
         account.name,
@@ -273,23 +279,11 @@ async function importOldData(event: Event) {
 
     // labels
     for (const label of data.HashTag) {
+      if (label._deleted) {
+        continue
+      }
       const id = await createLabel(state.activeWallet, label.name, label.color)
       labelMap.set(label['_doc_id_rev'].split('::')[0], id)
-    }
-
-    console.log('Importing planned payments..')
-
-    const plannedMap: Map<string, string> = new Map()
-
-    // planned payments
-    // for now, planned payments will be labels, so they can be converted again later
-    for (const label of data.StandingOrder) {
-      const id = await createLabel(
-        state.activeWallet,
-        label['_doc_id_rev'].split('::')[0],
-        '#333333'
-      )
-      plannedMap.set(label['_doc_id_rev'].split('::')[0], id)
     }
 
     console.log('Importing categories..')
@@ -306,6 +300,9 @@ async function importOldData(event: Event) {
 
     // categories
     for (const category of data.Category) {
+      if (category._deleted) {
+        continue
+      }
       const id = (() => {
         switch (category.name) {
           case 'Unknown Income':
@@ -465,12 +462,69 @@ async function importOldData(event: Event) {
       }
     }
 
+    console.log('Importing planned payments..')
+
+    const plannedMap: Map<string, string> = new Map()
+
+    // planned payments
+    for (const planned of data.StandingOrder) {
+      // some are marked as deleted even though they have records associated to them... keep those
+      if (planned._deleted && !planned.items?.length) {
+        continue
+      }
+      const accountId = accountMap.get(planned.accountId)
+      if (!accountId) {
+        console.warn('Could not map account for', planned)
+        continue
+      }
+      const categoryId = categoryMap.get(planned.categoryId)
+      if (!categoryId) {
+        console.warn('Could not map category for', planned)
+        continue
+      }
+      const labelIds = (planned.labels as string[])
+        .map((l) => labelMap.get(l))
+        .filter((x) => x !== undefined)
+
+      // items can be missing
+      const entries: PlannedEntry[] = planned.items
+        ? planned.items.map((item: any) => ({
+            approved: item.hasOwnProperty('recordIds'),
+            dismissed: item.dismissed,
+            plannedDate: DateTime.fromISO(item.originalDate).toMillis(),
+          }))
+        : []
+
+      // generateFromDate can be missing. try to get the first item's date. if nothing works, use created date
+      const date =
+        planned.generateFromDate ||
+        planned.items?.[0]?.originalDate ||
+        planned.reservedCreatedAt
+
+      const id = await createPlanned(
+        accountId,
+        categoryId,
+        labelIds,
+        planned.name,
+        planned.amount / 100,
+        null,
+        planned.note,
+        DateTime.fromISO(date).toMillis(),
+        planned.recurrenceRule ?? null,
+        entries
+      )
+      plannedMap.set(planned['_doc_id_rev'].split('::')[0], id)
+    }
+
     console.log('Importing debts..')
 
     const debtMap: Map<string, string> = new Map()
 
     // debts
     for (const debt of data.Debt) {
+      if (debt._deleted) {
+        continue
+      }
       const id = await createDebt(
         state.activeWallet,
         debt.remainingAmount / 100,
@@ -507,22 +561,19 @@ async function importOldData(event: Event) {
             .filter((x) => x !== undefined)
         : []
 
-      // detect planned payments and add to labels for now
+      // detect planned payments
       // detect debt
+      let plannedId = null
       let debtId = null
       if (record.refObjects) {
         // refObjects can be missing
         ;(record.refObjects as any[]).forEach((ref) => {
           if (ref.id.startsWith('-StandingOrder_')) {
-            const l = plannedMap.get(ref.id)
-            if (l) {
-              labelIds.push(l)
+            const p = plannedMap.get(ref.id)
+            if (p) {
+              plannedId = p
             } else {
-              console.warn(
-                'Could not map planned payment label for',
-                record,
-                ref
-              )
+              console.warn('Could not map planned payment for', record, ref)
             }
           } else if (ref.id.startsWith('-Debt_')) {
             const d = debtMap.get(ref.id)
@@ -554,6 +605,7 @@ async function importOldData(event: Event) {
         labelIds,
         debtId,
         transferId,
+        plannedId,
         (record.refAmount / 100) * (record.type === 0 ? 1 : -1),
         record.payee || null,
         record.note || null,
@@ -574,6 +626,7 @@ async function importOldData(event: Event) {
               other.accountId,
               other.categoryId,
               other.labelIds,
+              null, // transfers are not planned
               id,
               other.value,
               other.payee,
@@ -616,12 +669,37 @@ async function importOldData(event: Event) {
       )
     }
 
+    console.log('Assigning label to outside transfers...')
+
+    // create the tag "ouside transfer" and assign it to all, in case I want to isolate them in the future
+    const id = await createLabel(
+      state.activeWallet,
+      'Outside Transfer',
+      '#364933'
+    )
+    await Promise.all(
+      [...transferMap.values()].map((r) =>
+        getRecord(r).then((record) => {
+          if (record) {
+            record.labelIds.push(id)
+            return updateRecord(
+              r,
+              record.accountId,
+              record.categoryId,
+              record.labelIds,
+              null,
+              null,
+              record.value,
+              record.payee,
+              record.description,
+              record.datetime
+            )
+          }
+        })
+      )
+    )
+
     console.log('Import finished')
-
-    // TODO: leftover transfers are likely "from outside"/"to outside"
-    console.log('Leftover transfers', transferMap)
-
-    // TODO: delete debts with 0 records (probably the records were all deleted)
   } catch (e) {
     console.error('Import failed', e)
   }

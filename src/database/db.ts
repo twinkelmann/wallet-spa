@@ -52,6 +52,21 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
         },
       },
       {
+        singular: 'planned',
+        plural: 'planneds',
+        relations: {
+          accountId: {
+            belongsTo: { type: 'account', options: { async: true } },
+          },
+          categoryId: {
+            belongsTo: { type: 'category', options: { async: true } },
+          },
+          labelIds: {
+            hasMany: { type: 'label', options: { async: true } },
+          },
+        },
+      },
+      {
         singular: 'record',
         plural: 'records',
         relations: {
@@ -66,6 +81,12 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           },
           debtId: {
             belongsTo: { type: 'debt', options: { async: true } },
+          },
+          transferId: {
+            belongsTo: { type: 'record', options: { async: true } },
+          },
+          plannedId: {
+            belongsTo: { type: 'planned', options: { async: true } },
           },
         },
       },
@@ -93,13 +114,13 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           fields: ['data.walletId', '_id'],
         },
       })
-      // To look up children of account (record, monthly)
+      // To look up children of account (record, monthly, planned)
       // OPTIMIZE: check if flipping order is faster with many records
       await db.createIndex({
         index: {
           name: 'idx-account',
           ddoc: 'idx-account',
-          fields: ['data.accountId', '_id'],
+          fields: ['_id', 'data.accountId'],
         },
       })
       // To look up children of category (record, category)
@@ -124,6 +145,14 @@ export const DB: Promise<PouchDB.RelDatabase> = new Promise(
           name: 'idx-datetime',
           ddoc: 'idx-datetime',
           fields: ['data.datetime', 'data.accountId', '_id'],
+        },
+      })
+      // To look up children of planned (record)
+      await db.createIndex({
+        index: {
+          name: 'idx-planned',
+          ddoc: 'idx-planned',
+          fields: ['data.plannedId', '_id'],
         },
       })
       // TODO: remove
