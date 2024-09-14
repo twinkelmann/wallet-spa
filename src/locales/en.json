@@ -104,5 +104,21 @@
     "EUR": "Euro",
     "GBP": "Pound sterling",
     "USD": "United States dollar"
+  },
+  "time": {
+    "unit": {
+      "year": "year | year | years",
+      "quarter": "quarter | quarter | quarters",
+      "month": "month | month | months",
+      "week": "week | week | weeks",
+      "day": "day | day | days"
+    },
+    "relative-unit": {
+      "year": "this @:time.unit.year | last @:time.unit.year | {count} @:time.unit.year ago",
+      "quarter": "this @:time.unit.quarter | last @:time.unit.quarter | {count} @:time.unit.quarter ago",
+      "month": "this @:time.unit.month | last @:time.unit.month | {count} @:time.unit.month ago",
+      "week": "this @:time.unit.week | last @:time.unit.week | {count} @:time.unit.week ago",
+      "day": "today | yesterday | {count} @:time.unit.day ago"
+    }
   }
 }

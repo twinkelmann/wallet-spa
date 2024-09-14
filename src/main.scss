@@ -205,3 +205,9 @@ html.dark,
 html.dark * {
   scrollbar-color: theme('colors.zinc.600') theme('colors.zinc.800');
 }
+
+.w-stretch {
+  width: stretch;
+  width: -webkit-fill-available;
+  width: -moz-available;
+}

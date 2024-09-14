@@ -47,7 +47,7 @@ onMounted(async () => {
 <template>
   <main class="flex">
     <Menu v-if="!hideMenu" :show="show" @close="show = false"></Menu>
-    <div class="flex grow flex-col">
+    <div class="relative flex grow flex-col">
       <header
         class="mb-4 flex w-full items-center justify-between text-lg print:shrink-0"
       >

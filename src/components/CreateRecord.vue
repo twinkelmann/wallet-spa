@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="fixed bottom-8 right-8 flex flex-col-reverse items-end gap-4"
+    class="fixed bottom-16 right-8 flex flex-col-reverse items-end gap-4"
     ref="root"
   >
     <button
