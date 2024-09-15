@@ -30,8 +30,12 @@ const debts: Ref<RelDocument<Debt>[]> = ref([])
 const order = (a: Debt, b: Debt) => a.updatedAt - b.updatedAt
 
 const sorted = computed(() => debts.value.sort(order))
-const lent = computed(() => sorted.value.filter((d) => d.balance < 0))
-const borrowed = computed(() => sorted.value.filter((d) => d.balance > 0))
+const lent = computed(() =>
+  sorted.value.filter((d) => !d.closed && d.balance < 0)
+)
+const borrowed = computed(() =>
+  sorted.value.filter((d) => !d.closed && d.balance > 0)
+)
 const closed = computed(() =>
   sorted.value.filter((d) => d.closed || d.balance === 0)
 )
