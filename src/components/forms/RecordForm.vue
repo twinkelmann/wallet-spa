@@ -162,7 +162,9 @@ const submit = async (fields: any) => {
 <template>
   <div ref="top"></div>
   <!-- TODO: make this form very pretty (and full screen)-->
-  <template v-if="!choosingCategory">
+  <div
+    :class="`${choosingCategory ? 'pointer-events-none h-0 w-0 opacity-0' : ''}`"
+  >
     <FormKit
       type="form"
       @submit="submit"
@@ -280,8 +282,7 @@ const submit = async (fields: any) => {
         <span class="first-letter:capitalize">{{ $t('delete.record') }}</span>
       </button>
     </FormKit>
-  </template>
-
+  </div>
   <ul v-if="choosingCategory" class="flex flex-col gap-2">
     <CategoriesList
       :categories="categories"
