@@ -1,0 +1,451 @@
+[
+  {
+    "name": "Food, drinks",
+    "color": "#bf1e4e",
+    "icon": "restaurant",
+    "children": [
+      {
+        "name": "Bar, cafe",
+        "color": "#bf1e4e",
+        "icon": "wine_bar",
+        "children": []
+      },
+      {
+        "name": "Groceries",
+        "color": "#bf1e4e",
+        "icon": "grocery",
+        "children": []
+      },
+      {
+        "name": "Restaurant, fast-food",
+        "color": "#bf1e4e",
+        "icon": "lunch_dining",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Shopping",
+    "color": "#23a3c6",
+    "icon": "shopping_bag",
+    "children": [
+      {
+        "name": "Clothes, shoes",
+        "color": "#23a3c6",
+        "icon": "apparel",
+        "children": []
+      },
+      {
+        "name": "Electronics, accessories",
+        "color": "#23a3c6",
+        "icon": "devices_other",
+        "children": []
+      },
+      {
+        "name": "Home, garden",
+        "color": "#23a3c6",
+        "icon": "home_and_garden",
+        "children": []
+      },
+      {
+        "name": "Pets, animals",
+        "color": "#23a3c6",
+        "icon": "pets",
+        "children": []
+      },
+      {
+        "name": "Stationery, tools",
+        "color": "#23a3c6",
+        "icon": "square_foot",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Housing",
+    "color": "#d6ae42",
+    "icon": "cottage",
+    "children": [
+      {
+        "name": "Energy, utilities",
+        "color": "#d6ae42",
+        "icon": "bolt",
+        "children": []
+      },
+      {
+        "name": "Maintenance, repairs",
+        "color": "#d6ae42",
+        "icon": "construction",
+        "children": []
+      },
+      {
+        "name": "Mortgage",
+        "color": "#d6ae42",
+        "icon": "real_estate_agent",
+        "children": []
+      },
+      {
+        "name": "Property insurance",
+        "color": "#d6ae42",
+        "icon": "shield_with_house",
+        "children": []
+      },
+      {
+        "name": "Rent",
+        "color": "#d6ae42",
+        "icon": "key",
+        "children": []
+      },
+      {
+        "name": "Services",
+        "color": "#d6ae42",
+        "icon": "mop",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Transportation",
+    "color": "#899499",
+    "icon": "directions_bus",
+    "children": [
+      {
+        "name": "Business trips",
+        "color": "#899499",
+        "icon": "work",
+        "children": []
+      },
+      {
+        "name": "Long distance",
+        "color": "#899499",
+        "icon": "travel",
+        "children": []
+      },
+      {
+        "name": "Public transport",
+        "color": "#899499",
+        "icon": "train",
+        "children": []
+      },
+      {
+        "name": "Taxi",
+        "color": "#899499",
+        "icon": "local_taxi",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Vehicle",
+    "color": "#cf22d8",
+    "icon": "directions_car",
+    "children": [
+      {
+        "name": "Fuel, electricity",
+        "color": "#cf22d8",
+        "icon": "ev_station",
+        "children": []
+      },
+      {
+        "name": "Leasing",
+        "color": "#cf22d8",
+        "icon": "payments",
+        "children": []
+      },
+      {
+        "name": "Parking",
+        "color": "#cf22d8",
+        "icon": "local_parking",
+        "children": []
+      },
+      {
+        "name": "Rentals",
+        "color": "#cf22d8",
+        "icon": "car_rental",
+        "children": []
+      },
+      {
+        "name": "Vehicle insurance",
+        "color": "#cf22d8",
+        "icon": "contract",
+        "children": []
+      },
+      {
+        "name": "Vehicle maintenance",
+        "color": "#cf22d8",
+        "icon": "build",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Life, entertainement",
+    "color": "#7bc944",
+    "icon": "boy",
+    "children": [
+      {
+        "name": "Active sport, fitness",
+        "color": "#7bc944",
+        "icon": "fitness_center",
+        "children": []
+      },
+      {
+        "name": "Books, audio, subscriptions",
+        "color": "#7bc944",
+        "icon": "book_2",
+        "children": []
+      },
+      {
+        "name": "Charity, gifts",
+        "color": "#7bc944",
+        "icon": "featured_seasonal_and_gifts",
+        "children": []
+      },
+      {
+        "name": "Culture, sport events",
+        "color": "#7bc944",
+        "icon": "sign_language",
+        "children": []
+      },
+      {
+        "name": "Education, development",
+        "color": "#7bc944",
+        "icon": "school",
+        "children": []
+      },
+      {
+        "name": "Health care, doctor",
+        "color": "#7bc944",
+        "icon": "health_and_safety",
+        "children": []
+      },
+      {
+        "name": "Hobbies",
+        "color": "#7bc944",
+        "icon": "favorite",
+        "children": []
+      },
+      {
+        "name": "Holiday, trips, hotels",
+        "color": "#7bc944",
+        "icon": "your_trips",
+        "children": []
+      },
+      {
+        "name": "Life events",
+        "color": "#7bc944",
+        "icon": "cake",
+        "children": []
+      },
+      {
+        "name": "Lottery, gambling",
+        "color": "#7bc944",
+        "icon": "casino",
+        "children": []
+      },
+      {
+        "name": "TV, streaming",
+        "color": "#7bc944",
+        "icon": "tv_gen",
+        "children": []
+      },
+      {
+        "name": "Wellness, beauty",
+        "color": "#7bc944",
+        "icon": "health_and_beauty",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Communication, PC",
+    "color": "#444ea3",
+    "icon": "desktop_windows",
+    "children": [
+      {
+        "name": "Internet",
+        "color": "#444ea3",
+        "icon": "wifi",
+        "children": []
+      },
+      {
+        "name": "Phone, cell phone",
+        "color": "#444ea3",
+        "icon": "call",
+        "children": []
+      },
+      {
+        "name": "Postal services",
+        "color": "#444ea3",
+        "icon": "mail",
+        "children": []
+      },
+      {
+        "name": "Software, apps, games",
+        "color": "#444ea3",
+        "icon": "deployed_code_update",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Financial expenses",
+    "color": "#27b58d",
+    "icon": "payments",
+    "children": [
+      {
+        "name": "Advisory",
+        "color": "#27b58d",
+        "icon": "partner_exchange",
+        "children": []
+      },
+      {
+        "name": "Charges, Fees",
+        "color": "#27b58d",
+        "icon": "toll",
+        "children": []
+      },
+      {
+        "name": "Fines",
+        "color": "#27b58d",
+        "icon": "gavel",
+        "children": []
+      },
+      {
+        "name": "Insurances",
+        "color": "#27b58d",
+        "icon": "contract",
+        "children": []
+      },
+      {
+        "name": "Loan, interests",
+        "color": "#27b58d",
+        "icon": "credit_card",
+        "children": []
+      },
+      {
+        "name": "Taxes",
+        "color": "#27b58d",
+        "icon": "send_money",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Investments",
+    "color": "#d63956",
+    "icon": "currency_exchange",
+    "children": [
+      {
+        "name": "Collections",
+        "color": "#d63956",
+        "icon": "apps",
+        "children": []
+      },
+      {
+        "name": "Financial investments",
+        "color": "#d63956",
+        "icon": "finance_mode",
+        "children": []
+      },
+      {
+        "name": "Realty",
+        "color": "#d63956",
+        "icon": "apartment",
+        "children": []
+      },
+      {
+        "name": "Savings",
+        "color": "#d63956",
+        "icon": "savings",
+        "children": []
+      },
+      {
+        "name": "Vehicles, chattels",
+        "color": "#d63956",
+        "icon": "garage",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Income",
+    "color": "#f7d033",
+    "icon": "finance_chip",
+    "children": [
+      {
+        "name": "Checks, coupons",
+        "color": "#f7d033",
+        "icon": "checkbook",
+        "children": []
+      },
+      {
+        "name": "Dues, grants",
+        "color": "#f7d033",
+        "icon": "verified",
+        "children": []
+      },
+      {
+        "name": "Gifts",
+        "color": "#f7d033",
+        "icon": "featured_seasonal_and_gifts",
+        "children": []
+      },
+      {
+        "name": "Interests, dividends",
+        "color": "#f7d033",
+        "icon": "request_quote",
+        "children": []
+      },
+      {
+        "name": "Lending, renting",
+        "color": "#f7d033",
+        "icon": "credit_card",
+        "children": []
+      },
+      {
+        "name": "Lottery, gambling",
+        "color": "#f7d033",
+        "icon": "casino",
+        "children": []
+      },
+      {
+        "name": "Refunds (tax, purchase)",
+        "color": "#f7d033",
+        "icon": "undo",
+        "children": []
+      },
+      {
+        "name": "Rental income",
+        "color": "#f7d033",
+        "icon": "wifi_home",
+        "children": []
+      },
+      {
+        "name": "Sale",
+        "color": "#f7d033",
+        "icon": "package_2",
+        "children": []
+      },
+      {
+        "name": "Wage, invoices",
+        "color": "#f7d033",
+        "icon": "money",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Others",
+    "color": "#707070",
+    "icon": "other_admission",
+    "children": [
+      {
+        "name": "Missing",
+        "color": "#707070",
+        "icon": "unknown_document",
+        "children": []
+      }
+    ]
+  }
+]
