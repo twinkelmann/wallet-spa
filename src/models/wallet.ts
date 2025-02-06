@@ -2,9 +2,10 @@ import { DB } from '@/database/db'
 import type { HasTimestamps, ID, RelDocument } from './common'
 import { deleteAccount, getAllAccountsOfWallet } from './account'
 import {
+  CategoryTemplates,
   deleteCategory,
   getAllCategoriesOfWallet,
-  insertDefaultCategoryTree,
+  insertCategoryTreeTemplate,
 } from './category'
 import { deleteLabel, getAllLabelsOfWallet } from './label'
 
@@ -18,7 +19,10 @@ export interface Wallet extends HasTimestamps {
  * @param name Name of the new Wallet
  * @returns The ID of the new Wallet
  */
-export function createWallet(name: string): Promise<ID> {
+export function createWallet(
+  name: string,
+  template: CategoryTemplates
+): Promise<ID> {
   return DB.then((db) => {
     const now = new Date().valueOf()
     const newWallet = {
@@ -28,7 +32,7 @@ export function createWallet(name: string): Promise<ID> {
     } as Wallet
     return db.rel.save('wallet', newWallet)
   }).then(async (res) => {
-    await insertDefaultCategoryTree(res.id)
+    await insertCategoryTreeTemplate(res.id, template)
     return res.id
   })
 }

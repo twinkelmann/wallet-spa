@@ -28,34 +28,40 @@ const MONTH_START: DateObjectUnits = {
   millisecond: 0,
 }
 
+/**
+ * Get balance of account up to but not including the given date
+ */
+export async function getBalanceAtDate(accountId: ID, date: number) {
+  const currentMonthStart = DateTime.fromMillis(date, { zone: 'UTC' })
+    .set(MONTH_START)
+    .toMillis()
+  const lastMonthly = await getAllMonthliesOfAccountByDate(
+    accountId,
+    currentMonthStart,
+    currentMonthStart,
+    1,
+    true,
+    true
+  )
+
+  const startBalance = lastMonthly[0]?.balance || 0
+
+  const records = await getAllRecordsOfAccountsByDate(
+    [accountId],
+    currentMonthStart,
+    date
+  )
+
+  return to2DecimalNumber(
+    records.reduce((balance, r) => balance + r.value, startBalance)
+  )
+}
+
 export async function updateBalance(accountId: ID) {
-  const currentMonthStart = DateTime.utc().set(MONTH_START).toMillis()
   const account = await getAccount(accountId)
+
   if (account) {
-    const lastMonthly = await getAllMonthliesOfAccountByDate(
-      accountId,
-      currentMonthStart,
-      currentMonthStart,
-      1,
-      true,
-      true
-    )
-
-    const startBalance = lastMonthly[0]?.balance || 0
-
-    const records = await getAllRecordsOfAccountsByDate(
-      [accountId],
-      currentMonthStart,
-      new Date().valueOf(),
-      null,
-      true,
-      true
-    )
-
-    const finalBalance = to2DecimalNumber(
-      records.reduce((balance, r) => balance + r.value, startBalance)
-    )
-
+    const finalBalance = await getBalanceAtDate(accountId, new Date().valueOf())
     return updateAccount(
       accountId,
       account.name,

@@ -1,0 +1,313 @@
+[
+  {
+    "name": "Sales revenue",
+    "color": "#50b112",
+    "icon": "shopping_cart_checkout",
+    "children": [
+      {
+        "name": "Products",
+        "color": "#50b112",
+        "icon": "shopping_cart_checkout",
+        "children": []
+      },
+      {
+        "name": "Services",
+        "color": "#50b112",
+        "icon": "shopping_cart_checkout",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Other revenue",
+    "color": "#009241",
+    "icon": "payments",
+    "children": [
+      {
+        "name": "Interest, capital gains",
+        "color": "#009241",
+        "icon": "percent",
+        "children": []
+      },
+      {
+        "name": "Miscellaneous revenue",
+        "color": "#009241",
+        "icon": "payments",
+        "children": []
+      },
+      {
+        "name": "Refunds (tax)",
+        "color": "#009241",
+        "icon": "undo",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "New funding",
+    "color": "#94cfc8",
+    "icon": "cottage",
+    "children": [
+      {
+        "name": "New equity investments",
+        "color": "#94cfc8",
+        "icon": "finance_mode",
+        "children": []
+      },
+      {
+        "name": "New loans",
+        "color": "#94cfc8",
+        "icon": "credit_card",
+        "children": []
+      },
+      {
+        "name": "New notes, bonds",
+        "color": "#94cfc8",
+        "icon": "money",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Space, equipment",
+    "color": "#480094",
+    "icon": "storefront",
+    "children": [
+      {
+        "name": "Equipment rent or leasing",
+        "color": "#480094",
+        "icon": "precision_manufacturing",
+        "children": []
+      },
+      {
+        "name": "Repairs, maintenance",
+        "color": "#480094",
+        "icon": "construction",
+        "children": []
+      },
+      {
+        "name": "Space rent",
+        "color": "#480094",
+        "icon": "key",
+        "children": []
+      },
+      {
+        "name": "Utilities (energy, security)",
+        "color": "#480094",
+        "icon": "bolt",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Payroll, travel",
+    "color": "#0062cc",
+    "icon": "groups",
+    "children": [
+      {
+        "name": "Contractors",
+        "color": "#0062cc",
+        "icon": "sensor_occupied",
+        "children": []
+      },
+      {
+        "name": "Education, team events",
+        "color": "#0062cc",
+        "icon": "diversity_3",
+        "children": []
+      },
+      {
+        "name": "Employees",
+        "color": "#0062cc",
+        "icon": "psychology",
+        "children": []
+      },
+      {
+        "name": "Travel expenses",
+        "color": "#0062cc",
+        "icon": "luggage",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Inventory purchase",
+    "color": "#007db8",
+    "icon": "inventory_2",
+    "children": [
+      {
+        "name": "Goods for sale",
+        "color": "#007db8",
+        "icon": "package_2",
+        "children": []
+      },
+      {
+        "name": "Material",
+        "color": "#007db8",
+        "icon": "widgets",
+        "children": []
+      },
+      {
+        "name": "Other supplies",
+        "color": "#007db8",
+        "icon": "inventory_2",
+        "children": []
+      },
+      {
+        "name": "Parts",
+        "color": "#007db8",
+        "icon": "manufacturing",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Operational services",
+    "color": "#976700",
+    "icon": "rule_settings",
+    "children": [
+      {
+        "name": "Customer services",
+        "color": "#976700",
+        "icon": "support_agent",
+        "children": []
+      },
+      {
+        "name": "Logistics services",
+        "color": "#976700",
+        "icon": "conveyor_belt",
+        "children": []
+      },
+      {
+        "name": "Marketing and sales services",
+        "color": "#976700",
+        "icon": "communication",
+        "children": []
+      },
+      {
+        "name": "Operations and computing services",
+        "color": "#976700",
+        "icon": "lan",
+        "children": []
+      },
+      {
+        "name": "Other key services",
+        "color": "#976700",
+        "icon": "rule_settings",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Other bills and charges",
+    "color": "#c45800",
+    "icon": "payments",
+    "children": [
+      {
+        "name": "Accounting and legal services",
+        "color": "#c45800",
+        "icon": "partner_exchange",
+        "children": []
+      },
+      {
+        "name": "Interest, charges, insurance",
+        "color": "#c45800",
+        "icon": "toll",
+        "children": []
+      },
+      {
+        "name": "Other admin expenses",
+        "color": "#c45800",
+        "icon": "contract",
+        "children": []
+      },
+      {
+        "name": "Telecommunication charges",
+        "color": "#c45800",
+        "icon": "cell_tower",
+        "children": []
+      },
+      {
+        "name": "Taxes",
+        "color": "#c45800",
+        "icon": "send_money",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Loans repayment",
+    "color": "#cc3100",
+    "icon": "credit_card",
+    "children": [
+      {
+        "name": "Bank loans",
+        "color": "#cc3100",
+        "icon": "account_balance",
+        "children": []
+      },
+      {
+        "name": "New notes, bonds",
+        "color": "#cc3100",
+        "icon": "money",
+        "children": []
+      },
+      {
+        "name": "Other debts",
+        "color": "#cc3100",
+        "icon": "credit_card",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Assets purchase",
+    "color": "#a60039",
+    "icon": "currency_exchange",
+    "children": [
+      {
+        "name": "Equipment and tools",
+        "color": "#a60039",
+        "icon": "precision_manufacturing",
+        "children": []
+      },
+      {
+        "name": "Information technology",
+        "color": "#a60039",
+        "icon": "deployed_code_update",
+        "children": []
+      },
+      {
+        "name": "Licences",
+        "color": "#a60039",
+        "icon": "contract",
+        "children": []
+      },
+      {
+        "name": "Machines and vehicles",
+        "color": "#a60039",
+        "icon": "forklift",
+        "children": []
+      },
+      {
+        "name": "Property and furniture",
+        "color": "#a60039",
+        "icon": "chair",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name": "Others",
+    "color": "#707070",
+    "icon": "other_admission",
+    "children": [
+      {
+        "name": "Missing",
+        "color": "#707070",
+        "icon": "unknown_document",
+        "children": []
+      }
+    ]
+  }
+]

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { allCategoryTemplates, CategoryTemplates } from '@/models/category'
 import { type RelDocument } from '@/models/common'
 import { createWallet, updateWallet, type Wallet } from '@/models/wallet'
 import { capitalizeFirstLetter } from '@/util'
@@ -11,7 +12,7 @@ const submit = async (fields: any) => {
     if (props.wallet) {
       await updateWallet(props.wallet.id, fields.name)
     } else {
-      await createWallet(fields.name)
+      await createWallet(fields.name, fields.categoryTemplate)
     }
   } catch (e) {
     alert(e)
@@ -36,5 +37,22 @@ const submit = async (fields: any) => {
       :value="wallet?.name"
       validation="required"
     />
+    <FormKit
+      v-if="!wallet"
+      type="select"
+      name="categoryTemplate"
+      label="Category Template
+        "
+      :value="CategoryTemplates.DEFAULT"
+      validation="required"
+    >
+      <option
+        v-for="template of allCategoryTemplates"
+        :key="template"
+        :value="template"
+      >
+        {{ template }}
+      </option>
+    </FormKit>
   </FormKit>
 </template>

@@ -82,8 +82,27 @@ async function recursiveInsert(
   }
 }
 
-export async function insertDefaultCategoryTree(walletId: ID): Promise<void> {
-  const res = await fetch('/assets/defaultCategories.json')
+export enum CategoryTemplates {
+  DEFAULT = 'default',
+  BUSINESS = 'business',
+}
+
+export const allCategoryTemplates = [
+  CategoryTemplates.DEFAULT,
+  CategoryTemplates.BUSINESS,
+]
+
+const categoryTemplateFiles = new Map<CategoryTemplates, string>([
+  [CategoryTemplates.DEFAULT, '/assets/defaultCategories.json'],
+  [CategoryTemplates.BUSINESS, '/assets/businessCategories.json'],
+])
+
+export async function insertCategoryTreeTemplate(
+  walletId: ID,
+  template: CategoryTemplates
+): Promise<void> {
+  const templateFile = categoryTemplateFiles.get(template)!
+  const res = await fetch(templateFile)
   const json = (await res.json()) as CategoryWithChildren[]
   return recursiveInsert(walletId, json)
 }

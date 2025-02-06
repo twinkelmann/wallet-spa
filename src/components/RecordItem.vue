@@ -8,6 +8,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { capitalizeFirstLetter, useBlackText } from '@/util'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
+import Money from './Money.vue'
 
 const transferColor = '#206270'
 
@@ -75,16 +76,7 @@ const labels = computed(() => {
       </ul>
     </div>
     <div class="flex shrink-0 flex-col text-right">
-      <span
-        :class="`font-medium ${record.value >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`"
-      >
-        {{
-          record.value.toLocaleString(settings.numberLocale, {
-            style: 'currency',
-            currency: account.currency,
-          })
-        }}</span
-      >
+      <Money :amount="record.value" :currency="account.currency" />
       <!-- TODO maybe: intermediary value -->
       <span class="text-sm">{{
         DateTime.fromMillis(record.datetime)

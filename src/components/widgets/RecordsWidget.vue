@@ -305,6 +305,7 @@ async function importOldData(event: Event) {
       }
       const id = (() => {
         switch (category.name) {
+          // default
           case 'Unknown Income':
             return existingCategoriesByName.get('Others')
           case 'OneClick':
@@ -451,6 +452,106 @@ async function importOldData(event: Event) {
             return existingCategoriesByName.get('Wellness, beauty')
           case 'Automatic bank statements reading':
             return existingCategoriesByName.get('Others')
+          // business
+          case 'Sales Revenue':
+            return existingCategoriesByName.get('Sales revenue')
+          case 'Products':
+            return existingCategoriesByName.get('Products')
+          case 'Services':
+            return existingCategoriesByName.get('Services')
+          case 'Other Revenue':
+            return existingCategoriesByName.get('Other revenue')
+          case 'Interest, capital gains':
+            return existingCategoriesByName.get('Interest, capital gains')
+          case 'Miscellaneous revenue':
+            return existingCategoriesByName.get('Miscellaneous revenue')
+          case 'Refunds (tax)':
+            return existingCategoriesByName.get('Refunds (tax)')
+          case 'New Funding':
+            return existingCategoriesByName.get('New funding')
+          case 'New equity investments':
+            return existingCategoriesByName.get('New equity investments')
+          case 'New loans':
+            return existingCategoriesByName.get('New loans')
+          case 'New notes, bonds':
+            return existingCategoriesByName.get('New notes, bonds')
+          case 'Space & Equipment':
+            return existingCategoriesByName.get('Space, equipment')
+          case 'Equipment rent or leasing':
+            return existingCategoriesByName.get('Equipment rent or leasing')
+          case 'Repairs & maintenance':
+            return existingCategoriesByName.get('Repairs, maintenance')
+          case 'Space rent':
+            return existingCategoriesByName.get('Space rent')
+          case 'Utilities (energy, security)':
+            return existingCategoriesByName.get('Utilities (energy, security)s')
+          case 'Payroll & Travel':
+            return existingCategoriesByName.get('Payroll, travel')
+          case 'Contractors':
+            return existingCategoriesByName.get('Contractors')
+          case 'Education, team events':
+            return existingCategoriesByName.get('Education, team events')
+          case 'Employees':
+            return existingCategoriesByName.get('Employees')
+          case 'Travel expenses':
+            return existingCategoriesByName.get('Travel expenses')
+          case 'Inventory Purchase':
+            return existingCategoriesByName.get('Inventory purchase')
+          case 'Goods for sale':
+            return existingCategoriesByName.get('Goods for sale')
+          case 'Material':
+            return existingCategoriesByName.get('Material')
+          case 'Other Supplies':
+            return existingCategoriesByName.get('Other supplies')
+          case 'Parts':
+            return existingCategoriesByName.get('Parts')
+          case 'Operational Services':
+            return existingCategoriesByName.get('Operational services')
+          case 'Customer services':
+            return existingCategoriesByName.get('Customer services')
+          case 'Logistics services':
+            return existingCategoriesByName.get('Logistics services')
+          case 'Marketing & Sales services':
+            return existingCategoriesByName.get('Marketing and sales services')
+          case 'Operations & computing services':
+            return existingCategoriesByName.get(
+              'Operations and computing services'
+            )
+          case 'Other key services':
+            return existingCategoriesByName.get('Other key services')
+          case 'Other Bills & Charges':
+            return existingCategoriesByName.get('Other bills and charges')
+          case 'Accounting and Legal services':
+            return existingCategoriesByName.get('Accounting and legal services')
+          case 'Interest, Charges, Insurance':
+            return existingCategoriesByName.get('Interest, charges, insurance')
+          case 'Other admin expenses':
+            return existingCategoriesByName.get('Other admin expenses')
+          case 'SW subscriptions, Telco charges':
+            return existingCategoriesByName.get('Telecommunication charges')
+          case 'Taxes - VAT, income, other':
+            return existingCategoriesByName.get('Taxes')
+          case 'Loans Repayment':
+            return existingCategoriesByName.get('Loans repayment')
+          case 'Bank loans':
+            return existingCategoriesByName.get('Bank loans')
+          case 'New notes, bonds':
+            return existingCategoriesByName.get('New notes, bonds')
+          case 'Other debts':
+            return existingCategoriesByName.get('Other debts')
+          case 'Assets Purchase':
+            return existingCategoriesByName.get('Assets purchase')
+          case 'Equipment and Tools':
+            return existingCategoriesByName.get('Equipment and tools')
+          case 'Information Technology':
+            return existingCategoriesByName.get('Information technology')
+          case 'Licences':
+            return existingCategoriesByName.get('Licences')
+          case 'Machines and Vehicles':
+            return existingCategoriesByName.get('Machines and vehicles')
+          case 'Property and Furniture':
+            return existingCategoriesByName.get('Property and furniture')
+
           default:
             return existingCategoriesByName.get('Others')
         }
@@ -521,17 +622,19 @@ async function importOldData(event: Event) {
     const debtMap: Map<string, string> = new Map()
 
     // debts
-    for (const debt of data.Debt) {
-      if (debt._deleted) {
-        continue
+    if (data.Debt) {
+      for (const debt of data.Debt) {
+        if (debt._deleted) {
+          continue
+        }
+        const id = await createDebt(
+          state.activeWallet,
+          debt.remainingAmount / 100,
+          debt.name,
+          debt.note || null
+        )
+        debtMap.set(debt['_doc_id_rev'].split('::')[0], id)
       }
-      const id = await createDebt(
-        state.activeWallet,
-        debt.remainingAmount / 100,
-        debt.name,
-        debt.note || null
-      )
-      debtMap.set(debt['_doc_id_rev'].split('::')[0], id)
     }
 
     console.log('Importing records..')
