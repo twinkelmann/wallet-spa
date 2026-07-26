@@ -6,4 +6,11 @@ It is currently missing a couchDB server in order to replicate the data between 
 
 Deployment is available at https://wallet.naito.one
 
+To test:
+1. Create wallet
+1. Create at least one account
+1. Use "Add test data", or "Import old data" which supports a subset of the Wallet android app export format (no guarantees)
+
 > I do not recommand production use at this time, as everything is subject to change. This is a personal project currently on hold.
+>
+> Some features are missing, and sometimes the account balance is not updated correctly
